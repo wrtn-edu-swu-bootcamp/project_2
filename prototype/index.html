@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>밥심 - 서비스 프로토타입</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #81C784 100%);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .question-num {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        .option-btn:hover {
+            background: #e8f5e9;
+            transform: translateX(5px);
+        }
+
+        .option-btn.selected {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .menu-card {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #4CAF50;
+        }
+
+        .menu-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-reason {
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #2E7D32;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .menu-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #888;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .ingredient-list {
+            list-style: none;
+        }
+
+        .ingredient-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .ingredient-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            counter-increment: step-counter;
+        }
+
+        .step-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            background: #4CAF50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .nutrition-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .nutrition-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+
+        .nutrition-item .label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .video-link:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍚 밥심</h1>
+            <p>3분 질문으로 영양 만점 한 끼 찾기</p>
+        </div>
+
+        <div class="content">
+            <!-- Welcome Screen -->
+            <div id="welcome" class="screen active">
+                <h2 style="margin-bottom: 15px;">환영합니다!</h2>
+                <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
+                    간단한 질문에 답하시면<br>
+                    오늘의 완벽한 메뉴를 추천해드릴게요.
+                </p>
+                <button class="btn btn-primary" onclick="startQuestions()">시작하기</button>
+            </div>
+
+            <!-- Question 0: 기본 정보 -->
+            <div id="q0" class="screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 16%"></div>
+                </div>
+                <div class="question">
+                    <div class="question-num">필수 질문 1/6</div>
+                    <h3>기본 정보를 입력해주세요</h3>
+                    <div class="input-group">
+                        <label>성별</label>
+                        <select id="genderSelect" onchange="enableNextBtn('nextBtn0')">
+                            <option value="">선택해주세요</option>
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>키 (cm)</label>
+                            <input type="number" id="heightInput" placeholder="170" onkeyup="enableNextBtn('nextBtn0')">
+                        </div>
+                        <div class="input-group">
+                            <label>몸무게 (kg)</label>
+                            <input type="number" id="weightInput" placeholder="65" onkeyup="enableNextBtn('nextBtn0')">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="nextBtn0" disabled onclick="nextScreen('q1')">다음</button>
+            </div>
+
+            <!-- Question 1: 식사 시간대 -->
+            <div id="q1" class="screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33%"></div>
+                </div>
+                <div class="question">
+                    <div class="question-num">필수 질문 2/6</div>
+                    <h3>언제 드실 식사인가요?</h3>
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '아침')">
+                            🌅 아침<br>
+                            <small style="color: #999;">가볍고 빠르게 시작하는 하루</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '점심')">
+                            ☀️ 점심<br>
+                            <small style="color: #999;">든든한 에너지 충전</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '저녁')">
+                            🌙 저녁<br>
+                            <small style="color: #999;">하루를 마무리하는 식사</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '야식')">
+                            🌃 야식<br>
+                            <small style="color: #999;">가볍게 즐기는 간식</small>
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="nextBtn1" disabled onclick="nextScreen('q2')">다음</button>
+            </div>
+
+            <!-- Question 2: 조리 가능 여부 -->
+            <div id="q2" class="screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+                <div class="question">
+                    <div class="question-num">필수 질문 3/6</div>
+                    <h3>오늘 요리 준비, 어느 정도 가능하신가요?</h3>
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 'cooking', '전자레인지')">
+                            📱 전자레인지만<br>
+                            <small style="color: #999;">데우기만 하면 OK</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'cooking', '10분')">
+                            ⚡ 10분 이내 간단 조리<br>
+                            <small style="color: #999;">계란 프라이, 라면 정도</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'cooking', '20분')">
+                            👨‍🍳 20분 이내 기본 조리<br>
+                            <small style="color: #999;">볶고 끓이는 정도</small>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'cooking', '30분')">
+                            🔥 30분 이상 본격 조리<br>
+                            <small style="color: #999;">시간 여유 있어요</small>
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="nextBtn2" disabled onclick="nextScreen('q3')">다음</button>
+            </div>
+
+            <!-- Question 3: 예산 -->
+            <div id="q3" class="screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 66%"></div>
+                </div>
+                <div class="question">
+                    <div class="question-num">필수 질문 4/6</div>
+                    <h3>한 끼에 얼마까지 쓸 수 있으세요?</h3>
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '3000원')">
+                            💰 3,000원 이하
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '5000원')">
+                            💵 3,000원 - 5,000원
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000원')">
+                            💳 5,000원 - 8,000원
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000원이상')">
+                            💎 8,000원 이상
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="nextBtn3" disabled onclick="nextScreen('q4')">다음</button>
+            </div>
+
+            <!-- Question 4: 기피 식재료 -->
+            <div id="q4" class="screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 83%"></div>
+                </div>
+                <div class="question">
+                    <div class="question-num">필수 질문 5/6</div>
+                    <h3>못 먹거나 싫어하는 재료가 있나요?</h3>
+                    <div class="input-group">
+                        <input type="text" placeholder="예: 새우, 버섯, 파 등 (없으면 비워두세요)" id="avoidInput">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextScreen('loading')">추천받기</button>
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="screen">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <h3 style="color: #333; margin-bottom: 10px;">맞춤 메뉴를 찾고 있어요...</h3>
+                    <p style="color: #999;">잠시만 기다려주세요 ✨</p>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="screen">
+                <h3 style="margin-bottom: 20px;">이런 메뉴 어때요?</h3>
+                
+                <div class="menu-card" onclick="showDetail(1)">
+                    <h4>김치계란볶음밥</h4>
+                    <div class="recommendation-reason">
+                        💡 <strong>추천 이유:</strong> 단백질 18g으로 근육 유지에 도움을 주며, 김치의 유산균이 장 건강을 개선합니다. 탄수화물:단백질:지방 비율이 이상적입니다.
+                    </div>
+                    <p>집에 있는 재료로 뚝딱!</p>
+                    <div class="menu-meta">
+                        <div class="meta-item">⏱️ 10분</div>
+                        <div class="meta-item">⭐ 쉬움</div>
+                        <div class="meta-item">🔥 520kcal</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span class="tag">#단백질풍부</span>
+                        <span class="tag">#유산균</span>
+                    </div>
+                </div>
+
+                <div class="menu-card" onclick="showDetail(2)">
+                    <h4>참치김치찌개</h4>
+                    <div class="recommendation-reason">
+                        💡 <strong>추천 이유:</strong> 참치의 EPA/DHA가 두뇌 건강에 좋고, 저칼로리(380kcal)로 체중 관리에 적합합니다. 국물로 포만감도 높습니다.
+                    </div>
+                    <p>얼큰하고 속 풀리는 한 끼</p>
+                    <div class="menu-meta">
+                        <div class="meta-item">⏱️ 15분</div>
+                        <div class="meta-item">⭐ 쉬움</div>
+                        <div class="meta-item">🔥 380kcal</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span class="tag">#오메가3</span>
+                        <span class="tag">#저칼로리</span>
+                    </div>
+                </div>
+
+                <div class="menu-card" onclick="showDetail(3)">
+                    <h4>계란덮밥</h4>
+                    <div class="recommendation-reason">
+                        💡 <strong>추천 이유:</strong> 완전식품인 계란으로 필수 아미노산을 모두 섭취할 수 있으며, 비타민 B군이 에너지 대사를 촉진합니다.
+                    </div>
+                    <p>계란 3개로 든든하게</p>
+                    <div class="menu-meta">
+                        <div class="meta-item">⏱️ 8분</div>
+                        <div class="meta-item">⭐ 쉬움</div>
+                        <div class="meta-item">🔥 450kcal</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span class="tag">#완전식품</span>
+                        <span class="tag">#비타민B</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
+            </div>
+
+            <!-- Detail View -->
+            <div id="detail" class="screen">
+                <h3 style="margin-bottom: 20px;">김치계란볶음밥</h3>
+                
+                <div class="detail-section">
+                    <h4>🛒 필요한 재료</h4>
+                    <ul class="ingredient-list">
+                        <li>밥 1공기</li>
+                        <li>계란 2개</li>
+                        <li>김치 1/2컵</li>
+                        <li>식용유 약간</li>
+                        <li>참기름 약간</li>
+                    </ul>
+                    <p style="color: #4CAF50; margin-top: 10px; font-weight: bold;">예상 비용: 약 2,000원</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>👨‍🍳 조리 순서</h4>
+                    <ol class="step-list">
+                        <li>프라이팬에 기름을 두르고 김치를 먼저 볶습니다 (2분)</li>
+                        <li>밥을 넣고 함께 볶아줍니다 (3분)</li>
+                        <li>한쪽에 밀어두고 계란을 스크램블로 만듭니다 (2분)</li>
+                        <li>섞어서 볶고 참기름을 살짝 넣으면 완성! (2분)</li>
+                    </ol>
+                </div>
+
+                <div class="detail-section">
+                    <h4>🎥 조리법 영상</h4>
+                    <a href="https://www.youtube.com/results?search_query=김치계란볶음밥+만들기" target="_blank" class="video-link">
+                        <span>▶️</span>
+                        <span>유튜브에서 조리법 보기</span>
+                    </a>
+                </div>
+
+                <div class="detail-section">
+                    <h4>📊 영양 정보</h4>
+                    <div class="nutrition-grid">
+                        <div class="nutrition-item">
+                            <div class="value">520</div>
+                            <div class="label">칼로리</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">18g</div>
+                            <div class="label">단백질</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">65g</div>
+                            <div class="label">탄수화물</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">15g</div>
+                            <div class="label">지방</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>💚 영양학적 장점</h4>
+                    <ul class="ingredient-list">
+                        <li>단백질 18g으로 근육 유지 및 성장에 도움</li>
+                        <li>김치의 유산균이 장 건강과 면역력 증진</li>
+                        <li>계란의 비타민 B군이 에너지 대사 촉진</li>
+                        <li>적절한 탄수화물로 두뇌 활동 활성화</li>
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h4>💡 조리 팁</h4>
+                    <ul class="ingredient-list">
+                        <li>김치는 잘게 썰어서 볶으면 더 맛있어요</li>
+                        <li>계란은 센 불에서 빠르게 볶아야 부드러워요</li>
+                        <li>참기름은 마지막에 넣어야 향이 살아요</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" onclick="backToResults()">다른 메뉴 보기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedData = {
+            gender: '',
+            height: '',
+            weight: '',
+            mealTime: '',
+            cooking: '',
+            budget: '',
+            avoid: ''
+        };
+
+        function startQuestions() {
+            switchScreen('q0');
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function enableNextBtn(btnId) {
+            const gender = document.getElementById('genderSelect')?.value || '';
+            const height = document.getElementById('heightInput')?.value || '';
+            const weight = document.getElementById('weightInput')?.value || '';
+            
+            if (btnId === 'nextBtn0') {
+                const btn = document.getElementById(btnId);
+                if (gender && height && weight) {
+                    btn.disabled = false;
+                } else {
+                    btn.disabled = true;
+                }
+            }
+        }
+
+        function selectOption(btn, type, value) {
+            // Remove selected from siblings
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            
+            // Add selected to clicked button
+            btn.classList.add('selected');
+            
+            // Store selection
+            selectedData[type] = value;
+            
+            // Enable next button
+            if (type === 'mealTime') {
+                document.getElementById('nextBtn1').disabled = false;
+            } else if (type === 'cooking') {
+                document.getElementById('nextBtn2').disabled = false;
+            } else if (type === 'budget') {
+                document.getElementById('nextBtn3').disabled = false;
+            }
+        }
+
+        function nextScreen(screenId) {
+            if (screenId === 'q1') {
+                selectedData.gender = document.getElementById('genderSelect').value;
+                selectedData.height = document.getElementById('heightInput').value;
+                selectedData.weight = document.getElementById('weightInput').value;
+                switchScreen('q1');
+            } else if (screenId === 'loading') {
+                selectedData.avoid = document.getElementById('avoidInput').value;
+                switchScreen('loading');
+                setTimeout(() => {
+                    switchScreen('results');
+                }, 2000);
+            } else {
+                switchScreen(screenId);
+            }
+        }
+
+        function showDetail(menuId) {
+            switchScreen('detail');
+        }
+
+        function backToResults() {
+            switchScreen('results');
+        }
+
+        function restart() {
+            selectedData = {
+                gender: '',
+                height: '',
+                weight: '',
+                mealTime: '',
+                cooking: '',
+                budget: '',
+                avoid: ''
+            };
+            switchScreen('welcome');
+        }
+    </script>
+</body>
+</html>
