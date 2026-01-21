@@ -485,16 +485,16 @@
                     <div class="question-num">필수 질문 4/6</div>
                     <h3>한 끼에 얼마까지 쓸 수 있으세요?</h3>
                     <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '3000원')">
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '3000')">
                             💰 3,000원 이하
                         </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '5000원')">
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '5000')">
                             💵 3,000원 - 5,000원
                         </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000원')">
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000')">
                             💳 5,000원 - 8,000원
                         </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000원이상')">
+                        <button class="option-btn" onclick="selectOption(this, 'budget', '15000')">
                             💎 8,000원 이상
                         </button>
                     </div>
@@ -511,7 +511,7 @@
                     <div class="question-num">필수 질문 5/6</div>
                     <h3>못 먹거나 싫어하는 재료가 있나요?</h3>
                     <div class="input-group">
-                        <input type="text" placeholder="예: 새우, 버섯, 파 등 (없으면 비워두세요)" id="avoidInput">
+                        <input type="text" placeholder="예: 새우, 버섯, 파, 계란 등 (없으면 비워두세요)" id="avoidInput">
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="nextScreen('loading')">추천받기</button>
@@ -529,142 +529,379 @@
             <!-- Results -->
             <div id="results" class="screen">
                 <h3 style="margin-bottom: 20px;">이런 메뉴 어때요?</h3>
-                
-                <div class="menu-card" onclick="showDetail(1)">
-                    <h4>김치계란볶음밥</h4>
-                    <div class="recommendation-reason">
-                        💡 <strong>추천 이유:</strong> 단백질 18g으로 근육 유지에 도움을 주며, 김치의 유산균이 장 건강을 개선합니다. 탄수화물:단백질:지방 비율이 이상적입니다.
-                    </div>
-                    <p>집에 있는 재료로 뚝딱!</p>
-                    <div class="menu-meta">
-                        <div class="meta-item">⏱️ 10분</div>
-                        <div class="meta-item">⭐ 쉬움</div>
-                        <div class="meta-item">🔥 520kcal</div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">#단백질풍부</span>
-                        <span class="tag">#유산균</span>
-                    </div>
-                </div>
-
-                <div class="menu-card" onclick="showDetail(2)">
-                    <h4>참치김치찌개</h4>
-                    <div class="recommendation-reason">
-                        💡 <strong>추천 이유:</strong> 참치의 EPA/DHA가 두뇌 건강에 좋고, 저칼로리(380kcal)로 체중 관리에 적합합니다. 국물로 포만감도 높습니다.
-                    </div>
-                    <p>얼큰하고 속 풀리는 한 끼</p>
-                    <div class="menu-meta">
-                        <div class="meta-item">⏱️ 15분</div>
-                        <div class="meta-item">⭐ 쉬움</div>
-                        <div class="meta-item">🔥 380kcal</div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">#오메가3</span>
-                        <span class="tag">#저칼로리</span>
-                    </div>
-                </div>
-
-                <div class="menu-card" onclick="showDetail(3)">
-                    <h4>계란덮밥</h4>
-                    <div class="recommendation-reason">
-                        💡 <strong>추천 이유:</strong> 완전식품인 계란으로 필수 아미노산을 모두 섭취할 수 있으며, 비타민 B군이 에너지 대사를 촉진합니다.
-                    </div>
-                    <p>계란 3개로 든든하게</p>
-                    <div class="menu-meta">
-                        <div class="meta-item">⏱️ 8분</div>
-                        <div class="meta-item">⭐ 쉬움</div>
-                        <div class="meta-item">🔥 450kcal</div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <span class="tag">#완전식품</span>
-                        <span class="tag">#비타민B</span>
-                    </div>
-                </div>
-
+                <div id="menuContainer"></div>
                 <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
             </div>
 
             <!-- Detail View -->
             <div id="detail" class="screen">
-                <h3 style="margin-bottom: 20px;">김치계란볶음밥</h3>
-                
-                <div class="detail-section">
-                    <h4>🛒 필요한 재료</h4>
-                    <ul class="ingredient-list">
-                        <li>밥 1공기</li>
-                        <li>계란 2개</li>
-                        <li>김치 1/2컵</li>
-                        <li>식용유 약간</li>
-                        <li>참기름 약간</li>
-                    </ul>
-                    <p style="color: #4CAF50; margin-top: 10px; font-weight: bold;">예상 비용: 약 2,000원</p>
-                </div>
-
-                <div class="detail-section">
-                    <h4>👨‍🍳 조리 순서</h4>
-                    <ol class="step-list">
-                        <li>프라이팬에 기름을 두르고 김치를 먼저 볶습니다 (2분)</li>
-                        <li>밥을 넣고 함께 볶아줍니다 (3분)</li>
-                        <li>한쪽에 밀어두고 계란을 스크램블로 만듭니다 (2분)</li>
-                        <li>섞어서 볶고 참기름을 살짝 넣으면 완성! (2분)</li>
-                    </ol>
-                </div>
-
-                <div class="detail-section">
-                    <h4>🎥 조리법 영상</h4>
-                    <a href="https://www.youtube.com/results?search_query=김치계란볶음밥+만들기" target="_blank" class="video-link">
-                        <span>▶️</span>
-                        <span>유튜브에서 조리법 보기</span>
-                    </a>
-                </div>
-
-                <div class="detail-section">
-                    <h4>📊 영양 정보</h4>
-                    <div class="nutrition-grid">
-                        <div class="nutrition-item">
-                            <div class="value">520</div>
-                            <div class="label">칼로리</div>
-                        </div>
-                        <div class="nutrition-item">
-                            <div class="value">18g</div>
-                            <div class="label">단백질</div>
-                        </div>
-                        <div class="nutrition-item">
-                            <div class="value">65g</div>
-                            <div class="label">탄수화물</div>
-                        </div>
-                        <div class="nutrition-item">
-                            <div class="value">15g</div>
-                            <div class="label">지방</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-section">
-                    <h4>💚 영양학적 장점</h4>
-                    <ul class="ingredient-list">
-                        <li>단백질 18g으로 근육 유지 및 성장에 도움</li>
-                        <li>김치의 유산균이 장 건강과 면역력 증진</li>
-                        <li>계란의 비타민 B군이 에너지 대사 촉진</li>
-                        <li>적절한 탄수화물로 두뇌 활동 활성화</li>
-                    </ul>
-                </div>
-
-                <div class="detail-section">
-                    <h4>💡 조리 팁</h4>
-                    <ul class="ingredient-list">
-                        <li>김치는 잘게 썰어서 볶으면 더 맛있어요</li>
-                        <li>계란은 센 불에서 빠르게 볶아야 부드러워요</li>
-                        <li>참기름은 마지막에 넣어야 향이 살아요</li>
-                    </ul>
-                </div>
-
+                <div id="detailContent"></div>
                 <button class="btn btn-primary" onclick="backToResults()">다른 메뉴 보기</button>
             </div>
         </div>
     </div>
 
     <script>
+        // 메뉴 데이터베이스
+        const menuDatabase = [
+            {
+                id: 1,
+                name: "김치볶음밥",
+                description: "집에 있는 재료로 뚝딱! 단백질 풍부",
+                time: 10,
+                difficulty: "쉬움",
+                calories: 480,
+                protein: 12,
+                carbs: 68,
+                fat: 14,
+                cost: 2000,
+                tags: ["간편", "김치"],
+                reason: "김치의 유산균이 장 건강을 개선하고, 적절한 탄수화물로 빠른 에너지 공급이 가능합니다.",
+                ingredients: ["밥", "김치", "식용유", "참기름", "김"],
+                steps: [
+                    "프라이팬에 기름을 두르고 김치를 먼저 볶습니다 (2분)",
+                    "밥을 넣고 함께 볶아줍니다 (5분)",
+                    "참기름을 살짝 넣고 김을 올려 완성! (2분)"
+                ],
+                tips: ["김치는 잘게 썰어서 볶으면 더 맛있어요", "참기름은 마지막에 넣어야 향이 살아요"],
+                videoSearch: "김치볶음밥+만들기",
+                benefits: ["유산균으로 장 건강 증진", "빠른 에너지 공급", "간편한 한 끼"]
+            },
+            {
+                id: 2,
+                name: "김치계란볶음밥",
+                description: "계란 추가로 더 든든하게!",
+                time: 10,
+                difficulty: "쉬움",
+                calories: 520,
+                protein: 18,
+                carbs: 65,
+                fat: 15,
+                cost: 2500,
+                tags: ["단백질풍부", "유산균"],
+                reason: "단백질 18g으로 근육 유지에 도움을 주며, 김치의 유산균이 장 건강을 개선합니다.",
+                ingredients: ["밥", "계란", "김치", "식용유", "참기름"],
+                steps: [
+                    "프라이팬에 기름을 두르고 김치를 먼저 볶습니다 (2분)",
+                    "밥을 넣고 함께 볶아줍니다 (3분)",
+                    "한쪽에 밀어두고 계란을 스크램블로 만듭니다 (2분)",
+                    "섞어서 볶고 참기름을 살짝 넣으면 완성! (2분)"
+                ],
+                tips: ["계란은 센 불에서 빠르게 볶아야 부드러워요", "김치는 잘게 썰어서 볶으면 더 맛있어요"],
+                videoSearch: "김치계란볶음밥+만들기",
+                benefits: ["단백질 18g으로 근육 유지", "김치 유산균으로 장 건강", "빠른 에너지 대사"]
+            },
+            {
+                id: 3,
+                name: "참치김치찌개",
+                description: "얼큰하고 속 풀리는 한 끼",
+                time: 15,
+                difficulty: "쉬움",
+                calories: 380,
+                protein: 25,
+                carbs: 32,
+                fat: 12,
+                cost: 4000,
+                tags: ["오메가3", "저칼로리"],
+                reason: "참치의 EPA/DHA가 두뇌 건강에 좋고, 저칼로리(380kcal)로 체중 관리에 적합합니다.",
+                ingredients: ["참치캔", "김치", "두부", "대파", "고춧가루", "된장"],
+                steps: [
+                    "냄비에 김치와 참치를 넣고 볶습니다 (3분)",
+                    "물을 넣고 끓입니다 (5분)",
+                    "두부와 대파를 넣고 더 끓입니다 (5분)",
+                    "된장과 고춧가루로 간하면 완성!"
+                ],
+                tips: ["참치 기름까지 넣으면 더 고소해요", "두부는 마지막에 넣어야 부서지지 않아요"],
+                videoSearch: "참치김치찌개+만들기",
+                benefits: ["EPA/DHA로 두뇌 건강", "저칼로리로 체중 관리", "국물로 높은 포만감"]
+            },
+            {
+                id: 4,
+                name: "계란덮밥",
+                description: "계란 3개로 든든하게",
+                time: 8,
+                difficulty: "쉬움",
+                calories: 450,
+                protein: 21,
+                carbs: 55,
+                fat: 14,
+                cost: 2000,
+                tags: ["완전식품", "비타민B"],
+                reason: "완전식품인 계란으로 필수 아미노산을 모두 섭취할 수 있으며, 비타민 B군이 에너지 대사를 촉진합니다.",
+                ingredients: ["계란", "밥", "간장", "설탕", "참기름", "김"],
+                steps: [
+                    "계란 3개를 풀어줍니다",
+                    "프라이팬에 기름을 두르고 계란을 스크램블로 만듭니다 (3분)",
+                    "간장 소스(간장+설탕+물)를 만듭니다",
+                    "밥 위에 계란을 올리고 소스를 뿌려 완성!"
+                ],
+                tips: ["계란은 반숙으로 익히면 부드러워요", "간장 소스에 다진 마늘을 넣으면 풍미 UP"],
+                videoSearch: "계란덮밥+만들기",
+                benefits: ["필수 아미노산 완벽 섭취", "비타민 B로 에너지 대사", "단백질 21g"]
+            },
+            {
+                id: 5,
+                name: "새우볶음밥",
+                description: "고급스러운 새우의 풍미",
+                time: 12,
+                difficulty: "보통",
+                calories: 520,
+                protein: 22,
+                carbs: 62,
+                fat: 16,
+                cost: 6000,
+                tags: ["고단백", "타우린"],
+                reason: "새우의 타우린이 간 기능을 개선하고, 고단백 저지방으로 다이어트에 좋습니다.",
+                ingredients: ["새우", "밥", "계란", "양파", "당근", "완두콩"],
+                steps: [
+                    "새우는 손질해서 준비합니다",
+                    "팬에 기름을 두르고 새우를 볶습니다 (3분)",
+                    "야채를 넣고 함께 볶습니다 (2분)",
+                    "밥과 계란을 넣고 볶아 완성 (5분)"
+                ],
+                tips: ["새우는 너무 익히면 질겨져요", "야채는 작게 썰어야 볶기 쉬워요"],
+                videoSearch: "새우볶음밥+만들기",
+                benefits: ["타우린으로 간 기능 개선", "고단백 저지방", "다이어트 적합"]
+            },
+            {
+                id: 6,
+                name: "된장찌개",
+                description: "구수한 된장의 깊은 맛",
+                time: 20,
+                difficulty: "보통",
+                calories: 280,
+                protein: 15,
+                carbs: 28,
+                fat: 8,
+                cost: 3500,
+                tags: ["발효식품", "저칼로리"],
+                reason: "된장의 이소플라본이 항암 효과가 있고, 저칼로리로 건강한 식사가 가능합니다.",
+                ingredients: ["된장", "두부", "애호박", "감자", "대파", "멸치육수"],
+                steps: [
+                    "멸치로 육수를 냅니다 (5분)",
+                    "감자를 먼저 넣고 끓입니다 (5분)",
+                    "된장을 풀고 애호박, 두부를 넣습니다 (5분)",
+                    "대파를 넣고 한소끔 끓이면 완성!"
+                ],
+                tips: ["된장은 체에 거르면 더 부드러워요", "멸치 육수가 없으면 물로도 OK"],
+                videoSearch: "된장찌개+만들기",
+                benefits: ["이소플라본의 항암 효과", "발효 식품으로 장 건강", "저칼로리 건강식"]
+            },
+            {
+                id: 7,
+                name: "라면",
+                description: "빠르고 간편한 한 끼",
+                time: 5,
+                difficulty: "매우쉬움",
+                calories: 500,
+                protein: 10,
+                carbs: 75,
+                fat: 16,
+                cost: 1000,
+                tags: ["초간단", "스피드"],
+                reason: "빠른 조리로 시간이 없을 때 최적이며, 탄수화물로 즉각적인 에너지 공급이 가능합니다.",
+                ingredients: ["라면", "물", "스프", "계란", "파"],
+                steps: [
+                    "물 550ml를 끓입니다 (2분)",
+                    "면과 스프를 넣습니다 (3분)",
+                    "계란과 파를 넣으면 완성!"
+                ],
+                tips: ["물은 적게 넣을수록 진해요", "계란은 처음에 넣으면 완숙, 나중에 넣으면 반숙"],
+                videoSearch: "맛있는+라면+끓이는+법",
+                benefits: ["5분 초스피드 조리", "즉각적인 에너지 공급", "언제나 실패 없음"]
+            },
+            {
+                id: 8,
+                name: "토스트",
+                description: "전자레인지로 간편하게",
+                time: 3,
+                difficulty: "매우쉬움",
+                calories: 320,
+                protein: 12,
+                carbs: 42,
+                fat: 10,
+                cost: 2000,
+                tags: ["전자레인지", "초간단"],
+                reason: "전자레인지만으로 조리 가능하며, 아침 식사로 적합한 가벼운 한 끼입니다.",
+                ingredients: ["식빵", "햄", "치즈", "계란"],
+                steps: [
+                    "식빵 위에 햄과 치즈를 올립니다",
+                    "전자레인지에 1분 30초 돌립니다",
+                    "계란 프라이를 올리면 완성!"
+                ],
+                tips: ["치즈는 전자레인지용으로 사용하세요", "너무 오래 돌리면 빵이 딱딱해져요"],
+                videoSearch: "전자레인지+토스트+만들기",
+                benefits: ["전자레인지만으로 완성", "3분 초스피드", "아침 식사 최적"]
+            },
+            {
+                id: 9,
+                name: "비빔밥",
+                description: "영양 균형 완벽한 한 끼",
+                time: 15,
+                difficulty: "보통",
+                calories: 550,
+                protein: 18,
+                carbs: 78,
+                fat: 14,
+                cost: 5000,
+                tags: ["영양만점", "채소풍부"],
+                reason: "5가지 이상의 채소로 비타민과 미네랄을 골고루 섭취할 수 있는 영양 균형식입니다.",
+                ingredients: ["밥", "시금치", "콩나물", "당근", "고사리", "계란", "고추장"],
+                steps: [
+                    "각 나물을 데치거나 볶습니다 (10분)",
+                    "밥 위에 나물을 예쁘게 배치합니다",
+                    "계란 프라이를 올립니다",
+                    "고추장과 참기름을 넣어 비벼 먹습니다!"
+                ],
+                tips: ["나물은 한 번에 많이 만들어 냉장 보관하세요", "참기름을 넉넉히 넣으면 더 맛있어요"],
+                videoSearch: "비빔밥+만들기",
+                benefits: ["5가지 채소로 영양 균형", "비타민과 미네랄 풍부", "완벽한 한식"]
+            },
+            {
+                id: 10,
+                name: "순두부찌개",
+                description: "부드럽고 얼큰한 국물 요리",
+                time: 15,
+                difficulty: "쉬움",
+                calories: 320,
+                protein: 20,
+                carbs: 22,
+                fat: 12,
+                cost: 4000,
+                tags: ["고단백", "저칼로리"],
+                reason: "순두부의 양질의 단백질과 저칼로리로 다이어트에 최적이며, 소화도 잘 됩니다.",
+                ingredients: ["순두부", "조개", "계란", "대파", "고춧가루", "마늘"],
+                steps: [
+                    "냄비에 참기름과 마늘을 볶습니다 (1분)",
+                    "고춧가루와 물을 넣고 끓입니다 (5분)",
+                    "순두부와 조개를 넣습니다 (5분)",
+                    "계란을 풀어 넣고 대파를 올려 완성!"
+                ],
+                tips: ["순두부는 너무 저으면 부서져요", "조개 대신 해산물을 넣어도 좋아요"],
+                videoSearch: "순두부찌개+만들기",
+                benefits: ["양질의 단백질 20g", "저칼로리로 다이어트 적합", "소화 잘되는 식사"]
+            },
+            {
+                id: 11,
+                name: "떡볶이",
+                description: "달콤 매콤한 국민 간식",
+                time: 15,
+                difficulty: "쉬움",
+                calories: 420,
+                protein: 8,
+                carbs: 82,
+                fat: 6,
+                cost: 3000,
+                tags: ["간식", "매콤"],
+                reason: "탄수화물로 빠른 에너지 보충이 가능하며, 야식이나 간식으로 적합합니다.",
+                ingredients: ["떡", "어묵", "대파", "고추장", "고춧가루", "설탕"],
+                steps: [
+                    "냄비에 물과 양념을 넣고 끓입니다 (3분)",
+                    "떡과 어묵을 넣습니다 (8분)",
+                    "대파를 넣고 졸이면 완성!"
+                ],
+                tips: ["물은 적게 넣고 졸여야 맛있어요", "치즈를 올리면 더 고급스러워요"],
+                videoSearch: "떡볶이+만들기",
+                benefits: ["빠른 에너지 보충", "야식으로 최적", "쫄깃한 식감"]
+            },
+            {
+                id: 12,
+                name: "닭가슴살샐러드",
+                description: "다이어트 필수 메뉴",
+                time: 10,
+                difficulty: "쉬움",
+                calories: 280,
+                protein: 35,
+                carbs: 18,
+                fat: 6,
+                cost: 5500,
+                tags: ["고단백", "다이어트"],
+                reason: "닭가슴살의 고단백 저지방으로 근육 생성에 최적이며, 각종 채소로 비타민을 보충합니다.",
+                ingredients: ["닭가슴살", "양상추", "토마토", "오이", "드레싱"],
+                steps: [
+                    "닭가슴살을 삶거나 구워줍니다 (7분)",
+                    "채소를 씻어 한입 크기로 자릅니다",
+                    "접시에 채소를 담고 닭가슴살을 올립니다",
+                    "드레싱을 뿌려 완성!"
+                ],
+                tips: ["닭가슴살은 전자레인지에 익혀도 OK", "드레싱은 저칼로리 제품을 사용하세요"],
+                videoSearch: "닭가슴살샐러드+만들기",
+                benefits: ["고단백 35g으로 근육 생성", "저지방 저칼로리", "각종 비타민 풍부"]
+            },
+            {
+                id: 13,
+                name: "소고기덮밥",
+                description: "고급스러운 소고기의 풍미",
+                time: 15,
+                difficulty: "보통",
+                calories: 680,
+                protein: 28,
+                carbs: 75,
+                fat: 24,
+                cost: 8000,
+                tags: ["고단백", "철분"],
+                reason: "소고기의 철분이 빈혈 예방에 좋고, 양질의 단백질로 근육 회복에 도움을 줍니다.",
+                ingredients: ["소고기", "양파", "밥", "간장", "설탕", "마늘", "참기름"],
+                steps: [
+                    "소고기를 간장 양념에 재워둡니다 (5분)",
+                    "팬에 양파를 먼저 볶습니다 (2분)",
+                    "소고기를 넣고 볶습니다 (5분)",
+                    "밥 위에 올려 완성!"
+                ],
+                tips: ["소고기는 센 불에서 빠르게 볶아야 부드러워요", "양파는 많이 넣을수록 달콤해요"],
+                videoSearch: "소고기덮밥+만들기",
+                benefits: ["철분으로 빈혈 예방", "양질의 단백질 28g", "근육 회복 촉진"]
+            },
+            {
+                id: 14,
+                name: "파스타",
+                description: "이탈리안 레스토랑 스타일",
+                time: 20,
+                difficulty: "보통",
+                calories: 620,
+                protein: 18,
+                carbs: 88,
+                fat: 18,
+                cost: 5000,
+                tags: ["양식", "토마토"],
+                reason: "토마토의 리코펜이 항산화 작용을 하며, 탄수화물로 포만감이 오래 지속됩니다.",
+                ingredients: ["파스타면", "토마토소스", "마늘", "올리브오일", "바질", "파르메산치즈"],
+                steps: [
+                    "파스타면을 삶습니다 (8분)",
+                    "팬에 올리브오일과 마늘을 볶습니다 (2분)",
+                    "토마토소스를 넣고 졸입니다 (5분)",
+                    "삶은 면을 넣고 버무려 완성!"
+                ],
+                tips: ["면수를 조금 남겨두면 소스가 잘 버무려져요", "파르메산치즈는 마지막에 뿌리세요"],
+                videoSearch: "토마토파스타+만들기",
+                benefits: ["리코펜의 항산화 작용", "오래 지속되는 포만감", "레스토랑 스타일"]
+            },
+            {
+                id: 15,
+                name: "제육볶음",
+                description: "매콤한 돼지고기 볶음",
+                time: 25,
+                difficulty: "보통",
+                calories: 580,
+                protein: 32,
+                carbs: 45,
+                fat: 26,
+                cost: 7000,
+                tags: ["고단백", "매콤"],
+                reason: "돼지고기의 비타민 B1이 피로 회복에 좋고, 고단백으로 에너지를 충전할 수 있습니다.",
+                ingredients: ["돼지고기", "양파", "대파", "고추장", "고춧가루", "마늘", "생강"],
+                steps: [
+                    "돼지고기를 양념에 재워둡니다 (10분)",
+                    "팬에 기름을 두르고 양파를 볶습니다 (2분)",
+                    "재운 고기를 넣고 볶습니다 (10분)",
+                    "대파를 넣고 마무리!"
+                ],
+                tips: ["고기는 미리 재워둘수록 맛있어요", "양파와 대파를 많이 넣으면 덜 매워요"],
+                videoSearch: "제육볶음+만들기",
+                benefits: ["비타민 B1로 피로 회복", "고단백 32g", "매콤한 맛으로 식욕 증진"]
+            }
+        ];
+
         let selectedData = {
             gender: '',
             height: '',
@@ -674,6 +911,9 @@
             budget: '',
             avoid: ''
         };
+
+        let currentMenu = null;
+        let filteredMenus = [];
 
         function startQuestions() {
             switchScreen('q0');
@@ -700,18 +940,13 @@
         }
 
         function selectOption(btn, type, value) {
-            // Remove selected from siblings
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
                 b.classList.remove('selected');
             });
             
-            // Add selected to clicked button
             btn.classList.add('selected');
-            
-            // Store selection
             selectedData[type] = value;
             
-            // Enable next button
             if (type === 'mealTime') {
                 document.getElementById('nextBtn1').disabled = false;
             } else if (type === 'cooking') {
@@ -728,17 +963,169 @@
                 selectedData.weight = document.getElementById('weightInput').value;
                 switchScreen('q1');
             } else if (screenId === 'loading') {
-                selectedData.avoid = document.getElementById('avoidInput').value;
+                selectedData.avoid = document.getElementById('avoidInput').value.toLowerCase();
                 switchScreen('loading');
                 setTimeout(() => {
-                    switchScreen('results');
+                    filterAndDisplayMenus();
                 }, 2000);
             } else {
                 switchScreen(screenId);
             }
         }
 
+        function filterAndDisplayMenus() {
+            const cookingTimeMap = {
+                '전자레인지': 5,
+                '10분': 10,
+                '20분': 20,
+                '30분': 30
+            };
+
+            const maxTime = cookingTimeMap[selectedData.cooking];
+            const maxBudget = parseInt(selectedData.budget);
+            const avoidList = selectedData.avoid.split(',').map(item => item.trim()).filter(item => item);
+
+            // 필터링
+            filteredMenus = menuDatabase.filter(menu => {
+                // 조리 시간 체크
+                if (menu.time > maxTime) return false;
+                
+                // 예산 체크
+                if (menu.cost > maxBudget) return false;
+                
+                // 기피 식재료 체크
+                for (let avoid of avoidList) {
+                    for (let ingredient of menu.ingredients) {
+                        if (ingredient.includes(avoid) || avoid.includes(ingredient)) {
+                            return false;
+                        }
+                    }
+                    // 메뉴 이름에도 기피 식재료가 포함되어 있는지 체크
+                    if (menu.name.includes(avoid)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+
+            // 랜덤으로 3개 선택
+            const selectedMenus = [];
+            const menusCopy = [...filteredMenus];
+            
+            for (let i = 0; i < Math.min(3, menusCopy.length); i++) {
+                const randomIndex = Math.floor(Math.random() * menusCopy.length);
+                selectedMenus.push(menusCopy[randomIndex]);
+                menusCopy.splice(randomIndex, 1);
+            }
+
+            // 메뉴 표시
+            displayMenus(selectedMenus);
+            switchScreen('results');
+        }
+
+        function displayMenus(menus) {
+            const container = document.getElementById('menuContainer');
+            
+            if (menus.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #666;">
+                        <h3 style="margin-bottom: 15px;">😢 조건에 맞는 메뉴가 없어요</h3>
+                        <p>조건을 조금 완화해보시겠어요?</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = menus.map(menu => `
+                <div class="menu-card" onclick="showDetail(${menu.id})">
+                    <h4>${menu.name}</h4>
+                    <div class="recommendation-reason">
+                        💡 <strong>추천 이유:</strong> ${menu.reason}
+                    </div>
+                    <p>${menu.description}</p>
+                    <div class="menu-meta">
+                        <div class="meta-item">⏱️ ${menu.time}분</div>
+                        <div class="meta-item">⭐ ${menu.difficulty}</div>
+                        <div class="meta-item">🔥 ${menu.calories}kcal</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
         function showDetail(menuId) {
+            const menu = menuDatabase.find(m => m.id === menuId);
+            if (!menu) return;
+
+            currentMenu = menu;
+            
+            const detailHTML = `
+                <h3 style="margin-bottom: 20px;">${menu.name}</h3>
+                
+                <div class="detail-section">
+                    <h4>🛒 필요한 재료</h4>
+                    <ul class="ingredient-list">
+                        ${menu.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                    <p style="color: #4CAF50; margin-top: 10px; font-weight: bold;">예상 비용: 약 ${menu.cost.toLocaleString()}원</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4>👨‍🍳 조리 순서</h4>
+                    <ol class="step-list">
+                        ${menu.steps.map(step => `<li>${step}</li>`).join('')}
+                    </ol>
+                </div>
+
+                <div class="detail-section">
+                    <h4>🎥 조리법 영상</h4>
+                    <a href="https://www.youtube.com/results?search_query=${menu.videoSearch}" target="_blank" class="video-link">
+                        <span>▶️</span>
+                        <span>유튜브에서 조리법 보기</span>
+                    </a>
+                </div>
+
+                <div class="detail-section">
+                    <h4>📊 영양 정보</h4>
+                    <div class="nutrition-grid">
+                        <div class="nutrition-item">
+                            <div class="value">${menu.calories}</div>
+                            <div class="label">칼로리</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">${menu.protein}g</div>
+                            <div class="label">단백질</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">${menu.carbs}g</div>
+                            <div class="label">탄수화물</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="value">${menu.fat}g</div>
+                            <div class="label">지방</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>💚 영양학적 장점</h4>
+                    <ul class="ingredient-list">
+                        ${menu.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h4>💡 조리 팁</h4>
+                    <ul class="ingredient-list">
+                        ${menu.tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('detailContent').innerHTML = detailHTML;
             switchScreen('detail');
         }
 
@@ -756,6 +1143,10 @@
                 budget: '',
                 avoid: ''
             };
+            document.getElementById('genderSelect').value = '';
+            document.getElementById('heightInput').value = '';
+            document.getElementById('weightInput').value = '';
+            document.getElementById('avoidInput').value = '';
             switchScreen('welcome');
         }
     </script>
