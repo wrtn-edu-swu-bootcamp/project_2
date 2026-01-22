@@ -905,7 +905,7 @@
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                        <button class="btn btn-secondary" onclick="quickStart()">빠르게 추천받기 (5문항)</button>
+                        <button class="btn btn-secondary" onclick="fortuneRecommend()">🔮 오늘의 운세 음식</button>
                     </div>
                     
                     <div id="quickRecommendBtn" style="display: none; margin-top: 10px;">
@@ -913,107 +913,20 @@
                     </div>
                 </div>
 
-                <!-- Quick Mode Screen -->
-                <div id="quickMode" class="screen">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 20%"></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-num">빠른 추천 1/5</div>
-                        <h3>언제 드실 건가요?</h3>
-                        <div class="options">
-                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '아침')">
-                                🌅 아침
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '점심')">
-                                ☀️ 점심
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '저녁')">
-                                🌙 저녁
-                            </button>
+                <!-- Fortune Screen -->
+                <div id="fortuneScreen" class="screen">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 80px; margin-bottom: 20px;" id="fortuneEmoji">🔮</div>
+                        <h2 style="font-size: 28px; font-weight: 800; color: #1a1a1a; margin-bottom: 16px;" id="fortuneTitle">오늘의 운세</h2>
+                        <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 25px; border-radius: 20px; margin-bottom: 25px;">
+                            <p id="fortuneMessage" style="font-size: 16px; line-height: 1.8; color: #2E7D32; font-weight: 500;"></p>
                         </div>
-                    </div>
-                    <button class="btn btn-primary" id="quickBtn1" disabled onclick="nextQuick('quick2')">다음</button>
-                </div>
-
-                <div id="quick2" class="screen">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 40%"></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-num">빠른 추천 2/5</div>
-                        <h3>목표가 뭔가요?</h3>
-                        <div class="options">
-                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '다이어트')">
-                                📉 다이어트
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '건강유지')">
-                                🌱 건강유지
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '근육증가')">
-                                💪 근육증가
-                            </button>
+                        <div style="margin-bottom: 25px;">
+                            <p style="font-size: 18px; font-weight: 700; color: #4CAF50; margin-bottom: 10px;" id="fortuneColor"></p>
+                            <p style="font-size: 14px; color: #666;" id="fortuneDescription"></p>
                         </div>
+                        <button class="btn btn-primary" onclick="showFortuneMenus()">내 운세 음식 보기</button>
                     </div>
-                    <button class="btn btn-primary" id="quickBtn2" disabled onclick="nextQuick('quick3')">다음</button>
-                </div>
-
-                <div id="quick3" class="screen">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 60%"></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-num">빠른 추천 3/5</div>
-                        <h3>얼마나 시간이 있나요?</h3>
-                        <div class="options">
-                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '전자레인지')">
-                                📱 전자레인지만 (5분)
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '10분')">
-                                ⚡ 10분 이내
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '20분')">
-                                👨‍🍳 20분 이내
-                            </button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="quickBtn3" disabled onclick="nextQuick('quick4')">다음</button>
-                </div>
-
-                <div id="quick4" class="screen">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 80%"></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-num">빠른 추천 4/5</div>
-                        <h3>예산은 얼마나?</h3>
-                        <div class="options">
-                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '3000')">
-                                💰 3,000원 이하
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '5000')">
-                                💵 5,000원 이하
-                            </button>
-                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '15000')">
-                                💎 금액 상관없음
-                            </button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="quickBtn4" disabled onclick="nextQuick('quick5')">다음</button>
-                </div>
-
-                <div id="quick5" class="screen">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 100%"></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-num">빠른 추천 5/5</div>
-                        <h3>못 먹는 재료는?</h3>
-                        <div class="input-group" style="margin-top: 20px;">
-                            <input type="text" placeholder="예: 계란, 새우 (없으면 비워두세요)" id="quickAvoidInput">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="quickRecommend()">바로 추천받기</button>
                 </div>
 
                 <!-- Home Tab -->
@@ -2142,63 +2055,206 @@
             switchScreen('q0');
         }
 
-        function quickStart() {
-            document.getElementById('tabNav').style.display = 'none';
-            switchScreen('quickMode');
-        }
-
-        function selectQuickOption(btn, type, value) {
-            btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
-                b.classList.remove('selected');
-            });
-            
-            btn.classList.add('selected');
-            selectedData[type] = value;
-            
-            if (type === 'mealTime') {
-                document.getElementById('quickBtn1').disabled = false;
-            } else if (type === 'goal') {
-                document.getElementById('quickBtn2').disabled = false;
-            } else if (type === 'cooking') {
-                document.getElementById('quickBtn3').disabled = false;
-            } else if (type === 'budget') {
-                document.getElementById('quickBtn4').disabled = false;
+        // 운세 시스템
+        const fortunes = [
+            {
+                color: '빨강',
+                emoji: '🔴',
+                energy: '활력과 열정',
+                message: '오늘은 에너지가 넘치는 날입니다! 활력을 더해줄 빨간색 음식으로 기운을 충전하세요.',
+                keywords: ['토마토', '파프리카', '고추', '새우', '연어', '고등어', '김치'],
+                gradient: 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)',
+                textColor: '#c62828'
+            },
+            {
+                color: '초록',
+                emoji: '🟢',
+                energy: '건강과 평온',
+                message: '오늘은 몸과 마음의 균형을 찾는 날입니다. 신선한 녹색 채소로 건강한 하루를 시작하세요.',
+                keywords: ['시금치', '브로콜리', '샐러드', '채소', '아보카도', '케일', '오이', '애호박', '부추'],
+                gradient: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+                textColor: '#2e7d32'
+            },
+            {
+                color: '노랑',
+                emoji: '🟡',
+                energy: '행복과 긍정',
+                message: '오늘은 긍정의 에너지가 가득한 날입니다! 따뜻한 노란색 음식으로 행복을 느껴보세요.',
+                keywords: ['고구마', '단호박', '계란', '호박', '감자', '바나나', '귀리', '치즈'],
+                gradient: 'linear-gradient(135deg, #fffde7 0%, #fff9c4 100%)',
+                textColor: '#f57f17'
+            },
+            {
+                color: '보라',
+                emoji: '🟣',
+                energy: '지혜와 신비',
+                message: '오늘은 내면의 지혜를 찾는 날입니다. 보랏빛 음식으로 특별한 영양을 보충하세요.',
+                keywords: ['가지', '베리', '블루베리', '양배추', '자색', '적양배추'],
+                gradient: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)',
+                textColor: '#7b1fa2'
+            },
+            {
+                color: '흰색',
+                emoji: '⚪',
+                energy: '순수와 정화',
+                message: '오늘은 몸을 정화하고 순수함을 되찾는 날입니다. 담백한 흰색 음식으로 깨끗하게 시작하세요.',
+                keywords: ['두부', '연두부', '요거트', '우유', '무', '양파', '콩나물', '숙주', '쌀', '밥'],
+                gradient: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+                textColor: '#424242'
+            },
+            {
+                color: '검정',
+                emoji: '⚫',
+                energy: '보양과 기력',
+                message: '오늘은 깊은 보양이 필요한 날입니다. 진한 색의 음식으로 기력을 보충하세요.',
+                keywords: ['버섯', '표고', '검은콩', '미역', '김', '해조류', '흑미'],
+                gradient: 'linear-gradient(135deg, #eeeeee 0%, #e0e0e0 100%)',
+                textColor: '#212121'
             }
-        }
+        ];
 
-        function nextQuick(screenId) {
-            switchScreen(screenId);
-        }
-
-        function quickRecommend() {
-            selectedData.avoid = document.getElementById('quickAvoidInput').value.toLowerCase();
+        function fortuneRecommend() {
+            document.getElementById('tabNav').style.display = 'none';
             
-            // 빠른 추천용 기본값 설정 (사용자가 선택한 값 활용)
+            // 오늘 날짜로 운세 결정
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+            const fortuneIndex = dayOfYear % fortunes.length;
+            const todayFortune = fortunes[fortuneIndex];
+            
+            // 운세 화면 업데이트
+            document.getElementById('fortuneEmoji').textContent = todayFortune.emoji;
+            document.getElementById('fortuneTitle').textContent = `오늘의 운세: ${todayFortune.color}색`;
+            document.getElementById('fortuneMessage').textContent = todayFortune.message;
+            document.getElementById('fortuneColor').textContent = `✨ ${todayFortune.energy}의 기운`;
+            document.getElementById('fortuneDescription').textContent = `${todayFortune.color}색 음식으로 오늘의 운을 높여보세요!`;
+            
+            // 운세 정보 저장
+            selectedData.fortune = todayFortune;
+            selectedData.fortuneColor = todayFortune.color;
+            
+            switchScreen('fortuneScreen');
+        }
+
+        function showFortuneMenus() {
+            const fortune = selectedData.fortune;
+            
+            // 기본값 설정
             selectedData.gender = 'male';
             selectedData.height = 170;
             selectedData.weight = 65;
             selectedData.bmi = calculateBMI(170, 65);
-            // selectedData.mealTime과 selectedData.goal은 이미 선택됨
+            selectedData.mealTime = '점심';
             selectedData.activity = '보통';
+            selectedData.goal = '건강유지';
             selectedData.allergy = '';
-            selectedData.recommendCalories = getRecommendCalories(
-                'male', 
-                65, 
-                170, 
-                selectedData.mealTime, 
-                '보통', 
-                selectedData.goal
-            );
+            selectedData.avoid = '';
+            selectedData.cooking = '30분';
+            selectedData.budget = '15000';
+            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
             
             saveUserData();
             
-            // 빠른 재추천 버튼 표시
-            document.getElementById('quickRecommendBtn').style.display = 'block';
-            
             switchScreen('loading');
             setTimeout(() => {
-                filterAndDisplayMenus(true); // 새로운 검색
+                filterFortuneMenus(fortune);
             }, 2000);
+        }
+
+        function filterFortuneMenus(fortune) {
+            // 건강한 메뉴만 (healthScore 80 이상)
+            let healthyMenus = menuDatabase.filter(menu => menu.healthScore >= 80);
+            
+            // 운세 색깔과 관련된 메뉴 필터링
+            let fortuneMenus = healthyMenus.filter(menu => {
+                const menuText = (menu.name + menu.description + menu.ingredients.join(' ')).toLowerCase();
+                
+                // 운세 키워드와 매칭
+                for (let keyword of fortune.keywords) {
+                    if (menuText.includes(keyword.toLowerCase())) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            
+            // 운세 메뉴가 없으면 건강한 메뉴 전체 사용
+            if (fortuneMenus.length < 5) {
+                fortuneMenus = healthyMenus;
+            }
+            
+            // 건강 점수로 정렬
+            fortuneMenus.sort((a, b) => b.healthScore - a.healthScore);
+            
+            // 상위 20개 중 랜덤 3개
+            const topMenus = fortuneMenus.slice(0, Math.min(20, fortuneMenus.length));
+            const shuffled = [...topMenus];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            const selectedMenus = shuffled.slice(0, 3);
+            
+            // 운세 메시지와 함께 표시
+            displayFortuneMenus(selectedMenus, fortune);
+            switchScreen('results');
+            
+            // 탭 네비게이션 표시
+            document.getElementById('tabNav').style.display = 'flex';
+        }
+
+        function displayFortuneMenus(menus, fortune) {
+            const analysisDiv = document.getElementById('userAnalysis');
+            
+            analysisDiv.innerHTML = `
+                <div style="background: ${fortune.gradient}; padding: 25px; border-radius: 20px; margin-bottom: 25px; border-left: 4px solid ${fortune.textColor};">
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">${fortune.emoji}</div>
+                    <strong style="color: ${fortune.textColor}; font-size: 20px; display: block; text-align: center; margin-bottom: 12px;">
+                        오늘의 운세: ${fortune.color}색 (${fortune.energy})
+                    </strong>
+                    <p style="color: ${fortune.textColor}; font-size: 15px; line-height: 1.8; text-align: center;">
+                        ${fortune.message}
+                    </p>
+                </div>
+            `;
+            
+            const container = document.getElementById('menuContainer');
+            
+            container.innerHTML = menus.map(menu => {
+                let scoreClass = 'health-score';
+                let scoreEmoji = '🌟';
+                if (menu.healthScore >= 85) {
+                    scoreClass = 'health-score';
+                    scoreEmoji = '🌟';
+                } else if (menu.healthScore >= 75) {
+                    scoreClass = 'health-score medium';
+                    scoreEmoji = '⭐';
+                }
+
+                return `
+                <div class="menu-card">
+                    <div onclick="showMenuDetail(${menu.id})">
+                        <h4>
+                            ${menu.name}
+                            <span class="${scoreClass}">${scoreEmoji} ${menu.healthScore}점</span>
+                        </h4>
+                        <div class="recommendation-reason">
+                            ${fortune.emoji} <strong>운세 추천:</strong> ${fortune.color}색의 기운이 담긴 건강한 메뉴입니다!
+                        </div>
+                        <p style="color: #4CAF50; font-weight: bold; font-size: 14px; margin-bottom: 10px;">✨ 오늘의 ${fortune.energy} 음식</p>
+                        <div class="menu-meta">
+                            <div class="meta-item">⏱️ ${menu.time}분</div>
+                            <div class="meta-item">⭐ ${menu.difficulty}</div>
+                            <div class="meta-item">🔥 ${menu.calories}kcal</div>
+                            <div class="meta-item">💪 ${menu.protein}g</div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
         }
 
         function quickRecommendAgain() {
