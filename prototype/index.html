@@ -1466,8 +1466,23 @@
             { name: '오렌지주스', category: '음료', calories: 110, sugar: 22, sodium: 10, fat: 0, protein: 2, warning: '당류 주의', healthScore: 65 },
             { name: '이온음료', category: '음료', calories: 90, sugar: 23, sodium: 110, fat: 0, protein: 0, warning: '당류·나트륨 주의', healthScore: 50 },
             { name: '에너지드링크', category: '음료', calories: 110, sugar: 27, sodium: 200, fat: 0, protein: 1, warning: '카페인·당류 과다', healthScore: 35 },
+            { name: '우유', category: '음료', calories: 130, sugar: 12, sodium: 100, fat: 5, protein: 8, warning: '없음', healthScore: 80 },
             
-            // 편의점 간식
+            // 과일
+            { name: '딸기', category: '과일', calories: 32, sugar: 7, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 95 },
+            { name: '바나나', category: '과일', calories: 90, sugar: 12, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 90 },
+            { name: '사과', category: '과일', calories: 80, sugar: 15, sodium: 1, fat: 0, protein: 0, warning: '없음', healthScore: 95 },
+            { name: '포도', category: '과일', calories: 67, sugar: 16, sodium: 2, fat: 0, protein: 1, warning: '없음', healthScore: 90 },
+            { name: '수박', category: '과일', calories: 30, sugar: 6, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 92 },
+            { name: '귤', category: '과일', calories: 47, sugar: 9, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 93 },
+            { name: '배', category: '과일', calories: 57, sugar: 10, sodium: 1, fat: 0, protein: 0, warning: '없음', healthScore: 91 },
+            { name: '키위', category: '과일', calories: 61, sugar: 9, sodium: 3, fat: 0, protein: 1, warning: '없음', healthScore: 94 },
+            { name: '복숭아', category: '과일', calories: 39, sugar: 8, sodium: 0, fat: 0, protein: 1, warning: '없음', healthScore: 93 },
+            { name: '망고', category: '과일', calories: 60, sugar: 14, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 88 },
+            { name: '블루베리', category: '과일', calories: 57, sugar: 10, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 96 },
+            { name: '체리', category: '과일', calories: 50, sugar: 13, sodium: 0, fat: 0, protein: 1, warning: '없음', healthScore: 90 },
+            
+            // 편의점 음식
             { name: '삼각김밥', category: '편의점', calories: 280, sugar: 3, sodium: 650, fat: 8, protein: 8, warning: '나트륨 과다', healthScore: 55 },
             { name: '컵라면', category: '편의점', calories: 380, sugar: 5, sodium: 1800, fat: 15, protein: 10, warning: '나트륨 극과다', healthScore: 30 },
             { name: '도시락', category: '편의점', calories: 700, sugar: 8, sodium: 1500, fat: 25, protein: 25, warning: '나트륨 과다', healthScore: 50 },
@@ -1481,19 +1496,49 @@
             { name: '떡볶이', category: '패스트푸드', calories: 450, sugar: 18, sodium: 1200, fat: 8, protein: 12, warning: '당류·나트륨 과다', healthScore: 45 },
             { name: '순대', category: '패스트푸드', calories: 350, sugar: 3, sodium: 900, fat: 18, protein: 15, warning: '나트륨·지방 주의', healthScore: 50 },
             
+            // 한식
+            { name: '김치찌개', category: '한식', calories: 180, sugar: 5, sodium: 1200, fat: 8, protein: 15, warning: '나트륨 과다', healthScore: 65 },
+            { name: '된장찌개', category: '한식', calories: 150, sugar: 3, sodium: 1100, fat: 6, protein: 12, warning: '나트륨 과다', healthScore: 70 },
+            { name: '비빔밥', category: '한식', calories: 550, sugar: 8, sodium: 900, fat: 12, protein: 20, warning: '보통', healthScore: 75 },
+            { name: '불고기', category: '한식', calories: 350, sugar: 10, sodium: 800, fat: 15, protein: 30, warning: '당류·나트륨 주의', healthScore: 70 },
+            { name: '제육볶음', category: '한식', calories: 400, sugar: 12, sodium: 1000, fat: 20, protein: 28, warning: '나트륨·지방 주의', healthScore: 65 },
+            { name: '순두부찌개', category: '한식', calories: 200, sugar: 4, sodium: 1000, fat: 10, protein: 18, warning: '나트륨 과다', healthScore: 72 },
+            { name: '김밥', category: '한식', calories: 320, sugar: 4, sodium: 600, fat: 8, protein: 10, warning: '나트륨 주의', healthScore: 68 },
+            { name: '불백', category: '한식', calories: 480, sugar: 15, sodium: 950, fat: 18, protein: 35, warning: '당류·나트륨 주의', healthScore: 68 },
+            
+            // 중식
+            { name: '짜장면', category: '중식', calories: 700, sugar: 12, sodium: 1500, fat: 20, protein: 20, warning: '고칼로리·나트륨 과다', healthScore: 45 },
+            { name: '짬뽕', category: '중식', calories: 650, sugar: 8, sodium: 2000, fat: 18, protein: 25, warning: '나트륨 극과다', healthScore: 40 },
+            { name: '탕수육', category: '중식', calories: 800, sugar: 35, sodium: 900, fat: 35, protein: 30, warning: '고칼로리·당류·지방 과다', healthScore: 30 },
+            { name: '볶음밥', category: '중식', calories: 600, sugar: 5, sodium: 1200, fat: 22, protein: 18, warning: '고칼로리·나트륨 과다', healthScore: 50 },
+            
+            // 일식
+            { name: '초밥', category: '일식', calories: 350, sugar: 8, sodium: 800, fat: 5, protein: 20, warning: '나트륨 주의', healthScore: 70 },
+            { name: '라멘', category: '일식', calories: 500, sugar: 6, sodium: 1800, fat: 18, protein: 22, warning: '나트륨 극과다', healthScore: 45 },
+            { name: '돈까스', category: '일식', calories: 650, sugar: 8, sodium: 1000, fat: 30, protein: 28, warning: '고칼로리·고지방', healthScore: 40 },
+            { name: '우동', category: '일식', calories: 350, sugar: 5, sodium: 1500, fat: 5, protein: 12, warning: '나트륨 과다', healthScore: 55 },
+            
             // 간식
             { name: '과자', category: '간식', calories: 500, sugar: 25, sodium: 400, fat: 25, protein: 5, warning: '당류·지방 과다', healthScore: 25 },
             { name: '초콜릿', category: '간식', calories: 550, sugar: 50, sodium: 50, fat: 30, protein: 5, warning: '당류·지방 극과다', healthScore: 20 },
             { name: '아이스크림', category: '간식', calories: 250, sugar: 28, sodium: 80, fat: 12, protein: 4, warning: '당류 과다', healthScore: 35 },
             { name: '빵', category: '간식', calories: 300, sugar: 15, sodium: 350, fat: 10, protein: 8, warning: '당류·나트륨 주의', healthScore: 50 },
             { name: '케이크', category: '간식', calories: 400, sugar: 35, sodium: 200, fat: 18, protein: 5, warning: '당류·지방 과다', healthScore: 25 },
+            { name: '쿠키', category: '간식', calories: 480, sugar: 30, sodium: 300, fat: 22, protein: 6, warning: '당류·지방 과다', healthScore: 30 },
+            { name: '팝콘', category: '간식', calories: 380, sugar: 8, sodium: 600, fat: 20, protein: 8, warning: '나트륨·지방 주의', healthScore: 45 },
+            { name: '젤리', category: '간식', calories: 320, sugar: 55, sodium: 40, fat: 0, protein: 2, warning: '당류 극과다', healthScore: 25 },
+            
+            // 유제품
+            { name: '요거트', category: '유제품', calories: 120, sugar: 15, sodium: 80, fat: 3, protein: 8, warning: '보통', healthScore: 75 },
+            { name: '그릭요거트', category: '유제품', calories: 100, sugar: 7, sodium: 50, fat: 2, protein: 15, warning: '없음', healthScore: 88 },
+            { name: '치즈', category: '유제품', calories: 350, sugar: 1, sodium: 600, fat: 28, protein: 25, warning: '고지방·나트륨 주의', healthScore: 60 },
             
             // 건강 간식
-            { name: '바나나', category: '과일', calories: 90, sugar: 12, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 90 },
-            { name: '사과', category: '과일', calories: 80, sugar: 15, sodium: 1, fat: 0, protein: 0, warning: '없음', healthScore: 95 },
-            { name: '요거트', category: '유제품', calories: 120, sugar: 15, sodium: 80, fat: 3, protein: 8, warning: '보통', healthScore: 75 },
-            { name: '견과류', category: '간식', calories: 180, sugar: 2, sodium: 5, fat: 16, protein: 6, warning: '없음', healthScore: 85 },
-            { name: '그릭요거트', category: '유제품', calories: 100, sugar: 7, sodium: 50, fat: 2, protein: 15, warning: '없음', healthScore: 88 }
+            { name: '견과류', category: '건강간식', calories: 180, sugar: 2, sodium: 5, fat: 16, protein: 6, warning: '없음', healthScore: 85 },
+            { name: '아몬드', category: '건강간식', calories: 160, sugar: 1, sodium: 0, fat: 14, protein: 6, warning: '없음', healthScore: 87 },
+            { name: '호두', category: '건강간식', calories: 185, sugar: 1, sodium: 1, fat: 18, protein: 4, warning: '없음', healthScore: 86 },
+            { name: '고구마', category: '건강간식', calories: 130, sugar: 8, sodium: 10, fat: 0, protein: 2, warning: '없음', healthScore: 85 },
+            { name: '삶은계란', category: '건강간식', calories: 78, sugar: 0, sodium: 62, fat: 5, protein: 6, warning: '없음', healthScore: 90 }
         ];
 
         // 메뉴 데이터베이스 (동일)
