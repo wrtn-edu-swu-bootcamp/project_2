@@ -983,6 +983,22 @@
 
                 <!-- Home Tab -->
                 <div id="home" class="screen">
+                    <!-- 음식 영양 검색 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 20px; margin-bottom: 25px;">
+                        <h3 style="color: white; font-size: 20px; margin-bottom: 15px;">🔍 오늘 먹은 음식 검색</h3>
+                        <div style="position: relative;">
+                            <input type="text" id="foodSearchInput" placeholder="예: 초코라떼, 라면, 김밥..." 
+                                style="width: 100%; padding: 14px 50px 14px 14px; border: none; border-radius: 12px; font-size: 15px; font-family: 'Pretendard', sans-serif;"
+                                onkeyup="searchFood(event)">
+                            <button onclick="searchFood()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; cursor: pointer;">🔍</button>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 13px; margin-top: 10px; margin-bottom: 0;">
+                            💡 먹은 음식의 영양 성분과 건강 정보를 확인하세요!
+                        </p>
+                    </div>
+
+                    <div id="foodSearchResult" style="margin-bottom: 25px;"></div>
+
                     <!-- 오늘의 추천 -->
                     <div class="daily-banner" onclick="showDailyRecommendation()">
                         <h3>🌟 오늘의 추천</h3>
@@ -1420,6 +1436,49 @@
     <script>
         // 카카오 SDK 초기화 (실제 앱 키로 변경 필요)
         // Kakao.init('YOUR_APP_KEY');
+
+        // 일반 음식 영양 데이터베이스 (검색용)
+        const foodDatabase = [
+            // 음료
+            { name: '초코라떼', category: '음료', calories: 250, sugar: 30, sodium: 100, fat: 8, protein: 8, warning: '당류 과다', healthScore: 45 },
+            { name: '아메리카노', category: '음료', calories: 10, sugar: 0, sodium: 5, fat: 0, protein: 1, warning: '없음', healthScore: 85 },
+            { name: '카페라떼', category: '음료', calories: 150, sugar: 12, sodium: 120, fat: 6, protein: 8, warning: '보통', healthScore: 60 },
+            { name: '녹차라떼', category: '음료', calories: 200, sugar: 25, sodium: 150, fat: 5, protein: 6, warning: '당류 주의', healthScore: 55 },
+            { name: '밀크티', category: '음료', calories: 280, sugar: 35, sodium: 100, fat: 8, protein: 5, warning: '당류 과다', healthScore: 40 },
+            { name: '콜라', category: '음료', calories: 140, sugar: 39, sodium: 40, fat: 0, protein: 0, warning: '당류 과다', healthScore: 30 },
+            { name: '사이다', category: '음료', calories: 140, sugar: 37, sodium: 30, fat: 0, protein: 0, warning: '당류 과다', healthScore: 30 },
+            { name: '오렌지주스', category: '음료', calories: 110, sugar: 22, sodium: 10, fat: 0, protein: 2, warning: '당류 주의', healthScore: 65 },
+            { name: '이온음료', category: '음료', calories: 90, sugar: 23, sodium: 110, fat: 0, protein: 0, warning: '당류·나트륨 주의', healthScore: 50 },
+            { name: '에너지드링크', category: '음료', calories: 110, sugar: 27, sodium: 200, fat: 0, protein: 1, warning: '카페인·당류 과다', healthScore: 35 },
+            
+            // 편의점 간식
+            { name: '삼각김밥', category: '편의점', calories: 280, sugar: 3, sodium: 650, fat: 8, protein: 8, warning: '나트륨 과다', healthScore: 55 },
+            { name: '컵라면', category: '편의점', calories: 380, sugar: 5, sodium: 1800, fat: 15, protein: 10, warning: '나트륨 극과다', healthScore: 30 },
+            { name: '도시락', category: '편의점', calories: 700, sugar: 8, sodium: 1500, fat: 25, protein: 25, warning: '나트륨 과다', healthScore: 50 },
+            { name: '샌드위치', category: '편의점', calories: 350, sugar: 6, sodium: 800, fat: 12, protein: 15, warning: '나트륨 주의', healthScore: 60 },
+            { name: '핫도그', category: '편의점', calories: 450, sugar: 8, sodium: 1100, fat: 22, protein: 15, warning: '나트륨·지방 과다', healthScore: 40 },
+            
+            // 패스트푸드
+            { name: '햄버거', category: '패스트푸드', calories: 550, sugar: 8, sodium: 1000, fat: 28, protein: 25, warning: '고칼로리·고지방', healthScore: 35 },
+            { name: '치킨', category: '패스트푸드', calories: 800, sugar: 2, sodium: 1500, fat: 45, protein: 50, warning: '고칼로리·고지방', healthScore: 30 },
+            { name: '피자', category: '패스트푸드', calories: 650, sugar: 6, sodium: 1300, fat: 30, protein: 28, warning: '고칼로리·나트륨 과다', healthScore: 35 },
+            { name: '떡볶이', category: '패스트푸드', calories: 450, sugar: 18, sodium: 1200, fat: 8, protein: 12, warning: '당류·나트륨 과다', healthScore: 45 },
+            { name: '순대', category: '패스트푸드', calories: 350, sugar: 3, sodium: 900, fat: 18, protein: 15, warning: '나트륨·지방 주의', healthScore: 50 },
+            
+            // 간식
+            { name: '과자', category: '간식', calories: 500, sugar: 25, sodium: 400, fat: 25, protein: 5, warning: '당류·지방 과다', healthScore: 25 },
+            { name: '초콜릿', category: '간식', calories: 550, sugar: 50, sodium: 50, fat: 30, protein: 5, warning: '당류·지방 극과다', healthScore: 20 },
+            { name: '아이스크림', category: '간식', calories: 250, sugar: 28, sodium: 80, fat: 12, protein: 4, warning: '당류 과다', healthScore: 35 },
+            { name: '빵', category: '간식', calories: 300, sugar: 15, sodium: 350, fat: 10, protein: 8, warning: '당류·나트륨 주의', healthScore: 50 },
+            { name: '케이크', category: '간식', calories: 400, sugar: 35, sodium: 200, fat: 18, protein: 5, warning: '당류·지방 과다', healthScore: 25 },
+            
+            // 건강 간식
+            { name: '바나나', category: '과일', calories: 90, sugar: 12, sodium: 1, fat: 0, protein: 1, warning: '없음', healthScore: 90 },
+            { name: '사과', category: '과일', calories: 80, sugar: 15, sodium: 1, fat: 0, protein: 0, warning: '없음', healthScore: 95 },
+            { name: '요거트', category: '유제품', calories: 120, sugar: 15, sodium: 80, fat: 3, protein: 8, warning: '보통', healthScore: 75 },
+            { name: '견과류', category: '간식', calories: 180, sugar: 2, sodium: 5, fat: 16, protein: 6, warning: '없음', healthScore: 85 },
+            { name: '그릭요거트', category: '유제품', calories: 100, sugar: 7, sodium: 50, fat: 2, protein: 15, warning: '없음', healthScore: 88 }
+        ];
 
         // 메뉴 데이터베이스 (동일)
         const menuDatabase = [
@@ -3298,6 +3357,148 @@
 
         function backToResults() {
             switchScreen('results');
+        }
+
+        // ========================================
+        // 음식 영양 검색 기능
+        // ========================================
+        
+        function searchFood(event) {
+            // Enter 키로도 검색 가능
+            if (event && event.key && event.key !== 'Enter') return;
+            
+            const searchTerm = document.getElementById('foodSearchInput').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('foodSearchResult');
+            
+            if (!searchTerm) {
+                resultDiv.innerHTML = '';
+                return;
+            }
+            
+            // 검색 (부분 일치)
+            const results = foodDatabase.filter(food => 
+                food.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (results.length === 0) {
+                resultDiv.innerHTML = `
+                    <div style="background: #f5f5f5; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="color: #999; margin: 0;">❌ "${searchTerm}"을(를) 찾을 수 없습니다.</p>
+                        <p style="color: #999; font-size: 13px; margin-top: 8px;">다른 검색어를 입력해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 여러 결과가 있으면 첫 번째만 표시
+            const food = results[0];
+            displayFoodNutrition(food);
+        }
+        
+        function displayFoodNutrition(food) {
+            const resultDiv = document.getElementById('foodSearchResult');
+            
+            // 건강 점수에 따른 색상
+            let scoreColor = '#4CAF50';
+            let scoreText = '좋음';
+            let scoreEmoji = '😊';
+            
+            if (food.healthScore < 40) {
+                scoreColor = '#EF5350';
+                scoreText = '나쁨';
+                scoreEmoji = '😰';
+            } else if (food.healthScore < 60) {
+                scoreColor = '#FFA726';
+                scoreText = '보통';
+                scoreEmoji = '😐';
+            } else if (food.healthScore < 80) {
+                scoreColor = '#66BB6A';
+                scoreText = '좋음';
+                scoreEmoji = '😊';
+            } else {
+                scoreColor = '#4CAF50';
+                scoreText = '매우 좋음';
+                scoreEmoji = '🥰';
+            }
+            
+            // 경고 표시
+            let warningHtml = '';
+            if (food.warning !== '없음') {
+                warningHtml = `
+                    <div style="background: #ffebee; padding: 12px; border-radius: 8px; margin-top: 12px; border-left: 4px solid #EF5350;">
+                        <strong style="color: #EF5350;">⚠️ 주의사항:</strong>
+                        <p style="color: #d32f2f; margin: 4px 0 0 0; font-size: 14px;">${food.warning}</p>
+                    </div>
+                `;
+            }
+            
+            // 영양소 경고 계산
+            const sugarWarning = food.sugar > 25 ? ' <span style="color: #EF5350; font-weight: bold;">⚠️</span>' : food.sugar > 15 ? ' <span style="color: #FFA726;">⚠️</span>' : '';
+            const sodiumWarning = food.sodium > 800 ? ' <span style="color: #EF5350; font-weight: bold;">⚠️</span>' : food.sodium > 500 ? ' <span style="color: #FFA726;">⚠️</span>' : '';
+            const fatWarning = food.fat > 20 ? ' <span style="color: #EF5350; font-weight: bold;">⚠️</span>' : food.fat > 10 ? ' <span style="color: #FFA726;">⚠️</span>' : '';
+            
+            resultDiv.innerHTML = `
+                <div style="background: white; border-radius: 16px; padding: 20px; border: 2px solid #e9ecef; animation: fadeIn 0.3s;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 22px; color: #1a1a1a; margin: 0 0 4px 0;">${food.name}</h3>
+                            <span style="background: #f5f5f5; padding: 4px 10px; border-radius: 12px; font-size: 13px; color: #666;">${food.category}</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px;">${scoreEmoji}</div>
+                            <div style="font-size: 18px; font-weight: bold; color: ${scoreColor};">${food.healthScore}점</div>
+                            <div style="font-size: 12px; color: ${scoreColor};">${scoreText}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #2E7D32;">${food.calories}</div>
+                                <div style="font-size: 13px; color: #666;">칼로리 (kcal)</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #2E7D32;">${food.protein}g</div>
+                                <div style="font-size: 13px; color: #666;">단백질</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 16px; border-radius: 12px;">
+                        <h4 style="font-size: 15px; color: #666; margin: 0 0 12px 0;">영양 성분 상세</h4>
+                        <div style="display: grid; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 8px;">
+                                <span style="font-size: 14px; color: #666;">당류</span>
+                                <span style="font-size: 15px; font-weight: bold; color: #1a1a1a;">${food.sugar}g${sugarWarning}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 8px;">
+                                <span style="font-size: 14px; color: #666;">나트륨</span>
+                                <span style="font-size: 15px; font-weight: bold; color: #1a1a1a;">${food.sodium}mg${sodiumWarning}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 8px;">
+                                <span style="font-size: 14px; color: #666;">지방</span>
+                                <span style="font-size: 15px; font-weight: bold; color: #1a1a1a;">${food.fat}g${fatWarning}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${warningHtml}
+                    
+                    <div style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px;">
+                        <p style="font-size: 13px; color: #1976d2; margin: 0; line-height: 1.6;">
+                            💡 <strong>권장 정보:</strong><br>
+                            하루 당류 50g 이하, 나트륨 2000mg 이하 권장
+                        </p>
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                </style>
+            `;
         }
 
         // ========================================
