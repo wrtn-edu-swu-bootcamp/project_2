@@ -21,7 +21,7 @@
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 50%, #81C784 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -73,7 +73,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             padding: 40px 25px 30px;
             text-align: center;
@@ -139,7 +139,7 @@
         }
 
         .tab-btn.active {
-            color: #667eea;
+            color: #4CAF50;
         }
 
         .tab-btn.active::after {
@@ -149,7 +149,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
         }
 
         .content {
@@ -178,12 +178,12 @@
 
         /* 오늘의 추천 배너 */
         .daily-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 25px;
             color: white;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
         }
 
         .daily-banner h3 {
@@ -215,7 +215,7 @@
         .stat-card .value {
             font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -229,7 +229,7 @@
 
         .progress-bar {
             height: 6px;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(76, 175, 80, 0.1);
             border-radius: 10px;
             margin-bottom: 25px;
             overflow: hidden;
@@ -238,9 +238,9 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
             transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
 
         .question {
@@ -249,14 +249,14 @@
 
         .question-num {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 700;
             margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
 
         .question h3 {
@@ -304,7 +304,7 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(76, 175, 80, 0.1);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
@@ -315,17 +315,17 @@
         }
 
         .option-btn:hover {
-            border-color: #667eea;
+            border-color: #4CAF50;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
         }
 
         .option-btn.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            border-color: #4CAF50;
             color: white;
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
         }
 
         .option-btn small {
@@ -351,14 +351,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.4);
         }
 
         .btn-primary:active {
@@ -369,27 +369,27 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
         }
 
         .btn-secondary {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
             box-shadow: none;
         }
 
         .bmi-info, .nutrition-alert {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
             padding: 20px;
             border-radius: 16px;
             margin-bottom: 20px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4CAF50;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
         .bmi-info strong, .nutrition-alert strong {
-            color: #667eea;
+            color: #2E7D32;
             font-size: 17px;
             display: block;
             margin-bottom: 10px;
@@ -415,7 +415,7 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(to bottom, #667eea, #764ba2);
+            background: linear-gradient(to bottom, #4CAF50, #66BB6A);
             transform: scaleY(0);
             transition: transform 0.3s;
         }
@@ -426,8 +426,8 @@
 
         .menu-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.15);
+            border-color: #4CAF50;
         }
 
         .menu-card h4 {
@@ -461,27 +461,27 @@
 
         .action-btn:hover {
             background: #f8f9fa;
-            border-color: #667eea;
-            color: #667eea;
+            border-color: #4CAF50;
+            color: #4CAF50;
         }
 
         .action-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
-            border-color: #667eea;
+            border-color: #4CAF50;
         }
 
         .health-score {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
 
         .health-score.medium {
@@ -521,14 +521,14 @@
 
         .tag {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             margin: 4px 4px 4px 0;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.25);
         }
 
         .loading {
@@ -537,8 +537,8 @@
         }
 
         .loading-spinner {
-            border: 5px solid rgba(102, 126, 234, 0.1);
-            border-top: 5px solid #667eea;
+            border: 5px solid rgba(76, 175, 80, 0.1);
+            border-top: 5px solid #4CAF50;
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -588,8 +588,8 @@
 
         .input-group input:focus, .input-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
         }
 
         .input-row {
@@ -630,7 +630,7 @@
             content: "✓";
             position: absolute;
             left: 0;
-            color: #667eea;
+            color: #4CAF50;
             font-weight: 700;
             font-size: 18px;
         }
@@ -652,7 +652,7 @@
             content: counter(step-counter);
             position: absolute;
             left: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             width: 30px;
             height: 30px;
@@ -662,7 +662,7 @@
             justify-content: center;
             font-size: 14px;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
 
         .nutrition-grid {
@@ -682,7 +682,7 @@
         .nutrition-item .value {
             font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -700,7 +700,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             color: white;
             padding: 14px 24px;
             border-radius: 14px;
@@ -708,13 +708,13 @@
             font-weight: 700;
             font-size: 15px;
             transition: all 0.3s;
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
             width: 100%;
         }
 
         .video-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
         }
 
         /* 장보기 리스트 모달 */
@@ -803,7 +803,7 @@
         }
 
         #welcome strong {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -819,12 +819,12 @@
         }
 
         .container::-webkit-scrollbar-thumb {
-            background: rgba(102, 126, 234, 0.3);
+            background: rgba(76, 175, 80, 0.3);
             border-radius: 10px;
         }
 
         .container::-webkit-scrollbar-thumb:hover {
-            background: rgba(102, 126, 234, 0.5);
+            background: rgba(76, 175, 80, 0.5);
         }
 
         /* 반응형 */
@@ -899,7 +899,77 @@
                         <strong>영양학적으로 균형잡힌 식단</strong>을<br>
                         추천해드릴게요.
                     </p>
-                    <button class="btn btn-primary" onclick="startQuestions()">시작하기</button>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-primary" onclick="startQuestions()">자세하게 추천받기 (8문항)</button>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-secondary" onclick="quickStart()">빠르게 추천받기 (3문항)</button>
+                    </div>
+                    
+                    <div id="quickRecommendBtn" style="display: none; margin-top: 10px;">
+                        <button class="btn btn-secondary" onclick="quickRecommendAgain()">🔄 이전 정보로 다시 추천</button>
+                    </div>
+                </div>
+
+                <!-- Quick Mode Screen -->
+                <div id="quickMode" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 33%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">빠른 추천 1/3</div>
+                        <h3>얼마나 시간이 있나요?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '전자레인지')">
+                                📱 전자레인지만 (5분)
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '10분')">
+                                ⚡ 10분 이내
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '20분')">
+                                👨‍🍳 20분 이내
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="quickBtn1" disabled onclick="nextQuick('quick2')">다음</button>
+                </div>
+
+                <div id="quick2" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 66%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">빠른 추천 2/3</div>
+                        <h3>예산은 얼마나?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '3000')">
+                                💰 3,000원 이하
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '5000')">
+                                💵 5,000원 이하
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'budget', '15000')">
+                                💎 금액 상관없음
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="quickBtn2" disabled onclick="nextQuick('quick3')">다음</button>
+                </div>
+
+                <div id="quick3" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">빠른 추천 3/3</div>
+                        <h3>못 먹는 재료는?</h3>
+                        <div class="input-group" style="margin-top: 20px;">
+                            <input type="text" placeholder="예: 계란, 새우 (없으면 비워두세요)" id="quickAvoidInput">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="quickRecommend()">바로 추천받기</button>
                 </div>
 
                 <!-- Home Tab -->
@@ -1196,7 +1266,15 @@
                     <div id="userAnalysis"></div>
                     <h3 style="margin-bottom: 20px; font-size: 22px; font-weight: 700; color: #1a1a1a;">당신을 위한 건강한 식단</h3>
                     <div id="menuContainer"></div>
-                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="recommendAgain()">🔄 다른 메뉴 보기</button>
+                        <button class="btn btn-primary" onclick="restart()">🏠 처음으로</button>
+                    </div>
+                    
+                    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: #999;">
+                        💡 메뉴가 마음에 안 드시나요? 다른 메뉴 보기를 눌러보세요!
+                    </p>
                 </div>
 
                 <div id="detail" class="screen">
@@ -1932,6 +2010,70 @@
             switchScreen('q0');
         }
 
+        function quickStart() {
+            document.getElementById('tabNav').style.display = 'none';
+            switchScreen('quickMode');
+        }
+
+        function selectQuickOption(btn, type, value) {
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            
+            btn.classList.add('selected');
+            selectedData[type] = value;
+            
+            if (type === 'cooking') {
+                document.getElementById('quickBtn1').disabled = false;
+            } else if (type === 'budget') {
+                document.getElementById('quickBtn2').disabled = false;
+            }
+        }
+
+        function nextQuick(screenId) {
+            switchScreen(screenId);
+        }
+
+        function quickRecommend() {
+            selectedData.avoid = document.getElementById('quickAvoidInput').value.toLowerCase();
+            
+            // 빠른 추천용 기본값 설정
+            selectedData.gender = 'male';
+            selectedData.height = 170;
+            selectedData.weight = 65;
+            selectedData.bmi = calculateBMI(170, 65);
+            selectedData.mealTime = '점심';
+            selectedData.activity = '보통';
+            selectedData.goal = '건강유지';
+            selectedData.allergy = '';
+            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
+            
+            saveUserData();
+            
+            // 빠른 재추천 버튼 표시
+            document.getElementById('quickRecommendBtn').style.display = 'block';
+            
+            switchScreen('loading');
+            setTimeout(() => {
+                filterAndDisplayMenus();
+            }, 2000);
+        }
+
+        function quickRecommendAgain() {
+            switchScreen('loading');
+            setTimeout(() => {
+                filterAndDisplayMenus();
+            }, 1500);
+        }
+
+        function recommendAgain() {
+            // 현재 필터 조건으로 다른 메뉴 추천
+            switchScreen('loading');
+            setTimeout(() => {
+                filterAndDisplayMenus();
+            }, 1500);
+        }
+
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -2208,23 +2350,25 @@
                 }
 
                 return `
-                <div class="menu-card" onclick="showMenuDetail(${menu.id})">
-                    <h4>
-                        ${menu.name}
-                        <span class="${scoreClass}">${scoreEmoji} ${menu.healthScore}점</span>
-                    </h4>
-                    <div class="recommendation-reason">
-                        💡 <strong>추천 이유:</strong> ${menu.reason}
-                    </div>
-                    <p style="color: #667eea; font-weight: bold; font-size: 14px; margin-bottom: 10px;">${calorieNote}</p>
-                    <div class="menu-meta">
-                        <div class="meta-item">⏱️ ${menu.time}분</div>
-                        <div class="meta-item">⭐ ${menu.difficulty}</div>
-                        <div class="meta-item">🔥 ${menu.calories}kcal</div>
-                        <div class="meta-item">💪 ${menu.protein}g</div>
-                    </div>
-                    <div style="margin-top: 12px;">
-                        ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                <div class="menu-card">
+                    <div onclick="showMenuDetail(${menu.id})">
+                        <h4>
+                            ${menu.name}
+                            <span class="${scoreClass}">${scoreEmoji} ${menu.healthScore}점</span>
+                        </h4>
+                        <div class="recommendation-reason">
+                            💡 <strong>추천 이유:</strong> ${menu.reason}
+                        </div>
+                        <p style="color: #4CAF50; font-weight: bold; font-size: 14px; margin-bottom: 10px;">${calorieNote}</p>
+                        <div class="menu-meta">
+                            <div class="meta-item">⏱️ ${menu.time}분</div>
+                            <div class="meta-item">⭐ ${menu.difficulty}</div>
+                            <div class="meta-item">🔥 ${menu.calories}kcal</div>
+                            <div class="meta-item">💪 ${menu.protein}g</div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
                     </div>
                 </div>
             `}).join('');
