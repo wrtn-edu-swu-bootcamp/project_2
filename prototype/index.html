@@ -944,6 +944,26 @@
                     <button class="btn btn-secondary" style="margin-top: 12px;" onclick="restart()">처음으로</button>
                 </div>
 
+                <!-- Birthday Input Screen -->
+                <div id="birthdayScreen" class="screen">
+                    <div class="question">
+                        <div class="question-num">🔮 오늘의 운세</div>
+                        <h3>생년월일을 알려주세요!</h3>
+                        <p style="margin-bottom: 20px;">당신만의 운세를 확인해드릴게요</p>
+                        
+                        <div class="input-group">
+                            <label>🎂 생년월일</label>
+                            <input type="date" id="birthdayInput" 
+                                max="2010-12-31"
+                                style="padding: 14px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px; font-family: 'Pretendard', sans-serif;"
+                                onchange="checkBirthday()">
+                            <p style="font-size: 13px; color: #999; margin-top: 8px;">💡 생년월일로 당신만의 운세를 계산해요!</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="birthdayBtn" disabled onclick="calculateFortune()">내 운세 보기</button>
+                    <button class="btn btn-secondary" style="margin-top: 12px;" onclick="restart()">처음으로</button>
+                </div>
+
                 <!-- Fortune Screen -->
                 <div id="fortuneScreen" class="screen">
                     <div style="text-align: center; padding: 40px 20px;">
@@ -1767,6 +1787,8 @@
         let currentTab = 'home';
         let shownMenuIds = []; // 이미 보여준 메뉴 ID 기록
         let allFilteredMenus = []; // 전체 필터된 메뉴 저장
+        let isFortuneMode = false; // 운세 모드인지 구분
+        let currentFortune = null; // 현재 운세 저장
 
         // LocalStorage 키
         const STORAGE_KEYS = {
@@ -2083,6 +2105,7 @@
 
         function startQuestions() {
             document.getElementById('tabNav').style.display = 'none';
+            isFortuneMode = false; // 일반 추천 모드
             switchScreen('q0');
         }
 
@@ -2147,6 +2170,7 @@
         // 냉장고 재료로 추천
         function showIngredientInput() {
             document.getElementById('tabNav').style.display = 'none';
+            isFortuneMode = false; // 일반 추천 모드
             switchScreen('ingredientScreen');
         }
 
@@ -2328,13 +2352,45 @@
             `}).join('');
         }
 
+        // 생년월일 입력 화면으로 이동
         function fortuneRecommend() {
             document.getElementById('tabNav').style.display = 'none';
+            isFortuneMode = true; // 운세 모드 활성화
+            switchScreen('birthdayScreen');
+        }
+
+        // 생년월일 입력 확인
+        function checkBirthday() {
+            const input = document.getElementById('birthdayInput').value;
+            const btn = document.getElementById('birthdayBtn');
+            btn.disabled = !input;
+        }
+
+        // 생년월일로 운세 계산
+        function calculateFortune() {
+            const birthdayInput = document.getElementById('birthdayInput').value;
+            if (!birthdayInput) {
+                alert('생년월일을 입력해주세요!');
+                return;
+            }
             
-            // 오늘 날짜로 운세 결정
+            const birthday = new Date(birthdayInput);
             const today = new Date();
-            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-            const fortuneIndex = dayOfYear % fortunes.length;
+            
+            // 생년월일의 숫자들을 합산
+            const year = birthday.getFullYear();
+            const month = birthday.getMonth() + 1;
+            const day = birthday.getDate();
+            const birthSum = year + month + day;
+            
+            // 오늘 날짜의 숫자들을 합산
+            const todayYear = today.getFullYear();
+            const todayMonth = today.getMonth() + 1;
+            const todayDay = today.getDate();
+            const todaySum = todayYear + todayMonth + todayDay;
+            
+            // 생년월일 + 오늘 날짜로 개인화된 운세 계산
+            const fortuneIndex = (birthSum + todaySum) % fortunes.length;
             const todayFortune = fortunes[fortuneIndex];
             
             // 운세 화면 업데이트
@@ -2347,36 +2403,37 @@
             // 운세 정보 저장
             selectedData.fortune = todayFortune;
             selectedData.fortuneColor = todayFortune.color;
+            currentFortune = todayFortune; // 전역 변수에 저장
             
             switchScreen('fortuneScreen');
         }
 
         function showFortuneMenus() {
-            const fortune = selectedData.fortune;
-            
-            // 기본값 설정
-            selectedData.gender = 'male';
-            selectedData.height = 170;
-            selectedData.weight = 65;
-            selectedData.bmi = calculateBMI(170, 65);
-            selectedData.mealTime = '점심';
-            selectedData.activity = '보통';
-            selectedData.goal = '건강유지';
-            selectedData.allergy = '';
-            selectedData.avoid = '';
-            selectedData.cooking = '30분';
-            selectedData.budget = '15000';
-            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
-            
-            saveUserData();
+            const fortune = currentFortune || selectedData.fortune;
+            isFortuneMode = true; // 운세 모드 활성화
             
             switchScreen('loading');
             setTimeout(() => {
-                filterFortuneMenus(fortune);
+                filterFortuneMenus(fortune, true); // true = 새로운 검색
             }, 2000);
         }
 
-        function filterFortuneMenus(fortune) {
+        // 운세 추천 전용 "다른 메뉴 보기"
+        function recommendFortuneAgain() {
+            const fortune = currentFortune || selectedData.fortune;
+            
+            switchScreen('loading');
+            setTimeout(() => {
+                filterFortuneMenus(fortune, false); // false = 이미 본 메뉴 제외
+            }, 1500);
+        }
+
+        function filterFortuneMenus(fortune, isNewSearch = true) {
+            // 새로운 검색이면 초기화
+            if (isNewSearch) {
+                shownMenuIds = [];
+            }
+            
             // 건강한 메뉴만 (healthScore 80 이상)
             let healthyMenus = menuDatabase.filter(menu => menu.healthScore >= 80);
             
@@ -2425,8 +2482,17 @@
             // 건강 점수로 정렬
             fortuneMenus.sort((a, b) => b.healthScore - a.healthScore);
             
+            // 이미 본 메뉴 제외
+            let availableMenus = fortuneMenus.filter(menu => !shownMenuIds.includes(menu.id));
+            
+            // 모든 메뉴를 다 봤으면 초기화
+            if (availableMenus.length < 3) {
+                shownMenuIds = [];
+                availableMenus = fortuneMenus;
+            }
+            
             // 상위 20개 중 랜덤 3개
-            const topMenus = fortuneMenus.slice(0, Math.min(20, fortuneMenus.length));
+            const topMenus = availableMenus.slice(0, Math.min(20, availableMenus.length));
             const shuffled = [...topMenus];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2434,6 +2500,9 @@
             }
             
             const selectedMenus = shuffled.slice(0, 3);
+            
+            // 선택한 메뉴 ID 기록
+            selectedMenus.forEach(menu => shownMenuIds.push(menu.id));
             
             // 운세 메시지와 함께 표시
             displayFortuneMenus(selectedMenus, fortune);
@@ -2504,7 +2573,13 @@
         }
 
         function recommendAgain() {
-            // 현재 필터 조건으로 다른 메뉴 추천
+            // 운세 모드인지 확인
+            if (isFortuneMode) {
+                recommendFortuneAgain(); // 운세 추천 전용 함수 호출
+                return;
+            }
+            
+            // 일반 추천: 현재 필터 조건으로 다른 메뉴 추천
             switchScreen('loading');
             setTimeout(() => {
                 filterAndDisplayMenus(false); // false = 기존 필터 유지, 다른 메뉴만 선택
@@ -2932,6 +3007,12 @@
         }
 
         function restart() {
+            // 모든 모드 초기화
+            isFortuneMode = false;
+            currentFortune = null;
+            shownMenuIds = [];
+            allFilteredMenus = [];
+            
             document.getElementById('tabNav').style.display = 'flex';
             switchTab('home');
             updateStats();
