@@ -1,22 +1,4 @@
 {
-  "version": 2,
-  "name": "babssim-healthy-food",
-  "builds": [
-    {
-      "src": "prototype/index.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/prototype/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/prototype/index.html"
-    }
-  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/prototype/index.html" }
   ]
