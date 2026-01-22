@@ -888,6 +888,7 @@
                 <button class="tab-btn active" onclick="switchTab('home')">홈</button>
                 <button class="tab-btn" onclick="switchTab('saved')">저장 <span id="savedCount"></span></button>
                 <button class="tab-btn" onclick="switchTab('tracker')">통계</button>
+                <button class="tab-btn" onclick="switchTab('profile')">프로필</button>
             </div>
 
             <div class="content">
@@ -1055,6 +1056,86 @@
                             <li>평균 건강 점수: <strong id="avgHealthScore">0점</strong></li>
                         </ul>
                     </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profile" class="screen">
+                    <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">내 프로필 설정</h3>
+                    
+                    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 20px; border-radius: 16px; margin-bottom: 25px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">👤</div>
+                        <p style="color: #2E7D32; font-size: 15px; line-height: 1.6;">
+                            프로필을 저장하면 매번 입력하지 않아도 돼요!
+                        </p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>📝 기본 정보</h4>
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>성별</label>
+                            <select id="profileGender" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                                <option value="">선택하세요</option>
+                                <option value="male">남성</option>
+                                <option value="female">여성</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                            <div class="input-group">
+                                <label>키 (cm)</label>
+                                <input type="number" id="profileHeight" placeholder="170" min="100" max="250" 
+                                    style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                            </div>
+                            <div class="input-group">
+                                <label>몸무게 (kg)</label>
+                                <input type="number" id="profileWeight" placeholder="65" min="30" max="200" 
+                                    style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                            </div>
+                        </div>
+
+                        <div class="bmi-info" id="profileBMI" style="display: none; margin-bottom: 15px;"></div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>🎯 목표 및 활동</h4>
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>활동량</label>
+                            <select id="profileActivity" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                                <option value="">선택하세요</option>
+                                <option value="적음">적음 (주로 앉아있음)</option>
+                                <option value="보통">보통 (가끔 운동)</option>
+                                <option value="많음">많음 (규칙적 운동)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>목표</label>
+                            <select id="profileGoal" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                                <option value="">선택하세요</option>
+                                <option value="다이어트">다이어트</option>
+                                <option value="건강유지">건강 유지</option>
+                                <option value="근육증가">근육 증가</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>🚫 알레르기 및 기피 음식</h4>
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>알레르기 (쉼표로 구분)</label>
+                            <input type="text" id="profileAllergy" placeholder="예: 땅콩, 새우, 밀가루" 
+                                style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>기피 재료 (쉼표로 구분)</label>
+                            <input type="text" id="profileAvoid" placeholder="예: 양파, 마늘, 고수" 
+                                style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px;">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%; margin-bottom: 12px;">💾 프로필 저장</button>
+                    <button class="btn btn-secondary" onclick="clearProfile()" style="width: 100%;">🗑️ 프로필 초기화</button>
                 </div>
 
                 <!-- Question Screens -->
@@ -1789,6 +1870,8 @@
         let allFilteredMenus = []; // 전체 필터된 메뉴 저장
         let isFortuneMode = false; // 운세 모드인지 구분
         let currentFortune = null; // 현재 운세 저장
+        let isIngredientMode = false; // 냉장고 재료 모드인지 구분
+        let currentIngredients = []; // 현재 입력한 재료 저장
 
         // LocalStorage 키
         const STORAGE_KEYS = {
@@ -1809,12 +1892,161 @@
             const profile = localStorage.getItem(STORAGE_KEYS.userProfile);
             if (profile) {
                 selectedData = JSON.parse(profile);
+                loadProfileToForm(); // 프로필 폼에도 로드
             }
         }
 
         function saveUserData() {
             localStorage.setItem(STORAGE_KEYS.userProfile, JSON.stringify(selectedData));
         }
+
+        // 프로필 저장
+        function saveProfile() {
+            const gender = document.getElementById('profileGender').value;
+            const height = parseInt(document.getElementById('profileHeight').value);
+            const weight = parseInt(document.getElementById('profileWeight').value);
+            const activity = document.getElementById('profileActivity').value;
+            const goal = document.getElementById('profileGoal').value;
+            const allergy = document.getElementById('profileAllergy').value;
+            const avoid = document.getElementById('profileAvoid').value;
+
+            if (!gender || !height || !weight || !activity || !goal) {
+                alert('필수 정보를 모두 입력해주세요!\n(성별, 키, 몸무게, 활동량, 목표)');
+                return;
+            }
+
+            // selectedData에 저장
+            selectedData.gender = gender;
+            selectedData.height = height;
+            selectedData.weight = weight;
+            selectedData.bmi = calculateBMI(height, weight);
+            selectedData.activity = activity;
+            selectedData.goal = goal;
+            selectedData.allergy = allergy;
+            selectedData.avoid = avoid;
+
+            // localStorage에 저장
+            saveUserData();
+
+            alert('프로필이 저장되었습니다! ✅\n이제 추천받을 때 자동으로 적용돼요.');
+            updateProfileDisplay();
+        }
+
+        // 프로필 초기화
+        function clearProfile() {
+            if (!confirm('프로필을 초기화하시겠습니까?')) {
+                return;
+            }
+
+            // 폼 초기화
+            document.getElementById('profileGender').value = '';
+            document.getElementById('profileHeight').value = '';
+            document.getElementById('profileWeight').value = '';
+            document.getElementById('profileActivity').value = '';
+            document.getElementById('profileGoal').value = '';
+            document.getElementById('profileAllergy').value = '';
+            document.getElementById('profileAvoid').value = '';
+            document.getElementById('profileBMI').style.display = 'none';
+
+            // selectedData 초기화
+            selectedData = {
+                gender: '',
+                height: '',
+                weight: '',
+                bmi: 0,
+                recommendCalories: 0,
+                mealTime: '',
+                cooking: '',
+                budget: '',
+                avoid: '',
+                activity: '',
+                goal: '',
+                allergy: ''
+            };
+
+            // localStorage 초기화
+            localStorage.removeItem(STORAGE_KEYS.userProfile);
+
+            alert('프로필이 초기화되었습니다!');
+        }
+
+        // 프로필을 폼에 로드
+        function loadProfileToForm() {
+            if (selectedData.gender) {
+                document.getElementById('profileGender').value = selectedData.gender;
+            }
+            if (selectedData.height) {
+                document.getElementById('profileHeight').value = selectedData.height;
+            }
+            if (selectedData.weight) {
+                document.getElementById('profileWeight').value = selectedData.weight;
+            }
+            if (selectedData.activity) {
+                document.getElementById('profileActivity').value = selectedData.activity;
+            }
+            if (selectedData.goal) {
+                document.getElementById('profileGoal').value = selectedData.goal;
+            }
+            if (selectedData.allergy) {
+                document.getElementById('profileAllergy').value = selectedData.allergy;
+            }
+            if (selectedData.avoid) {
+                document.getElementById('profileAvoid').value = selectedData.avoid;
+            }
+
+            updateProfileDisplay();
+        }
+
+        // 프로필 BMI 표시 업데이트
+        function updateProfileDisplay() {
+            const height = parseInt(document.getElementById('profileHeight').value);
+            const weight = parseInt(document.getElementById('profileWeight').value);
+
+            if (height && weight) {
+                const bmi = calculateBMI(height, weight);
+                let status = '';
+                let color = '';
+
+                if (bmi < 18.5) {
+                    status = '저체중';
+                    color = '#2196F3';
+                } else if (bmi < 23) {
+                    status = '정상';
+                    color = '#4CAF50';
+                } else if (bmi < 25) {
+                    status = '과체중';
+                    color = '#FFA726';
+                } else {
+                    status = '비만';
+                    color = '#EF5350';
+                }
+
+                document.getElementById('profileBMI').style.display = 'block';
+                document.getElementById('profileBMI').innerHTML = `
+                    <div style="font-size: 15px; margin-bottom: 8px;">
+                        <strong>BMI:</strong> ${bmi} (${status})
+                    </div>
+                    <div class="bmi-bar">
+                        <div class="bmi-fill" style="width: ${Math.min(bmi * 3, 100)}%; background: ${color};"></div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('profileBMI').style.display = 'none';
+            }
+        }
+
+        // 프로필 입력 시 BMI 실시간 업데이트
+        document.addEventListener('DOMContentLoaded', function() {
+            const heightInput = document.getElementById('profileHeight');
+            const weightInput = document.getElementById('profileWeight');
+
+            if (heightInput) {
+                heightInput.addEventListener('input', updateProfileDisplay);
+            }
+            if (weightInput) {
+                weightInput.addEventListener('input', updateProfileDisplay);
+            }
+        });
 
         function updateStats() {
             // 저장한 메뉴 수
@@ -1928,6 +2160,9 @@
             } else if (tab === 'tracker') {
                 document.getElementById('tracker').classList.add('active');
                 updateStats();
+            } else if (tab === 'profile') {
+                document.getElementById('profile').classList.add('active');
+                loadProfileToForm();
             }
         }
 
@@ -2106,6 +2341,7 @@
         function startQuestions() {
             document.getElementById('tabNav').style.display = 'none';
             isFortuneMode = false; // 일반 추천 모드
+            isIngredientMode = false;
             switchScreen('q0');
         }
 
@@ -2189,30 +2425,30 @@
                 return;
             }
             
-            // 기본값 설정
-            selectedData.gender = 'male';
-            selectedData.height = 170;
-            selectedData.weight = 65;
-            selectedData.bmi = calculateBMI(170, 65);
-            selectedData.mealTime = '점심';
-            selectedData.activity = '보통';
-            selectedData.goal = '건강유지';
-            selectedData.allergy = '';
-            selectedData.avoid = '';
-            selectedData.cooking = '30분';
-            selectedData.budget = '15000';
-            selectedData.myIngredients = myIngredients;
-            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
-            
-            saveUserData();
+            // 냉장고 재료 모드 활성화
+            isIngredientMode = true;
+            currentIngredients = myIngredients;
             
             switchScreen('loading');
             setTimeout(() => {
-                filterByIngredients(myIngredients);
+                filterByIngredients(myIngredients, true); // true = 새로운 검색
             }, 2000);
         }
 
-        function filterByIngredients(myIngredients) {
+        // 냉장고 재료 전용 "다른 메뉴 보기"
+        function recommendIngredientAgain() {
+            switchScreen('loading');
+            setTimeout(() => {
+                filterByIngredients(currentIngredients, false); // false = 이미 본 메뉴 제외
+            }, 1500);
+        }
+
+        function filterByIngredients(myIngredients, isNewSearch = true) {
+            // 새로운 검색이면 초기화
+            if (isNewSearch) {
+                shownMenuIds = [];
+            }
+            
             // 건강한 메뉴만 (healthScore 75 이상)
             let healthyMenus = menuDatabase.filter(menu => menu.healthScore >= 75);
             
@@ -2254,8 +2490,17 @@
                 matchedMenus = healthyMenus;
             }
             
+            // 이미 본 메뉴 제외
+            let availableMenus = matchedMenus.filter(menu => !shownMenuIds.includes(menu.id));
+            
+            // 모든 메뉴를 다 봤으면 초기화
+            if (availableMenus.length < 3) {
+                shownMenuIds = [];
+                availableMenus = matchedMenus;
+            }
+            
             // 상위 20개 중 3개 선택
-            const topMenus = matchedMenus.slice(0, Math.min(20, matchedMenus.length));
+            const topMenus = availableMenus.slice(0, Math.min(20, availableMenus.length));
             const shuffled = [...topMenus];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2263,6 +2508,9 @@
             }
             
             const selectedMenus = shuffled.slice(0, 3);
+            
+            // 선택한 메뉴 ID 기록
+            selectedMenus.forEach(menu => shownMenuIds.push(menu.id));
             
             displayIngredientMenus(selectedMenus, myIngredients);
             switchScreen('results');
@@ -2579,6 +2827,12 @@
                 return;
             }
             
+            // 냉장고 재료 모드인지 확인
+            if (isIngredientMode) {
+                recommendIngredientAgain(); // 냉장고 재료 추천 전용 함수 호출
+                return;
+            }
+            
             // 일반 추천: 현재 필터 조건으로 다른 메뉴 추천
             switchScreen('loading');
             setTimeout(() => {
@@ -2589,6 +2843,14 @@
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+            
+            // q0 화면이면 프로필 자동 로드
+            if (screenId === 'q0' && selectedData.gender && selectedData.height && selectedData.weight) {
+                document.getElementById('genderSelect').value = selectedData.gender;
+                document.getElementById('heightInput').value = selectedData.height;
+                document.getElementById('weightInput').value = selectedData.weight;
+                enableNextBtn('nextBtn0');
+            }
         }
 
         function enableNextBtn(btnId) {
@@ -3009,7 +3271,9 @@
         function restart() {
             // 모든 모드 초기화
             isFortuneMode = false;
+            isIngredientMode = false;
             currentFortune = null;
+            currentIngredients = [];
             shownMenuIds = [];
             allFilteredMenus = [];
             
