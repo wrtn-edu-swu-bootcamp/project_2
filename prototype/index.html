@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>밥심 - 서비스 프로토타입</title>
+    <title>밥심 - 스마트 영양 추천</title>
+    
+    <!-- 한글 웹폰트 -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    
     <style>
         * {
             margin: 0;
@@ -12,45 +17,103 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 900px;
+            background: #f8f9fa;
+            border-radius: 40px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 
+                        0 0 0 12px #1a1a1a,
+                        0 0 0 14px #333;
+            overflow: hidden;
+            position: relative;
+            animation: phonePopIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes phonePopIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .notch {
+            width: 180px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
             width: 100%;
-            overflow: hidden;
-            max-height: 90vh;
+            height: 100%;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-top: 35px;
         }
 
         .header {
-            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 25px 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: headerGlow 8s linear infinite;
+        }
+
+        @keyframes headerGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .header p {
-            opacity: 0.9;
-            font-size: 14px;
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .content {
-            padding: 30px;
+            padding: 25px 20px 30px;
         }
 
         .screen {
@@ -59,296 +122,299 @@
 
         .screen.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            0% { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .progress-bar {
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            margin-bottom: 20px;
+            height: 6px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            margin-bottom: 25px;
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4CAF50 0%, #81C784 100%);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
         }
 
         .question {
             margin-bottom: 30px;
         }
 
-        .question h3 {
-            color: #333;
+        .question-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
             margin-bottom: 15px;
-            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .question-num {
-            color: #4CAF50;
-            font-size: 14px;
+        .question h3 {
+            color: #1a1a1a;
+            font-size: 22px;
+            font-weight: 700;
             margin-bottom: 10px;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+        }
+
+        .question p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .options {
             display: grid;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .option-btn {
-            background: #f5f5f5;
-            border: 2px solid transparent;
-            padding: 15px 20px;
-            border-radius: 10px;
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 18px 20px;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-align: left;
-            font-size: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .option-btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .option-btn:hover {
-            background: #e8f5e9;
-            transform: translateX(5px);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
 
         .option-btn.selected {
-            background: #e8f5e9;
-            border-color: #4CAF50;
-            color: #2E7D32;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .option-btn small {
+            display: block;
+            font-size: 13px;
+            opacity: 0.7;
+            margin-top: 4px;
+            font-weight: 400;
         }
 
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-top: 25px;
+            font-family: 'Pretendard', sans-serif;
+            letter-spacing: -0.3px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
-        .nutrition-alert {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
+        .bmi-info, .nutrition-alert {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 16px;
             margin-bottom: 20px;
-            font-size: 14px;
-            color: #856404;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        .nutrition-alert strong {
+        .bmi-info strong, .nutrition-alert strong {
+            color: #667eea;
+            font-size: 17px;
             display: block;
-            margin-bottom: 5px;
-            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 2px solid #f0f0f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .menu-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .menu-card h4 {
+            color: #1a1a1a;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .health-score {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: #4CAF50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 13px;
-            font-weight: bold;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .health-score.medium {
-            background: #FFA726;
+            background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
         }
 
         .health-score.low {
-            background: #FF7043;
-        }
-
-        .menu-card {
-            background: #f9f9f9;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            position: relative;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-color: #4CAF50;
-        }
-
-        .menu-card h4 {
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .menu-card p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 12px;
+            background: linear-gradient(135deg, #FF7043 0%, #F4511E 100%);
         }
 
         .recommendation-reason {
-            background: #e8f5e9;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            color: #2E7D32;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f3e5f5 100%);
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+            font-size: 14px;
+            color: #2e7d32;
             border-left: 3px solid #4CAF50;
+            line-height: 1.6;
         }
 
         .menu-meta {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
-            font-size: 13px;
+            margin: 12px 0;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
             gap: 5px;
-            color: #888;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
         }
 
         .tag {
             display: inline-block;
-            background: #4CAF50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            margin-right: 5px;
-        }
-
-        .detail-section {
-            margin-bottom: 25px;
-        }
-
-        .detail-section h4 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .ingredient-list {
-            list-style: none;
-        }
-
-        .ingredient-list li {
-            padding: 8px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .ingredient-list li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #4CAF50;
-        }
-
-        .step-list {
-            list-style: none;
-            counter-reset: step-counter;
-        }
-
-        .step-list li {
-            padding: 12px 0;
-            padding-left: 35px;
-            position: relative;
-            counter-increment: step-counter;
-        }
-
-        .step-list li:before {
-            content: counter(step-counter);
-            position: absolute;
-            left: 0;
-            background: #4CAF50;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .nutrition-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .nutrition-item {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .nutrition-item .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4CAF50;
-            margin-bottom: 5px;
-        }
-
-        .nutrition-item .label {
-            font-size: 14px;
-            color: #666;
+            font-weight: 600;
+            margin: 4px 4px 4px 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
         }
 
         .loading {
             text-align: center;
-            padding: 40px 0;
+            padding: 60px 20px;
         }
 
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4CAF50;
+            border: 5px solid rgba(102, 126, 234, 0.1);
+            border-top: 5px solid #667eea;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
         }
 
         @keyframes spin {
@@ -356,248 +422,423 @@
             100% { transform: rotate(360deg); }
         }
 
+        .loading h3 {
+            color: #1a1a1a;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .loading p {
+            color: #666;
+            font-size: 15px;
+        }
+
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .input-group label {
             display: block;
-            color: #555;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Pretendard', sans-serif;
+            transition: all 0.3s;
+            background: white;
         }
 
         .input-group input:focus, .input-group select:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         .input-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .detail-section h4 {
+            color: #1a1a1a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .ingredient-list, .step-list {
+            list-style: none;
+        }
+
+        .ingredient-list li {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .ingredient-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            padding: 14px 0 14px 45px;
+            position: relative;
+            counter-increment: step-counter;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .step-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .nutrition-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .nutrition-item .value {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .nutrition-item .label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
         }
 
         .video-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: #4CAF50;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 14px 24px;
+            border-radius: 14px;
             text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+            width: 100%;
         }
 
         .video-link:hover {
-            background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .bmi-info {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #2196F3;
+        /* 웰컴 스크린 특별 스타일 */
+        #welcome {
+            text-align: center;
+            padding: 40px 0;
         }
 
-        .bmi-info strong {
-            color: #1976D2;
+        #welcome h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        #welcome p {
             font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        #welcome strong {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 스크롤바 스타일 */
+        .container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        /* 반응형 */
+        @media (max-width: 480px) {
+            .mobile-frame {
+                border-radius: 0;
+                max-width: 100%;
+                height: 100vh;
+                max-height: none;
+                box-shadow: none;
+            }
+
+            .notch {
+                display: none;
+            }
+
+            .container {
+                padding-top: 0;
+            }
+
+            .header {
+                padding-top: 50px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🍚 밥심</h1>
-            <p>당신의 영양 균형을 위한 스마트 식단 추천</p>
-        </div>
-
-        <div class="content">
-            <!-- Welcome Screen -->
-            <div id="welcome" class="screen active">
-                <h2 style="margin-bottom: 15px;">환영합니다!</h2>
-                <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
-                    당신의 몸 상태와 목표를 분석해서<br>
-                    <strong style="color: #4CAF50;">영양학적으로 균형잡힌 식단</strong>을 추천해드릴게요.
-                </p>
-                <button class="btn btn-primary" onclick="startQuestions()">시작하기</button>
+    <div class="mobile-frame">
+        <div class="notch"></div>
+        <div class="container">
+            <div class="header">
+                <h1>🍚 밥심</h1>
+                <p>당신의 영양 균형을 위한 스마트 식단 추천</p>
             </div>
 
-            <!-- Question 0: 기본 정보 -->
-            <div id="q0" class="screen">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 16%"></div>
-                </div>
-                <div class="question">
-                    <div class="question-num">필수 질문 1/6</div>
-                    <h3>기본 정보를 입력해주세요</h3>
-                    <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
-                        적정 칼로리와 필요 영양소를 계산합니다
+            <div class="content">
+                <!-- Welcome Screen -->
+                <div id="welcome" class="screen active">
+                    <h2>환영합니다!</h2>
+                    <p style="margin-bottom: 40px;">
+                        당신의 몸 상태와 목표를 분석해서<br>
+                        <strong>영양학적으로 균형잡힌 식단</strong>을<br>
+                        추천해드릴게요.
                     </p>
-                    <div class="input-group">
-                        <label>성별</label>
-                        <select id="genderSelect" onchange="enableNextBtn('nextBtn0')">
-                            <option value="">선택해주세요</option>
-                            <option value="male">남성</option>
-                            <option value="female">여성</option>
-                        </select>
+                    <button class="btn btn-primary" onclick="startQuestions()">시작하기</button>
+                </div>
+
+                <!-- Question 0: 기본 정보 -->
+                <div id="q0" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 16%"></div>
                     </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label>키 (cm)</label>
-                            <input type="number" id="heightInput" placeholder="170" onkeyup="enableNextBtn('nextBtn0')">
+                    <div class="question">
+                        <div class="question-num">필수 질문 1/5</div>
+                        <h3>기본 정보를 입력해주세요</h3>
+                        <p>적정 칼로리와 필요 영양소를 계산합니다</p>
+                        
+                        <div style="margin-top: 20px;">
+                            <div class="input-group">
+                                <label>성별</label>
+                                <select id="genderSelect" onchange="enableNextBtn('nextBtn0')">
+                                    <option value="">선택해주세요</option>
+                                    <option value="male">남성</option>
+                                    <option value="female">여성</option>
+                                </select>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label>키 (cm)</label>
+                                    <input type="number" id="heightInput" placeholder="170" onkeyup="enableNextBtn('nextBtn0')">
+                                </div>
+                                <div class="input-group">
+                                    <label>몸무게 (kg)</label>
+                                    <input type="number" id="weightInput" placeholder="65" onkeyup="enableNextBtn('nextBtn0')">
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <label>몸무게 (kg)</label>
-                            <input type="number" id="weightInput" placeholder="65" onkeyup="enableNextBtn('nextBtn0')">
+                    </div>
+                    <button class="btn btn-primary" id="nextBtn0" disabled onclick="nextScreen('q1')">다음</button>
+                </div>
+
+                <!-- Question 1: 식사 시간대 -->
+                <div id="q1" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 33%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 2/5</div>
+                        <h3>언제 드실 식사인가요?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(this, 'mealTime', '아침')">
+                                🌅 아침<br>
+                                <small>400-500kcal, 가벼운 단백질</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'mealTime', '점심')">
+                                ☀️ 점심<br>
+                                <small>600-800kcal, 든든한 에너지</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'mealTime', '저녁')">
+                                🌙 저녁<br>
+                                <small>500-700kcal, 소화 잘되는 식사</small>
+                            </button>
                         </div>
                     </div>
+                    <button class="btn btn-primary" id="nextBtn1" disabled onclick="nextScreen('q2')">다음</button>
                 </div>
-                <button class="btn btn-primary" id="nextBtn0" disabled onclick="nextScreen('q1')">다음</button>
-            </div>
 
-            <!-- Question 1: 식사 시간대 -->
-            <div id="q1" class="screen">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 33%"></div>
+                <!-- Question 2: 조리 가능 여부 -->
+                <div id="q2" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 50%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 3/5</div>
+                        <h3>요리 준비 시간은?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(this, 'cooking', '전자레인지')">
+                                📱 전자레인지만<br>
+                                <small>데우기만 하면 OK</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'cooking', '10분')">
+                                ⚡ 10분 이내<br>
+                                <small>간단 조리</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'cooking', '20분')">
+                                👨‍🍳 20분 이내<br>
+                                <small>기본 조리</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'cooking', '30분')">
+                                🔥 30분 이상<br>
+                                <small>본격 조리</small>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="nextBtn2" disabled onclick="nextScreen('q3')">다음</button>
                 </div>
-                <div class="question">
-                    <div class="question-num">필수 질문 2/6</div>
-                    <h3>언제 드실 식사인가요?</h3>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '아침')">
-                            🌅 아침<br>
-                            <small style="color: #999;">400-500kcal, 가벼운 단백질</small>
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '점심')">
-                            ☀️ 점심<br>
-                            <small style="color: #999;">600-800kcal, 든든한 에너지</small>
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'mealTime', '저녁')">
-                            🌙 저녁<br>
-                            <small style="color: #999;">500-700kcal, 소화 잘되는 식사</small>
-                        </button>
+
+                <!-- Question 3: 예산 -->
+                <div id="q3" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 66%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 4/5</div>
+                        <h3>한 끼 예산은?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(this, 'budget', '3000')">
+                                💰 3,000원 이하
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'budget', '5000')">
+                                💵 3,000원 - 5,000원
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'budget', '8000')">
+                                💳 5,000원 - 8,000원
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'budget', '15000')">
+                                💎 8,000원 이상
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="nextBtn3" disabled onclick="nextScreen('q4')">다음</button>
+                </div>
+
+                <!-- Question 4: 기피 식재료 -->
+                <div id="q4" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 83%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 5/5</div>
+                        <h3>못 먹는 재료가 있나요?</h3>
+                        <div class="input-group" style="margin-top: 20px;">
+                            <input type="text" placeholder="예: 새우, 버섯, 파, 계란 등" id="avoidInput">
+                            <p style="font-size: 13px; color: #999; margin-top: 8px;">없으면 비워두세요</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextScreen('loading')">추천받기</button>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="screen">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <h3>영양을 분석하고 있어요...</h3>
+                        <p>잠시만 기다려주세요 ✨</p>
                     </div>
                 </div>
-                <button class="btn btn-primary" id="nextBtn1" disabled onclick="nextScreen('q2')">다음</button>
-            </div>
 
-            <!-- Question 2: 조리 가능 여부 -->
-            <div id="q2" class="screen">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 50%"></div>
+                <!-- Results -->
+                <div id="results" class="screen">
+                    <div id="userAnalysis"></div>
+                    <h3 style="margin-bottom: 20px; font-size: 22px; font-weight: 700; color: #1a1a1a;">당신을 위한 건강한 식단</h3>
+                    <div id="menuContainer"></div>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
                 </div>
-                <div class="question">
-                    <div class="question-num">필수 질문 3/6</div>
-                    <h3>오늘 요리 준비, 어느 정도 가능하신가요?</h3>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 'cooking', '전자레인지')">
-                            📱 전자레인지만<br>
-                            <small style="color: #999;">데우기만 하면 OK</small>
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'cooking', '10분')">
-                            ⚡ 10분 이내 간단 조리<br>
-                            <small style="color: #999;">계란 프라이, 샐러드 정도</small>
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'cooking', '20분')">
-                            👨‍🍳 20분 이내 기본 조리<br>
-                            <small style="color: #999;">볶고 끓이는 정도</small>
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'cooking', '30분')">
-                            🔥 30분 이상 본격 조리<br>
-                            <small style="color: #999;">시간 여유 있어요</small>
-                        </button>
-                    </div>
-                </div>
-                <button class="btn btn-primary" id="nextBtn2" disabled onclick="nextScreen('q3')">다음</button>
-            </div>
 
-            <!-- Question 3: 예산 -->
-            <div id="q3" class="screen">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 66%"></div>
+                <!-- Detail View -->
+                <div id="detail" class="screen">
+                    <div id="detailContent"></div>
+                    <button class="btn btn-primary" onclick="backToResults()">다른 메뉴 보기</button>
                 </div>
-                <div class="question">
-                    <div class="question-num">필수 질문 4/6</div>
-                    <h3>한 끼에 얼마까지 쓸 수 있으세요?</h3>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '3000')">
-                            💰 3,000원 이하
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '5000')">
-                            💵 3,000원 - 5,000원
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '8000')">
-                            💳 5,000원 - 8,000원
-                        </button>
-                        <button class="option-btn" onclick="selectOption(this, 'budget', '15000')">
-                            💎 8,000원 이상
-                        </button>
-                    </div>
-                </div>
-                <button class="btn btn-primary" id="nextBtn3" disabled onclick="nextScreen('q4')">다음</button>
-            </div>
-
-            <!-- Question 4: 기피 식재료 -->
-            <div id="q4" class="screen">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 83%"></div>
-                </div>
-                <div class="question">
-                    <div class="question-num">필수 질문 5/6</div>
-                    <h3>못 먹거나 싫어하는 재료가 있나요?</h3>
-                    <div class="input-group">
-                        <input type="text" placeholder="예: 새우, 버섯, 파, 계란 등 (없으면 비워두세요)" id="avoidInput">
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="nextScreen('loading')">추천받기</button>
-            </div>
-
-            <!-- Loading -->
-            <div id="loading" class="screen">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <h3 style="color: #333; margin-bottom: 10px;">영양을 분석하고 있어요...</h3>
-                    <p style="color: #999;">잠시만 기다려주세요 ✨</p>
-                </div>
-            </div>
-
-            <!-- Results -->
-            <div id="results" class="screen">
-                <div id="userAnalysis"></div>
-                <h3 style="margin-bottom: 20px;">당신을 위한 건강한 식단</h3>
-                <div id="menuContainer"></div>
-                <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
-            </div>
-
-            <!-- Detail View -->
-            <div id="detail" class="screen">
-                <div id="detailContent"></div>
-                <button class="btn btn-primary" onclick="backToResults()">다른 메뉴 보기</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 건강한 메뉴 데이터베이스 (50개 이상)
+        // 메뉴 데이터베이스 (이전과 동일)
         const menuDatabase = [
-            // === 고단백 건강식 (영양 점수 80-95) ===
             {
                 id: 1,
                 name: "닭가슴살 샐러드",
@@ -722,8 +963,6 @@
                 videoSearch: "아보카도토스트+만들기",
                 benefits: ["필수 아미노산 완벽 섭취", "건강한 불포화지방", "비타민 E 풍부"]
             },
-
-            // === 채소 풍부 건강식 (영양 점수 75-90) ===
             {
                 id: 6,
                 name: "채소 듬뿍 비빔밥",
@@ -797,8 +1036,6 @@
                 videoSearch: "채소두부찌개+만들기",
                 benefits: ["저칼로리 280kcal", "다양한 채소 섭취", "단백질 18g"]
             },
-
-            // === 통곡물 건강식 (영양 점수 75-85) ===
             {
                 id: 9,
                 name: "현미 김치볶음밥",
@@ -847,8 +1084,6 @@
                 videoSearch: "귀리죽+만들기",
                 benefits: ["베타글루칸으로 콜레스테롤 감소", "소화 잘됨", "포만감 오래 지속"]
             },
-
-            // === 건강한 국물 요리 (영양 점수 70-85) ===
             {
                 id: 11,
                 name: "닭가슴살 채소 수프",
@@ -897,8 +1132,6 @@
                 videoSearch: "참치김치찌개+만들기",
                 benefits: ["오메가3로 두뇌 건강", "유산균으로 장 건강", "단백질 25g"]
             },
-
-            // === 건강한 간편식 (영양 점수 65-80) ===
             {
                 id: 13,
                 name: "그릭 요거트 과일 볼",
@@ -970,499 +1203,6 @@
                 tips: ["약한 불에서 천천히 저어가며 익히세요", "채소는 다양하게 넣을수록 좋아요"],
                 videoSearch: "채소+스크램블+만들기",
                 benefits: ["완전 단백질 18g", "다양한 채소 섭취", "빠른 조리"]
-            },
-
-            // === 건강 개선 메뉴 추가 (20개 더) ===
-            {
-                id: 16,
-                name: "현미 새우 리조또",
-                description: "이탈리안 스타일 건강식",
-                time: 25,
-                difficulty: "보통",
-                calories: 420,
-                protein: 24,
-                carbs: 55,
-                fat: 12,
-                cost: 8000,
-                healthScore: 83,
-                tags: ["고단백", "통곡물", "타우린"],
-                reason: "새우의 타우린과 현미의 식이섬유가 만나 영양과 맛을 동시에 잡았습니다.",
-                ingredients: ["현미", "새우", "양파", "마늘", "파르메산치즈", "채소육수"],
-                steps: [
-                    "양파와 마늘을 볶습니다 (2분)",
-                    "현미를 넣고 육수를 조금씩 부어가며 저어줍니다 (15분)",
-                    "새우를 넣고 익힙니다 (5분)",
-                    "치즈를 갈아 넣어 완성!"
-                ],
-                tips: ["육수는 따뜻하게 준비하세요", "저어주는 것이 핵심입니다"],
-                videoSearch: "새우+리조또+건강하게",
-                benefits: ["타우린으로 간 기능", "식이섬유 풍부", "고단백 24g"]
-            },
-            {
-                id: 17,
-                name: "두부 스테이크 덮밥",
-                description: "식물성 단백질 가득",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 420,
-                protein: 20,
-                carbs: 58,
-                fat: 12,
-                cost: 4500,
-                healthScore: 81,
-                tags: ["비건", "식물성단백질", "저지방"],
-                reason: "두부로 충분한 단백질을 섭취하며, 저지방으로 건강한 한 끼입니다.",
-                ingredients: ["두부", "현미밥", "브로콜리", "간장", "참기름", "통깨"],
-                steps: [
-                    "두부를 두껍게 자르고 팬에 굽습니다 (7분)",
-                    "브로콜리를 데칩니다 (3분)",
-                    "밥 위에 두부와 브로콜리를 올립니다",
-                    "간장 소스를 뿌려 완성!"
-                ],
-                tips: ["두부는 물기를 완전히 제거하세요", "센 불에서 바삭하게 구우세요"],
-                videoSearch: "두부스테이크+덮밥",
-                benefits: ["식물성 단백질 20g", "저지방 건강식", "비건 친화"]
-            },
-            {
-                id: 18,
-                name: "연어 아보카도 포케",
-                description: "하와이안 스타일 건강 볼",
-                time: 12,
-                difficulty: "쉬움",
-                calories: 480,
-                protein: 28,
-                carbs: 48,
-                fat: 18,
-                cost: 10000,
-                healthScore: 90,
-                tags: ["오메가3", "건강한지방", "프리미엄"],
-                reason: "연어의 오메가3와 아보카도의 불포화지방산으로 심혈관 건강에 최고입니다.",
-                ingredients: ["연어(회용)", "아보카도", "현미밥", "오이", "간장", "와사비"],
-                steps: [
-                    "연어를 큐브 모양으로 자릅니다",
-                    "아보카도와 오이를 썰어줍니다",
-                    "밥 위에 재료를 올립니다",
-                    "간장 소스를 뿌려 완성!"
-                ],
-                tips: ["연어는 신선한 회용으로", "아보카도는 먹기 직전에 자르세요"],
-                videoSearch: "포케+만들기",
-                benefits: ["오메가3 최고", "건강한 지방", "고단백 28g"]
-            },
-            {
-                id: 19,
-                name: "퀴노아 샐러드 볼",
-                description: "슈퍼푸드 퀴노아로 영양 충전",
-                time: 18,
-                difficulty: "쉬움",
-                calories: 380,
-                protein: 16,
-                carbs: 52,
-                fat: 10,
-                cost: 5500,
-                healthScore: 88,
-                tags: ["슈퍼푸드", "완전식품", "채소풍부"],
-                reason: "퀴노아는 9가지 필수 아미노산을 모두 함유한 완전 식품입니다.",
-                ingredients: ["퀴노아", "병아리콩", "방울토마토", "오이", "레몬", "올리브오일"],
-                steps: [
-                    "퀴노아를 삶습니다 (15분)",
-                    "채소를 썰어 준비합니다",
-                    "모든 재료를 섞습니다",
-                    "레몬즙과 올리브오일을 뿌려 완성!"
-                ],
-                tips: ["퀴노아는 물 2배 비율로 삶으세요", "차갑게 먹어도 맛있어요"],
-                videoSearch: "퀴노아+샐러드+만들기",
-                benefits: ["완전 단백질 섭취", "9가지 필수 아미노산", "식이섬유 풍부"]
-            },
-            {
-                id: 20,
-                name: "고구마 닭가슴살 볼",
-                description: "운동 후 최적의 조합",
-                time: 20,
-                difficulty: "쉬움",
-                calories: 450,
-                protein: 35,
-                carbs: 58,
-                fat: 6,
-                cost: 5500,
-                healthScore: 86,
-                tags: ["고단백", "복합탄수화물", "운동식"],
-                reason: "고구마의 복합 탄수화물과 닭가슴살의 단백질로 운동 후 회복에 최적입니다.",
-                ingredients: ["고구마", "닭가슴살", "브로콜리", "올리브오일", "후추"],
-                steps: [
-                    "고구마를 찌거나 구웁니다 (10분)",
-                    "닭가슴살을 굽습니다 (8분)",
-                    "브로콜리를 데칩니다 (3분)",
-                    "볼에 담아 완성!"
-                ],
-                tips: ["고구마는 전자레인지로 익혀도 OK", "닭가슴살은 촉촉하게 익히세요"],
-                videoSearch: "고구마+닭가슴살+만들기",
-                benefits: ["고단백 35g", "복합 탄수화물", "운동 후 회복"]
-            },
-            {
-                id: 21,
-                name: "렌틸콩 카레",
-                description: "식물성 단백질 풍부한 비건 카레",
-                time: 25,
-                difficulty: "보통",
-                calories: 380,
-                protein: 18,
-                carbs: 62,
-                fat: 8,
-                cost: 4000,
-                healthScore: 84,
-                tags: ["비건", "식물성단백질", "식이섬유"],
-                reason: "렌틸콩의 식물성 단백질과 식이섬유로 장 건강과 포만감을 높입니다.",
-                ingredients: ["렌틸콩", "토마토", "양파", "카레가루", "코코넛밀크", "마늘"],
-                steps: [
-                    "양파와 마늘을 볶습니다 (3분)",
-                    "렌틸콩과 토마토를 넣고 끓입니다 (15분)",
-                    "카레가루와 코코넛밀크를 넣습니다 (5분)"
-                ],
-                tips: ["렌틸콩은 불리지 않아도 돼요", "코코넛밀크로 부드러운 맛"],
-                videoSearch: "렌틸콩+카레+만들기",
-                benefits: ["식물성 단백질 18g", "식이섬유 풍부", "비건 완벽식"]
-            },
-            {
-                id: 22,
-                name: "토마토 달걀 볶음",
-                description: "중식 스타일 간단 요리",
-                time: 10,
-                difficulty: "쉬움",
-                calories: 280,
-                protein: 14,
-                carbs: 22,
-                fat: 14,
-                cost: 3000,
-                healthScore: 79,
-                tags: ["간편", "리코펜", "단백질"],
-                reason: "토마토의 리코펜이 항산화 작용을 하며, 계란으로 단백질을 보충합니다.",
-                ingredients: ["토마토", "계란", "파", "설탕", "소금"],
-                steps: [
-                    "토마토를 큼직하게 썰어줍니다",
-                    "팬에 토마토를 먼저 볶습니다 (4분)",
-                    "계란을 풀어 넣고 볶습니다 (3분)",
-                    "소금과 설탕으로 간해 완성!"
-                ],
-                tips: ["토마토는 잘 익은 것을 사용하세요", "설탕을 조금 넣으면 감칠맛이 나요"],
-                videoSearch: "토마토+달걀+볶음",
-                benefits: ["리코펜의 항산화", "간편한 조리", "단백질 14g"]
-            },
-            {
-                id: 23,
-                name: "시금치 두부 된장국",
-                description: "철분과 단백질이 풍부한 국",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 220,
-                protein: 16,
-                carbs: 18,
-                fat: 8,
-                cost: 3500,
-                healthScore: 82,
-                tags: ["철분", "단백질", "저칼로리"],
-                reason: "시금치의 철분과 두부의 단백질로 영양 균형이 좋은 저칼로리 식사입니다.",
-                ingredients: ["시금치", "두부", "된장", "멸치육수", "마늘", "대파"],
-                steps: [
-                    "멸치로 육수를 냅니다 (5분)",
-                    "된장을 풀고 마늘을 넣습니다",
-                    "두부와 시금치를 넣고 끓입니다 (7분)"
-                ],
-                tips: ["시금치는 마지막에 넣어야 색이 살아요", "된장은 체에 거르세요"],
-                videoSearch: "시금치+두부+된장국",
-                benefits: ["철분으로 빈혈 예방", "단백질 16g", "저칼로리 220kcal"]
-            },
-            {
-                id: 24,
-                name: "현미 김밥",
-                description: "통곡물로 만든 건강 김밥",
-                time: 20,
-                difficulty: "보통",
-                calories: 420,
-                protein: 14,
-                carbs: 68,
-                fat: 10,
-                cost: 5000,
-                healthScore: 80,
-                tags: ["통곡물", "간편", "한식"],
-                reason: "현미로 식이섬유를 높이고, 다양한 재료로 영양 균형을 맞춘 김밥입니다.",
-                ingredients: ["현미밥", "김", "시금치", "당근", "단무지", "참기름"],
-                steps: [
-                    "재료를 준비하고 볶거나 데칩니다 (10분)",
-                    "김 위에 현미밥을 펴고 재료를 올립니다",
-                    "말아서 한입 크기로 자릅니다"
-                ],
-                tips: ["밥은 식혀서 사용하세요", "꽉 말아야 흐트러지지 않아요"],
-                videoSearch: "현미+김밥+만들기",
-                benefits: ["식이섬유 풍부", "다양한 영양소", "간편한 한 끼"]
-            },
-            {
-                id: 25,
-                name: "병아리콩 샐러드",
-                description: "식물성 단백질 폭탄",
-                time: 10,
-                difficulty: "쉬움",
-                calories: 320,
-                protein: 15,
-                carbs: 45,
-                fat: 9,
-                cost: 4000,
-                healthScore: 85,
-                tags: ["비건", "식물성단백질", "식이섬유"],
-                reason: "병아리콩의 식물성 단백질과 식이섬유로 장 건강과 포만감을 높입니다.",
-                ingredients: ["병아리콩(캔)", "방울토마토", "오이", "레몬", "올리브오일", "파슬리"],
-                steps: [
-                    "병아리콩을 헹궈 물기를 뺍니다",
-                    "채소를 썰어 줍니다",
-                    "모든 재료를 섞습니다",
-                    "레몬즙과 올리브오일을 뿌려 완성!"
-                ],
-                tips: ["병아리콩 캔을 사용하면 간편해요", "냉장 보관하면 2-3일 가능"],
-                videoSearch: "병아리콩+샐러드",
-                benefits: ["식물성 단백질 15g", "식이섬유 풍부", "비건 완벽식"]
-            },
-            {
-                id: 26,
-                name: "양송이버섯 스테이크",
-                description: "저칼로리 비건 스테이크",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 180,
-                protein: 8,
-                carbs: 18,
-                fat: 8,
-                cost: 4500,
-                healthScore: 78,
-                tags: ["비건", "저칼로리", "버섯"],
-                reason: "버섯의 비타민 D와 낮은 칼로리로 다이어트에 최적입니다.",
-                ingredients: ["양송이버섯(대)", "마늘", "올리브오일", "발사믹식초", "파슬리"],
-                steps: [
-                    "버섯을 큼직하게 준비합니다",
-                    "팬에 올리브오일과 마늘을 볶습니다 (2분)",
-                    "버섯을 앞뒤로 굽습니다 (10분)",
-                    "발사믹식초를 뿌려 완성!"
-                ],
-                tips: ["버섯은 씻지 말고 닦아서 사용하세요", "센 불에서 바삭하게"],
-                videoSearch: "버섯+스테이크",
-                benefits: ["비타민 D 풍부", "저칼로리 180kcal", "비건 친화"]
-            },
-            {
-                id: 27,
-                name: "콩나물 무침",
-                description: "아삭한 식감의 저칼로리 반찬",
-                time: 10,
-                difficulty: "쉬움",
-                calories: 120,
-                protein: 8,
-                carbs: 15,
-                fat: 3,
-                cost: 2000,
-                healthScore: 75,
-                tags: ["저칼로리", "아삭", "단백질"],
-                reason: "콩나물의 아스파라긴산이 피로 회복에 도움을 주며 저칼로리입니다.",
-                ingredients: ["콩나물", "대파", "마늘", "참기름", "깨소금"],
-                steps: [
-                    "콩나물을 삶습니다 (5분)",
-                    "물기를 빼고 양념을 넣습니다",
-                    "버무려서 완성!"
-                ],
-                tips: ["콩나물은 너무 익히면 아삭함이 없어요", "찬물에 헹구면 더 아삭해요"],
-                videoSearch: "콩나물+무침",
-                benefits: ["아스파라긴산으로 피로 회복", "저칼로리 120kcal", "단백질 8g"]
-            },
-            {
-                id: 28,
-                name: "닭가슴살 무한리필 샐러드",
-                description: "포만감 높은 다이어트 식사",
-                time: 12,
-                difficulty: "쉬움",
-                calories: 320,
-                protein: 38,
-                carbs: 22,
-                fat: 8,
-                cost: 6000,
-                healthScore: 92,
-                tags: ["고단백", "저지방", "다이어트"],
-                reason: "닭가슴살 150g으로 단백질을 충분히 섭취하며, 다양한 채소로 포만감을 높입니다.",
-                ingredients: ["닭가슴살 150g", "로메인", "방울토마토", "오이", "파프리카", "발사믹"],
-                steps: [
-                    "닭가슴살을 삶거나 구웁니다 (10분)",
-                    "채소를 씻어 큼직하게 썰어줍니다",
-                    "볼에 담고 닭가슴살을 올립니다",
-                    "발사믹 드레싱을 뿌려 완성!"
-                ],
-                tips: ["채소는 신선한 것을 많이 넣으세요", "드레싱은 적게 사용하세요"],
-                videoSearch: "닭가슴살+샐러드+다이어트",
-                benefits: ["고단백 38g", "저지방 8g", "높은 포만감"]
-            },
-            {
-                id: 29,
-                name: "브로콜리 퀴노아 볼",
-                description: "슈퍼푸드 조합",
-                time: 20,
-                difficulty: "쉬움",
-                calories: 350,
-                protein: 16,
-                carbs: 52,
-                fat: 9,
-                cost: 5000,
-                healthScore: 89,
-                tags: ["슈퍼푸드", "완전식품", "채소"],
-                reason: "퀴노아와 브로콜리 모두 슈퍼푸드로, 영양소가 매우 풍부합니다.",
-                ingredients: ["퀴노아", "브로콜리", "아보카도", "방울토마토", "레몬", "올리브오일"],
-                steps: [
-                    "퀴노아를 삶습니다 (15분)",
-                    "브로콜리를 데칩니다 (3분)",
-                    "아보카도와 토마토를 썰어줍니다",
-                    "볼에 담고 레몬즙을 뿌려 완성!"
-                ],
-                tips: ["퀴노아는 미리 만들어두면 편해요", "아보카도는 먹기 직전에"],
-                videoSearch: "퀴노아+브로콜리+볼",
-                benefits: ["슈퍼푸드 2종", "완전 단백질", "영양소 풍부"]
-            },
-            {
-                id: 30,
-                name: "현미 새우 볶음밥",
-                description: "통곡물과 해산물의 만남",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 450,
-                protein: 22,
-                carbs: 62,
-                fat: 12,
-                cost: 7000,
-                healthScore: 81,
-                tags: ["통곡물", "해산물", "타우린"],
-                reason: "현미의 식이섬유와 새우의 타우린으로 건강하게 즐기는 볶음밥입니다.",
-                ingredients: ["현미밥", "새우", "당근", "완두콩", "계란", "간장"],
-                steps: [
-                    "새우를 손질해서 볶습니다 (3분)",
-                    "채소를 넣고 함께 볶습니다 (2분)",
-                    "현미밥과 계란을 넣고 볶습니다 (8분)"
-                ],
-                tips: ["현미밥은 미리 식혀두세요", "센 불에서 빠르게 볶으세요"],
-                videoSearch: "현미+새우+볶음밥",
-                benefits: ["식이섬유 풍부", "타우린으로 간 건강", "단백질 22g"]
-            },
-            {
-                id: 31,
-                name: "연어 포케 볼",
-                description: "하와이안 스타일 영양식",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 480,
-                protein: 30,
-                carbs: 50,
-                fat: 16,
-                cost: 10000,
-                healthScore: 91,
-                tags: ["오메가3", "고단백", "프리미엄"],
-                reason: "연어의 오메가3와 신선한 채소로 최고의 영양 균형을 자랑합니다.",
-                ingredients: ["연어(회용)", "현미밥", "아보카도", "오이", "에다마메", "간장"],
-                steps: [
-                    "연어를 큐브로 자릅니다",
-                    "채소를 준비합니다",
-                    "밥 위에 재료를 예쁘게 담습니다",
-                    "간장 소스를 곁들여 완성!"
-                ],
-                tips: ["재료는 차갑게 준비하세요", "연어는 신선한 회용으로"],
-                videoSearch: "연어+포케+볼",
-                benefits: ["오메가3 최고 함량", "고단백 30g", "프리미엄 영양식"]
-            },
-            {
-                id: 32,
-                name: "두부 채소 전골",
-                description: "따뜻한 저칼로리 건강식",
-                time: 20,
-                difficulty: "쉬움",
-                calories: 280,
-                protein: 20,
-                carbs: 24,
-                fat: 10,
-                cost: 5000,
-                healthScore: 84,
-                tags: ["저칼로리", "단백질", "채소풍부"],
-                reason: "두부와 다양한 채소로 영양은 높이고 칼로리는 낮춘 건강한 전골입니다.",
-                ingredients: ["두부", "배추", "버섯", "당근", "대파", "멸치육수"],
-                steps: [
-                    "육수를 끓입니다 (5분)",
-                    "채소를 썰어 넣습니다 (10분)",
-                    "두부를 넣고 한소끔 끓입니다 (3분)"
-                ],
-                tips: ["채소는 다양하게 넣을수록 좋아요", "두부는 마지막에"],
-                videoSearch: "두부+전골+만들기",
-                benefits: ["저칼로리 280kcal", "단백질 20g", "채소 풍부"]
-            },
-            {
-                id: 33,
-                name: "치킨 케이준 샐러드",
-                description: "매콤한 고단백 샐러드",
-                time: 15,
-                difficulty: "쉬움",
-                calories: 350,
-                protein: 32,
-                carbs: 22,
-                fat: 14,
-                cost: 6000,
-                healthScore: 85,
-                tags: ["고단백", "매콤", "다이어트"],
-                reason: "케이준 양념으로 맛있게, 고단백으로 건강하게 즐기는 샐러드입니다.",
-                ingredients: ["닭가슴살", "케이준시즈닝", "로메인", "방울토마토", "옥수수", "요거트드레싱"],
-                steps: [
-                    "닭가슴살에 케이준시즈닝을 발라 굽습니다 (10분)",
-                    "채소를 준비합니다",
-                    "볼에 담고 요거트드레싱을 뿌립니다"
-                ],
-                tips: ["케이준시즈닝은 취향껏 조절하세요", "닭가슴살은 촉촉하게"],
-                videoSearch: "케이준+치킨+샐러드",
-                benefits: ["고단백 32g", "매콤한 맛", "저지방 다이어트식"]
-            },
-            {
-                id: 34,
-                name: "아보카도 명란 덮밥",
-                description: "건강한 지방과 단백질의 조화",
-                time: 10,
-                difficulty: "쉬움",
-                calories: 420,
-                protein: 18,
-                carbs: 52,
-                fat: 16,
-                cost: 6500,
-                healthScore: 80,
-                tags: ["건강한지방", "간편", "영양"],
-                reason: "아보카도의 불포화지방산과 명란의 단백질로 영양 균형이 좋습니다.",
-                ingredients: ["현미밥", "아보카도", "명란", "김", "참기름", "깨소금"],
-                steps: [
-                    "아보카도를 슬라이스합니다",
-                    "밥 위에 아보카도와 명란을 올립니다",
-                    "김과 깨소금을 뿌려 완성!"
-                ],
-                tips: ["아보카도는 잘 익은 것으로", "간장을 살짝 뿌려도 맛있어요"],
-                videoSearch: "아보카도+명란+덮밥",
-                benefits: ["불포화지방산 풍부", "간편한 한 끼", "영양 균형"]
-            },
-            {
-                id: 35,
-                name: "시금치 페스토 파스타",
-                description: "철분 가득 건강 파스타",
-                time: 20,
-                difficulty: "보통",
-                calories: 450,
-                protein: 16,
-                carbs: 68,
-                fat: 14,
-                cost: 5500,
-                healthScore: 79,
-                tags: ["철분", "채소", "양식"],
-                reason: "시금치의 철분과 통밀 파스타로 건강하게 즐기는 이탈리안 요리입니다.",
-                ingredients: ["통밀파스타", "시금치", "마늘", "잣", "파르메산치즈", "올리브오일"],
-                steps: [
-                    "파스타를 삶습니다 (8분)",
-                    "시금치 페스토를 만듭니다 (믹서에 갈기, 5분)",
-                    "파스타와 페스토를 버무립니다"
-                ],
-                tips: ["페스토는 미리 만들어 냉동 보관 가능", "치즈는 넉넉히"],
-                videoSearch: "시금치+페스토+파스타",
-                benefits: ["철분으로 빈혈 예방", "통밀로 식이섬유", "건강한 양식"]
             }
         ];
 
@@ -1528,15 +1268,12 @@
         }
 
         function getRecommendCalories(gender, weight, height, mealTime) {
-            // 기초대사량 계산 (Harris-Benedict)
             let bmr = gender === 'male' 
-                ? 66 + (13.7 * weight) + (5 * height) - (6.8 * 25)  // 평균 나이 25세 가정
+                ? 66 + (13.7 * weight) + (5 * height) - (6.8 * 25)
                 : 655 + (9.6 * weight) + (1.8 * height) - (4.7 * 25);
             
-            // 활동대사량 (보통 활동량)
             const tdee = bmr * 1.55;
             
-            // 식사별 칼로리 비율
             const mealRatios = {
                 '아침': 0.25,
                 '점심': 0.35,
@@ -1583,7 +1320,6 @@
             const avoidList = selectedData.avoid.split(',').map(item => item.trim()).filter(item => item);
             const targetCalories = selectedData.recommendCalories;
 
-            // 필터링
             filteredMenus = menuDatabase.filter(menu => {
                 if (menu.time > maxTime) return false;
                 if (menu.cost > maxBudget) return false;
@@ -1602,23 +1338,19 @@
                 return true;
             });
 
-            // 건강 점수 순으로 정렬
             filteredMenus.sort((a, b) => b.healthScore - a.healthScore);
 
-            // 칼로리가 목표와 가까운 순으로 가중치 부여
             filteredMenus.forEach(menu => {
                 const calorieDiff = Math.abs(menu.calories - targetCalories);
                 menu.calorieScore = 100 - (calorieDiff / 10);
             });
 
-            // 최종 점수 = 건강점수 70% + 칼로리점수 30%
             filteredMenus.sort((a, b) => {
                 const scoreA = (a.healthScore * 0.7) + (a.calorieScore * 0.3);
                 const scoreB = (b.healthScore * 0.7) + (b.calorieScore * 0.3);
                 return scoreB - scoreA;
             });
 
-            // 상위 5개 중에서 랜덤 3개 선택 (다양성)
             const topMenus = filteredMenus.slice(0, Math.min(8, filteredMenus.length));
             const selectedMenus = [];
             
@@ -1636,7 +1368,6 @@
             const analysisDiv = document.getElementById('userAnalysis');
             const container = document.getElementById('menuContainer');
             
-            // 사용자 분석 정보 표시
             let bmiStatus = '';
             let bmiColor = '';
             if (selectedData.bmi < 18.5) {
@@ -1655,8 +1386,8 @@
 
             analysisDiv.innerHTML = `
                 <div class="bmi-info">
-                    <strong>당신의 건강 분석</strong><br>
-                    <div style="margin-top: 10px; font-size: 14px;">
+                    <strong>당신의 건강 분석</strong>
+                    <div style="margin-top: 10px; font-size: 15px; line-height: 1.8;">
                         BMI: <span style="color: ${bmiColor}; font-weight: bold;">${selectedData.bmi}</span> (${bmiStatus})<br>
                         권장 칼로리: <strong>${selectedData.recommendCalories}kcal</strong>
                     </div>
@@ -1665,9 +1396,9 @@
             
             if (menus.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: #666;">
-                        <h3 style="margin-bottom: 15px;">😢 조건에 맞는 메뉴가 없어요</h3>
-                        <p>예산을 조금 올리거나 조리 시간을 늘려보세요</p>
+                    <div style="text-align: center; padding: 60px 20px; color: #666;">
+                        <h3 style="margin-bottom: 15px; font-size: 20px;">😢 조건에 맞는 메뉴가 없어요</h3>
+                        <p style="font-size: 15px;">예산을 조금 올리거나 조리 시간을 늘려보세요</p>
                     </div>
                 `;
                 return;
@@ -1706,14 +1437,14 @@
                     <div class="recommendation-reason">
                         💡 <strong>추천 이유:</strong> ${menu.reason}
                     </div>
-                    <p style="color: #4CAF50; font-weight: bold; font-size: 13px;">${calorieNote}</p>
+                    <p style="color: #667eea; font-weight: bold; font-size: 14px; margin-bottom: 10px;">${calorieNote}</p>
                     <div class="menu-meta">
                         <div class="meta-item">⏱️ ${menu.time}분</div>
                         <div class="meta-item">⭐ ${menu.difficulty}</div>
                         <div class="meta-item">🔥 ${menu.calories}kcal</div>
                         <div class="meta-item">💪 ${menu.protein}g</div>
                     </div>
-                    <div style="margin-top: 10px;">
+                    <div style="margin-top: 12px;">
                         ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
                     </div>
                 </div>
@@ -1727,15 +1458,15 @@
             currentMenu = menu;
             
             const detailHTML = `
-                <h3 style="margin-bottom: 10px;">${menu.name}</h3>
+                <h3 style="margin-bottom: 12px; font-size: 24px; font-weight: 700;">${menu.name}</h3>
                 <span class="health-score">🌟 건강 점수: ${menu.healthScore}점</span>
                 
-                <div class="detail-section" style="margin-top: 20px;">
+                <div class="detail-section" style="margin-top: 25px;">
                     <h4>🛒 필요한 재료</h4>
                     <ul class="ingredient-list">
                         ${menu.ingredients.map(ing => `<li>${ing}</li>`).join('')}
                     </ul>
-                    <p style="color: #4CAF50; margin-top: 10px; font-weight: bold;">예상 비용: 약 ${menu.cost.toLocaleString()}원</p>
+                    <p style="color: #667eea; margin-top: 12px; font-weight: bold; font-size: 15px;">예상 비용: 약 ${menu.cost.toLocaleString()}원</p>
                 </div>
 
                 <div class="detail-section">
