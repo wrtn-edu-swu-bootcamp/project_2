@@ -905,7 +905,7 @@
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                        <button class="btn btn-secondary" onclick="quickStart()">빠르게 추천받기 (3문항)</button>
+                        <button class="btn btn-secondary" onclick="quickStart()">빠르게 추천받기 (5문항)</button>
                     </div>
                     
                     <div id="quickRecommendBtn" style="display: none; margin-top: 10px;">
@@ -916,10 +916,54 @@
                 <!-- Quick Mode Screen -->
                 <div id="quickMode" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 33%"></div>
+                        <div class="progress-fill" style="width: 20%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">빠른 추천 1/3</div>
+                        <div class="question-num">빠른 추천 1/5</div>
+                        <h3>언제 드실 건가요?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '아침')">
+                                🌅 아침
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '점심')">
+                                ☀️ 점심
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'mealTime', '저녁')">
+                                🌙 저녁
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="quickBtn1" disabled onclick="nextQuick('quick2')">다음</button>
+                </div>
+
+                <div id="quick2" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">빠른 추천 2/5</div>
+                        <h3>목표가 뭔가요?</h3>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '다이어트')">
+                                📉 다이어트
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '건강유지')">
+                                🌱 건강유지
+                            </button>
+                            <button class="option-btn" onclick="selectQuickOption(this, 'goal', '근육증가')">
+                                💪 근육증가
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="quickBtn2" disabled onclick="nextQuick('quick3')">다음</button>
+                </div>
+
+                <div id="quick3" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">빠른 추천 3/5</div>
                         <h3>얼마나 시간이 있나요?</h3>
                         <div class="options">
                             <button class="option-btn" onclick="selectQuickOption(this, 'cooking', '전자레인지')">
@@ -933,15 +977,15 @@
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary" id="quickBtn1" disabled onclick="nextQuick('quick2')">다음</button>
+                    <button class="btn btn-primary" id="quickBtn3" disabled onclick="nextQuick('quick4')">다음</button>
                 </div>
 
-                <div id="quick2" class="screen">
+                <div id="quick4" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 66%"></div>
+                        <div class="progress-fill" style="width: 80%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">빠른 추천 2/3</div>
+                        <div class="question-num">빠른 추천 4/5</div>
                         <h3>예산은 얼마나?</h3>
                         <div class="options">
                             <button class="option-btn" onclick="selectQuickOption(this, 'budget', '3000')">
@@ -955,15 +999,15 @@
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary" id="quickBtn2" disabled onclick="nextQuick('quick3')">다음</button>
+                    <button class="btn btn-primary" id="quickBtn4" disabled onclick="nextQuick('quick5')">다음</button>
                 </div>
 
-                <div id="quick3" class="screen">
+                <div id="quick5" class="screen">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 100%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">빠른 추천 3/3</div>
+                        <div class="question-num">빠른 추천 5/5</div>
                         <h3>못 먹는 재료는?</h3>
                         <div class="input-group" style="margin-top: 20px;">
                             <input type="text" placeholder="예: 계란, 새우 (없으면 비워두세요)" id="quickAvoidInput">
@@ -1670,7 +1714,93 @@
                 tips: ["약한 불에서 천천히 저어가며 익히세요", "채소는 다양하게 넣을수록 좋아요"],
                 videoSearch: "채소+스크램블+만들기",
                 benefits: ["완전 단백질 18g", "다양한 채소 섭취", "빠른 조리"]
-            }
+            },
+            // === 추가 메뉴 85개 ===
+            { id: 16, name: "고구마 샐러드", description: "식이섬유 풍부", time: 15, difficulty: "쉬움", calories: 320, protein: 8, carbs: 55, fat: 8, cost: 3500, healthScore: 88, tags: ["식이섬유", "비타민", "다이어트"], reason: "고구마의 복합 탄수화물과 식이섬유로 포만감이 오래 지속됩니다.", ingredients: ["고구마", "양상추", "방울토마토", "요거트 드레싱"], steps: ["고구마를 쪄서 식힙니다", "채소와 함께 담아 드레싱 뿌리기"], tips: ["고구마는 전자레인지 5분"], videoSearch: "고구마샐러드", benefits: ["식이섬유", "비타민A", "저지방"] },
+            { id: 17, name: "퀴노아 볼", description: "완전 단백질 슈퍼푸드", time: 20, difficulty: "보통", calories: 380, protein: 15, carbs: 52, fat: 12, cost: 6000, healthScore: 93, tags: ["슈퍼푸드", "완전단백질", "비건"], reason: "퀴노아는 9가지 필수 아미노산을 모두 포함한 완전 단백질입니다.", ingredients: ["퀴노아", "아보카도", "병아리콩", "채소", "레몬드레싱"], steps: ["퀴노아 삶기", "채소와 함께 볼에 담기"], tips: ["퀴노아는 물 2배로 15분"], videoSearch: "퀴노아볼", benefits: ["완전단백질", "식이섬유", "철분"] },
+            { id: 18, name: "두부 스테이크 덮밥", description: "고단백 한 그릇", time: 15, difficulty: "쉬움", calories: 420, protein: 24, carbs: 58, fat: 10, cost: 4500, healthScore: 86, tags: ["고단백", "한그릇", "간편"], reason: "두부의 식물성 단백질로 건강하게 포만감을 채웁니다.", ingredients: ["두부", "현미밥", "브로콜리", "간장소스"], steps: ["두부 굽기", "밥 위에 올리기"], tips: ["두부는 물기 제거 필수"], videoSearch: "두부스테이크덮밥", benefits: ["식물성단백질", "저칼로리", "소화잘됨"] },
+            { id: 19, name: "새우 아보카도 샐러드", description: "고단백 저칼로리", time: 12, difficulty: "쉬움", calories: 290, protein: 28, carbs: 15, fat: 14, cost: 8000, healthScore: 91, tags: ["고단백", "저칼로리", "오메가3"], reason: "새우의 고단백과 아보카도의 건강한 지방이 완벽한 조합입니다.", ingredients: ["새우", "아보카도", "양상추", "레몬"], steps: ["새우 삶기", "채소와 버무리기"], tips: ["새우는 3분만"], videoSearch: "새우아보카도샐러드", benefits: ["고단백28g", "건강한지방", "저칼로리"] },
+            { id: 20, name: "현미 주먹밥", description: "간편한 한 끼", time: 10, difficulty: "매우쉬움", calories: 350, protein: 8, carbs: 65, fat: 5, cost: 2500, healthScore: 79, tags: ["간편", "통곡물", "휴대용"], reason: "현미의 식이섬유로 포만감 있는 간편 한 끼입니다.", ingredients: ["현미밥", "김", "참기름", "소금"], steps: ["현미밥 뭉치기", "김 감기"], tips: ["손에 물 묻히기"], videoSearch: "현미주먹밥", benefits: ["식이섬유", "휴대간편", "경제적"] },
+            { id: 21, name: "렌틸콩 카레", description: "식물성 단백질 풍부", time: 25, difficulty: "보통", calories: 380, protein: 18, carbs: 58, fat: 8, cost: 4000, healthScore: 88, tags: ["비건", "식물성단백질", "향신료"], reason: "렌틸콩의 풍부한 철분과 단백질로 영양 만점입니다.", ingredients: ["렌틸콩", "카레가루", "양파", "토마토", "코코넛밀크"], steps: ["렌틸콩 삶기", "카레 끓이기"], tips: ["렌틸콩은 불리지 않아도 OK"], videoSearch: "렌틸콩카레", benefits: ["철분", "단백질", "항산화"] },
+            { id: 22, name: "토마토 달걀볶음", description: "중식 간단 요리", time: 10, difficulty: "쉬움", calories: 250, protein: 16, carbs: 18, fat: 12, cost: 3000, healthScore: 84, tags: ["중식", "간편", "영양"], reason: "토마토의 리코펜과 계란의 단백질이 만나 영양 가득합니다.", ingredients: ["토마토", "계란", "마늘", "설탕"], steps: ["토마토 볶기", "계란 넣고 섞기"], tips: ["설탕 약간이 포인트"], videoSearch: "토마토달걀볶음", benefits: ["리코펜", "단백질", "간편"] },
+            { id: 23, name: "시금치 된장국", description: "저칼로리 국물 요리", time: 15, difficulty: "쉬움", calories: 120, protein: 8, carbs: 15, fat: 3, cost: 2500, healthScore: 81, tags: ["저칼로리", "한식", "국물"], reason: "시금치의 철분과 된장의 발효 영양소로 건강합니다.", ingredients: ["시금치", "된장", "두부", "멸치육수"], steps: ["육수 내기", "된장 풀고 시금치 넣기"], tips: ["시금치는 마지막에"], videoSearch: "시금치된장국", benefits: ["철분", "저칼로리", "발효식품"] },
+            { id: 24, name: "단호박 샐러드", description: "비타민A 가득", time: 15, difficulty: "쉬움", calories: 280, protein: 6, carbs: 48, fat: 8, cost: 3500, healthScore: 87, tags: ["비타민", "채소", "다이어트"], reason: "단호박의 베타카로틴이 면역력을 높여줍니다.", ingredients: ["단호박", "견과류", "발사믹", "루꼴라"], steps: ["단호박 찌기", "샐러드와 버무리기"], tips: ["전자레인지 7분"], videoSearch: "단호박샐러드", benefits: ["베타카로틴", "면역력", "항산화"] },
+            { id: 25, name: "연두부 샐러드", description: "부드러운 단백질", time: 5, difficulty: "매우쉬움", calories: 180, protein: 12, carbs: 10, fat: 10, cost: 3000, healthScore: 83, tags: ["저칼로리", "단백질", "간편"], reason: "연두부의 부드러운 식감과 단백질로 간편한 한 끼입니다.", ingredients: ["연두부", "간장", "참기름", "파"], steps: ["연두부 담기", "양념 뿌리기"], tips: ["차가운 두부가 맛있어요"], videoSearch: "연두부샐러드", benefits: ["단백질", "저칼로리", "소화잘됨"] },
+            { id: 26, name: "병아리콩 후무스", description: "중동식 건강 간식", time: 10, difficulty: "쉬움", calories: 220, protein: 10, carbs: 25, fat: 10, cost: 4000, healthScore: 85, tags: ["중동식", "단백질", "간식"], reason: "병아리콩의 식물성 단백질과 식이섬유가 풍부합니다.", ingredients: ["병아리콩", "타히니", "레몬", "마늘", "올리브오일"], steps: ["병아리콩 으깨기", "재료 섞기"], tips: ["믹서기 사용 추천"], videoSearch: "후무스만들기", benefits: ["식물성단백질", "식이섬유", "건강간식"] },
+            { id: 27, name: "아스파라거스 베이컨 볶음", description: "간단 서양식", time: 12, difficulty: "쉬움", calories: 280, protein: 18, carbs: 12, fat: 18, cost: 5500, healthScore: 80, tags: ["서양식", "간편", "영양"], reason: "아스파라거스의 엽산과 베이컨의 풍미가 조화롭습니다.", ingredients: ["아스파라거스", "베이컨", "마늘", "올리브오일"], steps: ["베이컨 굽기", "아스파라거스 볶기"], tips: ["센 불에서 빠르게"], videoSearch: "아스파라거스베이컨", benefits: ["엽산", "단백질", "간편"] },
+            { id: 28, name: "오트밀 바나나 볼", description: "아침 에너지 충전", time: 5, difficulty: "매우쉬움", calories: 320, protein: 12, carbs: 52, fat: 8, cost: 3000, healthScore: 86, tags: ["아침", "통곡물", "간편"], reason: "오트밀의 베타글루칸으로 콜레스테롤 관리에 좋습니다.", ingredients: ["오트밀", "바나나", "우유", "꿀"], steps: ["오트밀에 우유 붓기", "바나나 올리기"], tips: ["하룻밤 불려도 좋아요"], videoSearch: "오트밀볼", benefits: ["베타글루칸", "포만감", "빠른아침"] },
+            { id: 29, name: "양배추 샐러드", description: "식이섬유 듬뿍", time: 10, difficulty: "매우쉬움", calories: 150, protein: 5, carbs: 22, fat: 5, cost: 2000, healthScore: 82, tags: ["저칼로리", "식이섬유", "경제적"], reason: "양배추의 비타민U가 위 건강에 도움을 줍니다.", ingredients: ["양배추", "당근", "사과식초", "올리브오일"], steps: ["양배추 채 썰기", "드레싱 버무리기"], tips: ["소금 약간 뿌려 절이기"], videoSearch: "양배추샐러드", benefits: ["비타민U", "위건강", "저칼로리"] },
+            { id: 30, name: "두부 김치볶음", description: "얼큰한 한식", time: 15, difficulty: "쉬움", calories: 320, protein: 20, carbs: 25, fat: 15, cost: 3500, healthScore: 83, tags: ["한식", "단백질", "유산균"], reason: "두부의 단백질과 김치의 유산균이 만나 영양 만점입니다.", ingredients: ["두부", "김치", "돼지고기", "고춧가루"], steps: ["김치 볶기", "두부 넣기"], tips: ["두부는 물기 빼기"], videoSearch: "두부김치볶음", benefits: ["단백질", "유산균", "얼큰"] },
+            { id: 31, name: "콩나물국밥", description: "해장 최고", time: 20, difficulty: "쉬움", calories: 380, protein: 15, carbs: 58, fat: 8, cost: 3500, healthScore: 81, tags: ["한식", "해장", "국물"], reason: "콩나물의 아스파라긴산이 숙취 해소에 도움을 줍니다.", ingredients: ["콩나물", "밥", "멸치육수", "대파"], steps: ["육수 끓이기", "콩나물 넣기"], tips: ["뚜껑 열지 말고 삶기"], videoSearch: "콩나물국밥", benefits: ["아스파라긴산", "해장", "포만감"] },
+            { id: 32, name: "가지볶음", description: "저칼로리 반찬", time: 15, difficulty: "쉬움", calories: 180, protein: 5, carbs: 22, fat: 8, cost: 2500, healthScore: 80, tags: ["저칼로리", "채소", "간편"], reason: "가지의 안토시아닌이 항산화 효과를 제공합니다.", ingredients: ["가지", "간장", "마늘", "참기름"], steps: ["가지 썰기", "볶기"], tips: ["가지는 소금물에 담그기"], videoSearch: "가지볶음", benefits: ["안토시아닌", "저칼로리", "항산화"] },
+            { id: 33, name: "버섯 리조또", description: "서양식 영양 한 그릇", time: 25, difficulty: "보통", calories: 420, protein: 12, carbs: 65, fat: 12, cost: 5000, healthScore: 84, tags: ["서양식", "버섯", "한그릇"], reason: "버섯의 비타민D와 쌀의 탄수화물이 조화롭습니다.", ingredients: ["쌀", "버섯", "파마산치즈", "화이트와인"], steps: ["쌀 볶기", "육수 부으며 저어주기"], tips: ["육수는 따뜻하게"], videoSearch: "버섯리조또", benefits: ["비타민D", "크리미", "영양"] },
+            { id: 34, name: "시리얼 과일 볼", description: "빠른 아침", time: 3, difficulty: "매우쉬움", calories: 280, protein: 10, carbs: 52, fat: 5, cost: 3500, healthScore: 78, tags: ["아침", "간편", "빠름"], reason: "시리얼과 과일로 빠르고 간편한 아침 식사입니다.", ingredients: ["시리얼", "우유", "바나나", "블루베리"], steps: ["시리얼 담기", "우유 붓기", "과일 올리기"], tips: ["통곡물 시리얼 선택"], videoSearch: "시리얼볼", benefits: ["빠른아침", "비타민", "간편"] },
+            { id: 35, name: "미역국", description: "한식 전통 국물", time: 20, difficulty: "쉬움", calories: 120, protein: 8, carbs: 10, fat: 5, cost: 2500, healthScore: 82, tags: ["한식", "저칼로리", "미네랄"], reason: "미역의 요오드와 미네랄이 갑상선 건강에 좋습니다.", ingredients: ["미역", "쇠고기", "다시다", "참기름"], steps: ["미역 불리기", "고기 볶다 물 넣기"], tips: ["미역은 물에 20분"], videoSearch: "미역국", benefits: ["요오드", "미네랄", "저칼로리"] },
+            { id: 36, name: "새송이버섯 구이", description: "비건 스테이크", time: 10, difficulty: "매우쉬움", calories: 80, protein: 6, carbs: 12, fat: 2, cost: 2500, healthScore: 85, tags: ["비건", "저칼로리", "간편"], reason: "새송이버섯의 식감과 영양으로 만족스러운 한 끼입니다.", ingredients: ["새송이버섯", "올리브오일", "소금", "후추"], steps: ["버섯 슬라이스", "팬에 굽기"], tips: ["센 불에서 빠르게"], videoSearch: "새송이버섯구이", benefits: ["저칼로리", "식이섬유", "비건"] },
+            { id: 37, name: "순두부찌개", description: "부드러운 한식", time: 15, difficulty: "쉬움", calories: 280, protein: 18, carbs: 20, fat: 12, cost: 4000, healthScore: 84, tags: ["한식", "단백질", "매운맛"], reason: "순두부의 부드러운 단백질로 소화가 잘 됩니다.", ingredients: ["순두부", "계란", "김치", "고춧가루"], steps: ["육수 끓이기", "순두부 넣기"], tips: ["계란은 마지막에"], videoSearch: "순두부찌개", benefits: ["단백질", "소화잘됨", "얼큰"] },
+            { id: 38, name: "단호박죽", description: "달콤한 건강 죽", time: 25, difficulty: "보통", calories: 280, protein: 6, carbs: 58, fat: 4, cost: 3500, healthScore: 86, tags: ["죽", "비타민", "소화"], reason: "단호박의 베타카로틴이 면역력을 높여줍니다.", ingredients: ["단호박", "쌀", "우유", "소금"], steps: ["단호박 찌기", "으깨서 죽 끓이기"], tips: ["믹서기로 곱게"], videoSearch: "단호박죽", benefits: ["베타카로틴", "소화잘됨", "면역력"] },
+            { id: 39, name: "감자 샐러드", description: "포만감 샐러드", time: 20, difficulty: "쉬움", calories: 320, protein: 8, carbs: 48, fat: 10, cost: 3000, healthScore: 79, tags: ["포만감", "경제적", "간편"], reason: "감자의 칼륨이 나트륨 배출을 도와줍니다.", ingredients: ["감자", "계란", "마요네즈", "오이"], steps: ["감자 삶기", "으깨서 버무리기"], tips: ["감자는 껍질째"], videoSearch: "감자샐러드", benefits: ["칼륨", "포만감", "경제적"] },
+            { id: 40, name: "참치 샐러드", description: "고단백 간편식", time: 8, difficulty: "매우쉬움", calories: 280, protein: 30, carbs: 15, fat: 12, cost: 4500, healthScore: 88, tags: ["고단백", "간편", "오메가3"], reason: "참치의 EPA/DHA로 두뇌 건강에 좋습니다.", ingredients: ["참치캔", "양상추", "토마토", "올리브오일"], steps: ["참치 기름 빼기", "채소와 섞기"], tips: ["참치는 물에 담근거 선택"], videoSearch: "참치샐러드", benefits: ["고단백30g", "오메가3", "간편"] },
+            { id: 41, name: "아보카도 샐러드", description: "건강한 지방", time: 10, difficulty: "매우쉬움", calories: 280, protein: 6, carbs: 20, fat: 20, cost: 5000, healthScore: 89, tags: ["건강한지방", "비타민", "간편"], reason: "아보카도의 불포화지방산이 심혈관 건강에 좋습니다.", ingredients: ["아보카도", "방울토마토", "루꼴라", "레몬"], steps: ["아보카도 자르기", "샐러드와 버무리기"], tips: ["레몬즙은 변색 방지"], videoSearch: "아보카도샐러드", benefits: ["불포화지방", "비타민E", "심혈관건강"] },
+            { id: 42, name: "팽이버섯 볶음", description: "저칼로리 반찬", time: 10, difficulty: "매우쉬움", calories: 80, protein: 5, carbs: 12, fat: 2, cost: 2000, healthScore: 81, tags: ["저칼로리", "식이섬유", "간편"], reason: "팽이버섯의 식이섬유가 장 건강에 도움을 줍니다.", ingredients: ["팽이버섯", "간장", "마늘", "참기름"], steps: ["팽이버섯 씻기", "팬에 볶기"], tips: ["센 불에서 빠르게"], videoSearch: "팽이버섯볶음", benefits: ["저칼로리", "식이섬유", "경제적"] },
+            { id: 43, name: "토마토 파스타", description: "이탈리안 클래식", time: 20, difficulty: "보통", calories: 480, protein: 15, carbs: 72, fat: 14, cost: 4500, healthScore: 82, tags: ["이탈리안", "파스타", "토마토"], reason: "토마토의 리코펜과 파스타의 탄수화물이 균형잡힌 한 끼입니다.", ingredients: ["스파게티", "토마토소스", "마늘", "올리브오일"], steps: ["파스타 삶기", "소스에 볶기"], tips: ["파스타는 알덴테로"], videoSearch: "토마토파스타", benefits: ["리코펜", "탄수화물", "이탈리안"] },
+            { id: 44, name: "두유 스무디", description: "식물성 단백질 음료", time: 5, difficulty: "매우쉬움", calories: 220, protein: 15, carbs: 28, fat: 6, cost: 3500, healthScore: 85, tags: ["음료", "단백질", "간편"], reason: "두유의 이소플라본이 호르몬 균형에 도움을 줍니다.", ingredients: ["두유", "바나나", "블루베리", "꿀"], steps: ["재료 믹서에 넣기", "갈기"], tips: ["얼음 추가하면 시원"], videoSearch: "두유스무디", benefits: ["이소플라본", "단백질", "빠름"] },
+            { id: 45, name: "콩비지찌개", description: "고단백 저칼로리", time: 20, difficulty: "쉬움", calories: 250, protein: 20, carbs: 22, fat: 8, cost: 3000, healthScore: 87, tags: ["고단백", "저칼로리", "한식"], reason: "콩비지의 식물성 단백질과 식이섬유가 풍부합니다.", ingredients: ["콩비지", "김치", "돼지고기", "대파"], steps: ["육수 끓이기", "콩비지 넣기"], tips: ["콩비지는 마지막에"], videoSearch: "콩비지찌개", benefits: ["식물성단백질", "식이섬유", "저칼로리"] },
+            { id: 46, name: "달걀말이", description: "간단 단백질", time: 10, difficulty: "쉬움", calories: 220, protein: 18, carbs: 8, fat: 14, cost: 2500, healthScore: 82, tags: ["단백질", "간편", "도시락"], reason: "계란의 완전 단백질로 영양 만점입니다.", ingredients: ["계란 4개", "소금", "파", "당근"], steps: ["계란 풀기", "팬에 말아가며 굽기"], tips: ["약한 불에서 천천히"], videoSearch: "달걀말이", benefits: ["완전단백질", "간편", "휴대용"] },
+            { id: 47, name: "청포묵 무침", description: "저칼로리 한식", time: 10, difficulty: "매우쉬움", calories: 120, protein: 3, carbs: 22, fat: 3, cost: 2500, healthScore: 79, tags: ["저칼로리", "한식", "간편"], reason: "청포묵의 식이섬유가 포만감을 주며 칼로리가 낮습니다.", ingredients: ["청포묵", "간장", "깨", "파"], steps: ["청포묵 자르기", "양념 버무리기"], tips: ["차갑게 먹어야 맛있어요"], videoSearch: "청포묵무침", benefits: ["저칼로리", "식이섬유", "포만감"] },
+            { id: 48, name: "시금치 나물", description: "철분 가득 반찬", time: 10, difficulty: "쉬움", calories: 80, protein: 5, carbs: 10, fat: 3, cost: 2000, healthScore: 84, tags: ["철분", "나물", "한식"], reason: "시금치의 철분과 엽산이 빈혈 예방에 좋습니다.", ingredients: ["시금치", "간장", "마늘", "참기름"], steps: ["시금치 데치기", "양념 무치기"], tips: ["데친 후 찬물에"], videoSearch: "시금치나물", benefits: ["철분", "엽산", "저칼로리"] },
+            { id: 49, name: "호박죽", description: "소화 잘되는 죽", time: 30, difficulty: "보통", calories: 280, protein: 6, carbs: 58, fat: 4, cost: 3000, healthScore: 83, tags: ["죽", "소화", "전통"], reason: "호박의 베타카로틴과 부드러운 식감으로 소화가 잘 됩니다.", ingredients: ["호박", "쌀", "팥", "소금"], steps: ["호박 찌기", "쌀과 함께 끓이기"], tips: ["믹서기로 곱게 갈기"], videoSearch: "호박죽", benefits: ["베타카로틴", "소화잘됨", "전통식"] },
+            { id: 50, name: "명란 파스타", description: "일식 퓨전", time: 15, difficulty: "쉬움", calories: 480, protein: 20, carbs: 68, fat: 15, cost: 6000, healthScore: 81, tags: ["퓨전", "파스타", "일식"], reason: "명란의 DHA와 파스타의 탄수화물이 균형잡힌 한 끼입니다.", ingredients: ["스파게티", "명란젓", "버터", "김"], steps: ["파스타 삶기", "명란과 버무리기"], tips: ["불 끄고 버무리기"], videoSearch: "명란파스타", benefits: ["DHA", "탄수화물", "퓨전"] },
+            { id: 51, name: "무생채", description: "아삭한 반찬", time: 15, difficulty: "쉬움", calories: 80, protein: 2, carbs: 15, fat: 2, cost: 1500, healthScore: 80, tags: ["반찬", "저칼로리", "한식"], reason: "무의 소화효소가 소화를 돕고 비타민C가 풍부합니다.", ingredients: ["무", "고춧가루", "식초", "설탕"], steps: ["무 채 썰기", "양념 무치기"], tips: ["30분 재우면 더 맛있어요"], videoSearch: "무생채", benefits: ["소화효소", "비타민C", "저칼로리"] },
+            { id: 52, name: "닭가슴살 샌드위치", description: "고단백 간편식", time: 12, difficulty: "쉬움", calories: 380, protein: 32, carbs: 42, fat: 10, cost: 5000, healthScore: 88, tags: ["고단백", "샌드위치", "간편"], reason: "닭가슴살의 고단백과 통곡물빵의 식이섬유가 조화롭습니다.", ingredients: ["통곡물빵", "닭가슴살", "양상추", "토마토"], steps: ["닭가슴살 굽기", "빵에 채소와 함께 넣기"], tips: ["닭가슴살은 소금 간"], videoSearch: "닭가슴살샌드위치", benefits: ["고단백32g", "식이섬유", "간편"] },
+            { id: 53, name: "토마토 계란국", description: "중식 간단 국", time: 10, difficulty: "매우쉬움", calories: 180, protein: 12, carbs: 15, fat: 8, cost: 2500, healthScore: 82, tags: ["중식", "간편", "국물"], reason: "토마토의 리코펜과 계란의 단백질이 영양 만점입니다.", ingredients: ["토마토", "계란", "파", "소금"], steps: ["물 끓이고 토마토 넣기", "계란 풀어넣기"], tips: ["계란은 천천히 저으며"], videoSearch: "토마토계란국", benefits: ["리코펜", "단백질", "간편"] },
+            { id: 54, name: "표고버섯볶음", description: "향긋한 반찬", time: 12, difficulty: "쉬움", calories: 100, protein: 6, carbs: 14, fat: 3, cost: 3000, healthScore: 83, tags: ["버섯", "반찬", "저칼로리"], reason: "표고버섯의 비타민D와 식이섬유가 풍부합니다.", ingredients: ["표고버섯", "간장", "마늘", "참기름"], steps: ["표고버섯 썰기", "팬에 볶기"], tips: ["물기 없이 볶기"], videoSearch: "표고버섯볶음", benefits: ["비타민D", "식이섬유", "저칼로리"] },
+            { id: 55, name: "단호박 샐러드", description: "달콤한 샐러드", time: 15, difficulty: "쉬움", calories: 250, protein: 5, carbs: 45, fat: 6, cost: 3500, healthScore: 86, tags: ["샐러드", "비타민", "간편"], reason: "단호박의 베타카로틴이 항산화 효과를 제공합니다.", ingredients: ["단호박", "견과류", "치즈", "꿀"], steps: ["단호박 찌기", "재료와 섞기"], tips: ["전자레인지 7분"], videoSearch: "단호박샐러드", benefits: ["베타카로틴", "항산화", "달콤"] },
+            { id: 56, name: "우엉조림", description: "식이섬유 반찬", time: 25, difficulty: "보통", calories: 180, protein: 4, carbs: 32, fat: 5, cost: 3000, healthScore: 82, tags: ["반찬", "식이섬유", "한식"], reason: "우엉의 이눌린이 장 건강에 도움을 줍니다.", ingredients: ["우엉", "간장", "설탕", "참기름"], steps: ["우엉 썰기", "조림장에 졸이기"], tips: ["식초물에 담가 변색 방지"], videoSearch: "우엉조림", benefits: ["이눌린", "식이섬유", "장건강"] },
+            { id: 57, name: "연근조림", description: "아삭한 반찬", time: 20, difficulty: "보통", calories: 160, protein: 3, carbs: 30, fat: 4, cost: 3500, healthScore: 81, tags: ["반찬", "식이섬유", "한식"], reason: "연근의 탄닌이 지혈과 위 건강에 좋습니다.", ingredients: ["연근", "간장", "설탕", "식초"], steps: ["연근 썰기", "조림장에 졸이기"], tips: ["식초물에 데치기"], videoSearch: "연근조림", benefits: ["탄닌", "식이섬유", "위건강"] },
+            { id: 58, name: "토마토 달걀국", description: "간단 국물", time: 10, difficulty: "매우쉬움", calories: 150, protein: 10, carbs: 12, fat: 7, cost: 2500, healthScore: 81, tags: ["국물", "간편", "영양"], reason: "토마토와 계란의 조합으로 영양 균형이 좋습니다.", ingredients: ["토마토", "계란", "대파", "소금"], steps: ["물 끓이기", "토마토와 계란 넣기"], tips: ["토마토는 십자로 칼집"], videoSearch: "토마토달걀국", benefits: ["리코펜", "단백질", "간편"] },
+            { id: 59, name: "숙주나물", description: "아삭한 나물", time: 8, difficulty: "매우쉬움", calories: 60, protein: 4, carbs: 8, fat: 2, cost: 1500, healthScore: 80, tags: ["나물", "저칼로리", "한식"], reason: "숙주의 비타민C와 식이섬유가 풍부합니다.", ingredients: ["숙주", "간장", "마늘", "깨"], steps: ["숙주 데치기", "양념 무치기"], tips: ["데치는 시간 짧게"], videoSearch: "숙주나물", benefits: ["비타민C", "식이섬유", "저칼로리"] },
+            { id: 60, name: "애호박볶음", description: "담백한 반찬", time: 10, difficulty: "쉬움", calories: 100, protein: 4, carbs: 12, fat: 4, cost: 2000, healthScore: 80, tags: ["반찬", "저칼로리", "한식"], reason: "애호박의 비타민과 미네랄이 풍부합니다.", ingredients: ["애호박", "양파", "마늘", "식용유"], steps: ["호박 썰기", "팬에 볶기"], tips: ["센 불에서 빠르게"], videoSearch: "애호박볶음", benefits: ["비타민", "저칼로리", "간편"] },
+            { id: 61, name: "단백질 셰이크", description: "운동 후 보충", time: 3, difficulty: "매우쉬움", calories: 180, protein: 25, carbs: 15, fat: 3, cost: 4000, healthScore: 85, tags: ["단백질", "운동", "간편"], reason: "빠른 단백질 흡수로 근육 회복에 도움을 줍니다.", ingredients: ["단백질파우더", "우유", "바나나"], steps: ["셰이커에 재료 넣기", "흔들기"], tips: ["운동 후 30분 내"], videoSearch: "단백질셰이크", benefits: ["고단백25g", "빠른흡수", "근육회복"] },
+            { id: 62, name: "그린 스무디", description: "녹색 채소 음료", time: 5, difficulty: "매우쉬움", calories: 150, protein: 5, carbs: 28, fat: 3, cost: 4000, healthScore: 90, tags: ["스무디", "채소", "다이어트"], reason: "녹색 채소의 엽록소와 비타민이 해독에 도움을 줍니다.", ingredients: ["시금치", "케일", "사과", "바나나"], steps: ["믹서에 재료 넣기", "갈기"], tips: ["얼음 추가 추천"], videoSearch: "그린스무디", benefits: ["엽록소", "비타민", "해독"] },
+            { id: 63, name: "베리 스무디 볼", description: "항산화 가득", time: 8, difficulty: "쉬움", calories: 280, protein: 10, carbs: 52, fat: 5, cost: 5000, healthScore: 88, tags: ["스무디", "항산화", "아침"], reason: "베리류의 안토시아닌이 항산화 효과를 제공합니다.", ingredients: ["믹스베리", "그릭요거트", "바나나", "그래놀라"], steps: ["베리와 요거트 갈기", "그래놀라 토핑"], tips: ["얼린 베리 사용"], videoSearch: "베리스무디볼", benefits: ["안토시아닌", "항산화", "예쁨"] },
+            { id: 64, name: "치킨 샐러드 랩", description: "고단백 휴대식", time: 15, difficulty: "쉬움", calories: 380, protein: 30, carbs: 35, fat: 12, cost: 5500, healthScore: 87, tags: ["고단백", "랩", "휴대용"], reason: "닭가슴살의 고단백과 통밀 토르티야로 영양 균형이 좋습니다.", ingredients: ["토르티야", "닭가슴살", "양상추", "토마토"], steps: ["닭가슴살 굽기", "토르티야에 말기"], tips: ["토르티야 살짝 데우기"], videoSearch: "치킨랩", benefits: ["고단백", "휴대편함", "영양균형"] },
+            { id: 65, name: "아보카도 토스트", description: "트렌디 브런치", time: 10, difficulty: "매우쉬움", calories: 320, protein: 12, carbs: 35, fat: 16, cost: 5000, healthScore: 86, tags: ["브런치", "건강한지방", "트렌디"], reason: "아보카도의 불포화지방산과 통곡물빵의 식이섬유가 조화롭습니다.", ingredients: ["통곡물빵", "아보카도", "계란", "토마토"], steps: ["빵 굽기", "아보카도 으깨 바르기"], tips: ["레몬즙 추가"], videoSearch: "아보카도토스트", benefits: ["불포화지방", "식이섬유", "트렌디"] },
+            { id: 66, name: "계란 샌드위치", description: "단백질 간편식", time: 10, difficulty: "쉬움", calories: 320, protein: 18, carbs: 38, fat: 12, cost: 3500, healthScore: 82, tags: ["단백질", "샌드위치", "간편"], reason: "계란의 완전 단백질로 영양 만점인 간편 식사입니다.", ingredients: ["빵", "계란", "양상추", "마요네즈"], steps: ["계란 삶기", "빵에 넣기"], tips: ["계란은 반숙"], videoSearch: "계란샌드위치", benefits: ["완전단백질", "간편", "포만감"] },
+            { id: 67, name: "참치 마요 덮밥", description: "간편 한 그릇", time: 10, difficulty: "매우쉬움", calories: 480, protein: 28, carbs: 62, fat: 14, cost: 4500, healthScore: 80, tags: ["간편", "한그릇", "고단백"], reason: "참치의 단백질과 밥의 탄수화물이 균형잡힌 한 끼입니다.", ingredients: ["밥", "참치캔", "마요네즈", "김"], steps: ["밥 담기", "참치 마요 올리기"], tips: ["김가루 듬뿍"], videoSearch: "참치마요덮밥", benefits: ["고단백", "간편", "포만감"] },
+            { id: 68, name: "두부 김치국", description: "얼큰한 국물", time: 15, difficulty: "쉬움", calories: 200, protein: 15, carbs: 18, fat: 8, cost: 3000, healthScore: 82, tags: ["한식", "국물", "단백질"], reason: "두부의 단백질과 김치의 유산균이 만나 건강한 한 끼입니다.", ingredients: ["두부", "김치", "대파", "육수"], steps: ["육수 끓이기", "김치와 두부 넣기"], tips: ["김치는 잘 익은 것"], videoSearch: "두부김치국", benefits: ["단백질", "유산균", "얼큰"] },
+            { id: 69, name: "버섯 덮밥", description: "고소한 한 그릇", time: 15, difficulty: "쉬움", calories: 380, protein: 12, carbs: 62, fat: 10, cost: 4000, healthScore: 83, tags: ["한그릇", "버섯", "간편"], reason: "버섯의 식이섬유와 비타민D가 풍부합니다.", ingredients: ["밥", "느타리버섯", "간장", "마늘"], steps: ["버섯 볶기", "밥 위에 올리기"], tips: ["버섯은 물기 없이"], videoSearch: "버섯덮밥", benefits: ["식이섬유", "비타민D", "저칼로리"] },
+            { id: 70, name: "냉이된장국", description: "봄나물 국", time: 15, difficulty: "쉬움", calories: 120, protein: 8, carbs: 15, fat: 3, cost: 3500, healthScore: 85, tags: ["봄나물", "한식", "계절"], reason: "냉이의 향긋함과 영양소가 봄철 피로 회복에 좋습니다.", ingredients: ["냉이", "된장", "두부", "육수"], steps: ["육수 끓이기", "된장 풀고 냉이 넣기"], tips: ["냉이는 마지막에"], videoSearch: "냉이된장국", benefits: ["봄나물", "비타민", "향긋"] },
+            { id: 71, name: "닭고기 야채볶음", description: "고단백 중식", time: 18, difficulty: "보통", calories: 350, protein: 32, carbs: 25, fat: 14, cost: 5500, healthScore: 86, tags: ["중식", "고단백", "채소"], reason: "닭고기의 고단백과 다양한 야채의 영양소가 조화롭습니다.", ingredients: ["닭고기", "파프리카", "양파", "간장"], steps: ["닭고기 볶기", "야채 넣고 볶기"], tips: ["센 불에서 빠르게"], videoSearch: "닭고기야채볶음", benefits: ["고단백", "채소다양", "중식"] },
+            { id: 72, name: "콩나물무침", description: "숙취 해소 나물", time: 10, difficulty: "매우쉬움", calories: 80, protein: 6, carbs: 10, fat: 2, cost: 1500, healthScore: 81, tags: ["나물", "숙취해소", "저칼로리"], reason: "콩나물의 아스파라긴산이 숙취 해소에 도움을 줍니다.", ingredients: ["콩나물", "간장", "마늘", "깨"], steps: ["콩나물 삶기", "양념 무치기"], tips: ["뚜껑 열지 말고"], videoSearch: "콩나물무침", benefits: ["아스파라긴산", "숙취해소", "저칼로리"] },
+            { id: 73, name: "멸치볶음", description: "칼슘 가득 반찬", time: 15, difficulty: "쉬움", calories: 180, protein: 15, carbs: 12, fat: 10, cost: 3000, healthScore: 83, tags: ["칼슘", "반찬", "한식"], reason: "멸치의 칼슘이 뼈 건강에 도움을 줍니다.", ingredients: ["멸치", "간장", "물엿", "견과류"], steps: ["멸치 볶기", "간장양념 넣기"], tips: ["약한 불에서 천천히"], videoSearch: "멸치볶음", benefits: ["칼슘", "뼈건강", "반찬"] },
+            { id: 74, name: "고등어구이", description: "오메가3 생선", time: 15, difficulty: "쉬움", calories: 320, protein: 28, carbs: 0, fat: 22, cost: 4500, healthScore: 89, tags: ["생선", "오메가3", "고단백"], reason: "고등어의 오메가3가 심혈관 건강에 매우 좋습니다.", ingredients: ["고등어", "소금", "레몬"], steps: ["고등어에 소금", "그릴에 굽기"], tips: ["껍질 바삭하게"], videoSearch: "고등어구이", benefits: ["오메가3", "고단백", "심혈관건강"] },
+            { id: 75, name: "된장찌개", description: "한식 국물 정석", time: 20, difficulty: "쉬움", calories: 220, protein: 15, carbs: 20, fat: 8, cost: 3500, healthScore: 84, tags: ["한식", "국물", "발효"], reason: "된장의 발효 영양소가 장 건강에 도움을 줍니다.", ingredients: ["된장", "두부", "호박", "버섯", "육수"], steps: ["육수 끓이기", "된장 풀고 재료 넣기"], tips: ["된장은 체에 거르기"], videoSearch: "된장찌개", benefits: ["발효식품", "장건강", "한식"] },
+            { id: 76, name: "참치 주먹밥", description: "간편 휴대식", time: 10, difficulty: "매우쉬움", calories: 350, protein: 22, carbs: 52, fat: 8, cost: 3500, healthScore: 81, tags: ["간편", "휴대용", "주먹밥"], reason: "참치의 단백질과 밥의 탄수화물이 균형잡힌 간편식입니다.", ingredients: ["밥", "참치캔", "김", "깨"], steps: ["밥에 참치 섞기", "주먹밥 만들기"], tips: ["참치 기름 빼기"], videoSearch: "참치주먹밥", benefits: ["단백질", "간편", "휴대용"] },
+            { id: 77, name: "달걀 비빔밥", description: "완전 단백질 한 끼", time: 15, difficulty: "쉬움", calories: 420, protein: 20, carbs: 62, fat: 12, cost: 4000, healthScore: 84, tags: ["한그릇", "단백질", "간편"], reason: "계란의 완전 단백질과 채소의 영양이 조화롭습니다.", ingredients: ["밥", "계란", "나물", "고추장"], steps: ["밥에 나물 담기", "계란 올리기"], tips: ["계란은 반숙"], videoSearch: "달걀비빔밥", benefits: ["완전단백질", "영양균형", "간편"] },
+            { id: 78, name: "김치전", description: "간단 한식 간식", time: 15, difficulty: "쉬움", calories: 280, protein: 8, carbs: 38, fat: 10, cost: 3000, healthScore: 78, tags: ["한식", "간식", "유산균"], reason: "김치의 유산균이 장 건강에 도움을 줍니다.", ingredients: ["김치", "부침가루", "계란", "식용유"], steps: ["김치와 반죽 섞기", "팬에 부치기"], tips: ["김치는 잘게 썰기"], videoSearch: "김치전", benefits: ["유산균", "간단", "한식"] },
+            { id: 79, name: "부추전", description: "향긋한 전", time: 15, difficulty: "쉬움", calories: 250, protein: 10, carbs: 35, fat: 8, cost: 3000, healthScore: 79, tags: ["전", "한식", "채소"], reason: "부추의 황화알릴이 혈액순환에 도움을 줍니다.", ingredients: ["부추", "부침가루", "계란", "식용유"], steps: ["부추와 반죽 섞기", "팬에 부치기"], tips: ["부추는 3cm로"], videoSearch: "부추전", benefits: ["황화알릴", "혈액순환", "향긋"] },
+            { id: 80, name: "해물파전", description: "바삭한 한식", time: 20, difficulty: "보통", calories: 380, protein: 18, carbs: 42, fat: 15, cost: 6000, healthScore: 80, tags: ["해물", "전", "한식"], reason: "해물의 타우린이 피로 회복에 도움을 줍니다.", ingredients: ["오징어", "새우", "부추", "부침가루"], steps: ["해물과 반죽 섞기", "팬에 바삭하게 부치기"], tips: ["센 불에서 바삭하게"], videoSearch: "해물파전", benefits: ["타우린", "해물", "바삭"] },
+            { id: 81, name: "두부조림", description: "단백질 반찬", time: 20, difficulty: "쉬움", calories: 220, protein: 18, carbs: 15, fat: 10, cost: 3000, healthScore: 83, tags: ["반찬", "단백질", "한식"], reason: "두부의 식물성 단백질이 건강하게 단백질을 보충합니다.", ingredients: ["두부", "간장", "설탕", "파"], steps: ["두부 굽기", "조림장에 조리기"], tips: ["두부는 물기 제거"], videoSearch: "두부조림", benefits: ["식물성단백질", "저칼로리", "간편"] },
+            { id: 82, name: "묵은지 김치찌개", description: "진한 한식 국물", time: 25, difficulty: "쉬움", calories: 280, protein: 15, carbs: 22, fat: 12, cost: 4000, healthScore: 82, tags: ["한식", "국물", "유산균"], reason: "묵은지의 깊은 맛과 유산균이 풍부합니다.", ingredients: ["묵은지", "돼지고기", "두부", "대파"], steps: ["고기 볶기", "김치 넣고 끓이기"], tips: ["묵은지가 핵심"], videoSearch: "묵은지찌개", benefits: ["유산균", "깊은맛", "얼큰"] },
+            { id: 83, name: "닭곰탕", description: "보양 국물", time: 40, difficulty: "보통", calories: 320, protein: 28, carbs: 18, fat: 14, cost: 6000, healthScore: 85, tags: ["보양", "국물", "고단백"], reason: "닭고기의 단백질과 콜라겐이 보양에 좋습니다.", ingredients: ["닭", "대파", "마늘", "소금"], steps: ["닭 삶기", "육수 우려내기"], tips: ["푹 끓여야 진해요"], videoSearch: "닭곰탕", benefits: ["단백질", "콜라겐", "보양"] },
+            { id: 84, name: "감자탕", description: "든든한 국물", time: 40, difficulty: "보통", calories: 380, protein: 22, carbs: 35, fat: 16, cost: 7000, healthScore: 81, tags: ["국물", "든든", "한식"], reason: "감자의 칼륨과 돼지뼈의 단백질이 든든한 한 끼입니다.", ingredients: ["감자", "돼지뼈", "우거지", "고춧가루"], steps: ["뼈 삶기", "감자와 우거지 넣기"], tips: ["압력솥 사용 추천"], videoSearch: "감자탕", benefits: ["칼륨", "단백질", "든든"] },
+            { id: 85, name: "북어국", description: "해장 국물", time: 20, difficulty: "쉬움", calories: 180, protein: 18, carbs: 12, fat: 6, cost: 4000, healthScore: 83, tags: ["해장", "국물", "고단백"], reason: "북어의 단백질이 숙취 해소에 도움을 줍니다.", ingredients: ["북어", "콩나물", "대파", "육수"], steps: ["육수 끓이기", "북어와 콩나물 넣기"], tips: ["북어는 미리 불리기"], videoSearch: "북어국", benefits: ["단백질", "숙취해소", "해장"] },
+            { id: 86, name: "계란찜", description: "부드러운 단백질", time: 10, difficulty: "쉬움", calories: 180, protein: 15, carbs: 5, fat: 12, cost: 2000, healthScore: 84, tags: ["단백질", "간편", "부드러움"], reason: "계란의 단백질을 부드럽게 섭취할 수 있는 요리입니다.", ingredients: ["계란", "물", "소금", "파"], steps: ["계란 풀기", "찜기에 찌기"], tips: ["물은 1:1 비율"], videoSearch: "계란찜", benefits: ["완전단백질", "부드러움", "소화잘됨"] },
+            { id: 87, name: "잡채", description: "영양 가득 한식", time: 30, difficulty: "보통", calories: 380, protein: 12, carbs: 48, fat: 15, cost: 6000, healthScore: 82, tags: ["한식", "영양", "채소"], reason: "다양한 채소와 당면이 어우러진 영양 만점 요리입니다.", ingredients: ["당면", "시금치", "당근", "버섯", "간장"], steps: ["재료 각각 볶기", "당면과 섞기"], tips: ["당면은 삶지 말고 불리기"], videoSearch: "잡채", benefits: ["채소다양", "영양균형", "한식"] },
+            { id: 88, name: "두부 샐러드", description: "식물성 단백질", time: 10, difficulty: "매우쉬움", calories: 220, protein: 18, carbs: 15, fat: 12, cost: 3500, healthScore: 87, tags: ["샐러드", "단백질", "간편"], reason: "두부의 식물성 단백질로 건강하게 단백질을 섭취합니다.", ingredients: ["두부", "양상추", "방울토마토", "참깨드레싱"], steps: ["두부 자르기", "채소와 함께 담기"], tips: ["두부는 차갑게"], videoSearch: "두부샐러드", benefits: ["식물성단백질", "저칼로리", "간편"] },
+            { id: 89, name: "팥죽", description: "전통 건강 죽", time: 40, difficulty: "보통", calories: 320, protein: 12, carbs: 58, fat: 4, cost: 3500, healthScore: 83, tags: ["죽", "전통", "팥"], reason: "팥의 사포닌이 이뇨 작용과 붓기 제거에 도움을 줍니다.", ingredients: ["팥", "쌀", "설탕", "소금"], steps: ["팥 삶기", "쌀과 함께 끓이기"], tips: ["압력솥 사용 추천"], videoSearch: "팥죽", benefits: ["사포닌", "이뇨작용", "전통"] },
+            { id: 90, name: "미소시루", description: "일본식 된장국", time: 10, difficulty: "매우쉬움", calories: 80, protein: 6, carbs: 10, fat: 2, cost: 2500, healthScore: 81, tags: ["일식", "국물", "발효"], reason: "미소의 발효 영양소가 장 건강에 도움을 줍니다.", ingredients: ["미소", "두부", "미역", "파"], steps: ["물 끓이기", "미소 풀고 재료 넣기"], tips: ["끓이면 안 돼요"], videoSearch: "미소시루", benefits: ["발효식품", "저칼로리", "일식"] },
+            { id: 91, name: "오징어볶음", description: "매콤한 반찬", time: 20, difficulty: "보통", calories: 280, protein: 20, carbs: 22, fat: 10, cost: 5000, healthScore: 80, tags: ["해물", "매운맛", "반찬"], reason: "오징어의 타우린이 피로 회복에 도움을 줍니다.", ingredients: ["오징어", "고춧가루", "양파", "대파"], steps: ["오징어 손질", "매콤하게 볶기"], tips: ["센 불에서 빠르게"], videoSearch: "오징어볶음", benefits: ["타우린", "피로회복", "매운맛"] },
+            { id: 92, name: "새우볶음밥", description: "중식 한 그릇", time: 15, difficulty: "쉬움", calories: 480, protein: 22, carbs: 68, fat: 14, cost: 6000, healthScore: 81, tags: ["중식", "한그릇", "고단백"], reason: "새우의 단백질과 밥의 탄수화물이 균형잡힌 한 끼입니다.", ingredients: ["밥", "새우", "계란", "야채"], steps: ["밥 볶기", "새우와 계란 넣기"], tips: ["센 불에서 볶기"], videoSearch: "새우볶음밥", benefits: ["고단백", "중식", "포만감"] },
+            { id: 93, name: "떡국", description: "한국 전통 국물", time: 20, difficulty: "쉬움", calories: 350, protein: 12, carbs: 58, fat: 8, cost: 4000, healthScore: 79, tags: ["전통", "국물", "한식"], reason: "떡의 탄수화물로 에너지를 공급하는 전통 음식입니다.", ingredients: ["떡국떡", "소고기", "계란", "육수"], steps: ["육수 내기", "떡 넣고 끓이기"], tips: ["떡은 물에 불리기"], videoSearch: "떡국", benefits: ["전통음식", "탄수화물", "포만감"] },
+            { id: 94, name: "유부초밥", description: "일식 간편식", time: 20, difficulty: "보통", calories: 380, protein: 12, carbs: 65, fat: 8, cost: 4500, healthScore: 78, tags: ["일식", "초밥", "간편"], reason: "유부의 단백질과 초밥의 탄수화물이 균형잡힌 한 끼입니다.", ingredients: ["유부", "밥", "식초", "설탕"], steps: ["초밥 만들기", "유부에 넣기"], tips: ["밥은 식혀서"], videoSearch: "유부초밥", benefits: ["단백질", "휴대용", "일식"] },
+            { id: 95, name: "만두국", description: "따뜻한 국물", time: 15, difficulty: "매우쉬움", calories: 380, protein: 15, carbs: 52, fat: 12, cost: 4500, healthScore: 78, tags: ["국물", "간편", "한식"], reason: "만두와 국물로 든든한 한 끼 식사입니다.", ingredients: ["만두", "떡국떡", "계란", "육수"], steps: ["육수 끓이기", "만두 넣기"], tips: ["만두는 냉동 OK"], videoSearch: "만두국", benefits: ["간편", "포만감", "따뜻"] },
+            { id: 96, name: "라면 샐러드", description: "퓨전 건강식", time: 15, difficulty: "쉬움", calories: 380, protein: 12, carbs: 52, fat: 14, cost: 3500, healthScore: 75, tags: ["퓨전", "샐러드", "간편"], reason: "라면과 채소를 함께 먹어 영양 균형을 맞춘 요리입니다.", ingredients: ["라면", "양상추", "오이", "드레싱"], steps: ["라면 삶아 식히기", "채소와 버무리기"], tips: ["면은 차갑게"], videoSearch: "라면샐러드", benefits: ["퓨전", "채소섭취", "색다름"] },
+            { id: 97, name: "곤약 샐러드", description: "초저칼로리", time: 10, difficulty: "매우쉬움", calories: 80, protein: 2, carbs: 15, fat: 2, cost: 2500, healthScore: 82, tags: ["저칼로리", "다이어트", "간편"], reason: "곤약의 식이섬유가 포만감을 주며 칼로리가 매우 낮습니다.", ingredients: ["곤약", "오이", "당근", "간장드레싱"], steps: ["곤약 데치기", "채소와 버무리기"], tips: ["곤약은 데쳐서 냄새 제거"], videoSearch: "곤약샐러드", benefits: ["초저칼로리", "식이섬유", "다이어트"] },
+            { id: 98, name: "쌀국수", description: "베트남식 국물", time: 20, difficulty: "보통", calories: 420, protein: 18, carbs: 62, fat: 10, cost: 5500, healthScore: 80, tags: ["베트남", "국물", "쌀국수"], reason: "쌀국수의 부드러운 면발과 국물이 소화가 잘 됩니다.", ingredients: ["쌀국수", "고기", "숙주", "허브"], steps: ["국물 끓이기", "쌀국수 삶아 담기"], tips: ["허브는 신선하게"], videoSearch: "쌀국수", benefits: ["소화잘됨", "베트남식", "향긋"] },
+            { id: 99, name: "찜닭", description: "달콤한 한식", time: 40, difficulty: "보통", calories: 420, protein: 32, carbs: 38, fat: 14, cost: 7000, healthScore: 82, tags: ["한식", "고단백", "달콤"], reason: "닭고기의 단백질과 감자, 당면이 어우러진 영양 만점 요리입니다.", ingredients: ["닭", "감자", "당근", "간장", "설탕"], steps: ["닭 볶기", "야채 넣고 조리기"], tips: ["압력솥이 빠름"], videoSearch: "찜닭", benefits: ["고단백", "영양균형", "달콤"] },
+            { id: 100, name: "비지찌개", description: "식물성 단백질 국물", time: 25, difficulty: "쉬움", calories: 240, protein: 18, carbs: 20, fat: 10, cost: 3000, healthScore: 86, tags: ["식물성단백질", "저칼로리", "한식"], reason: "콩비지의 식물성 단백질과 식이섬유가 다이어트에 최적입니다.", ingredients: ["콩비지", "김치", "돼지고기", "대파"], steps: ["육수 끓이기", "재료 넣고 끓이기"], tips: ["비지는 마지막에"], videoSearch: "비지찌개", benefits: ["식물성단백질", "식이섬유", "저칼로리"] }
         ];
 
         let selectedData = {
@@ -2025,10 +2155,14 @@
             btn.classList.add('selected');
             selectedData[type] = value;
             
-            if (type === 'cooking') {
+            if (type === 'mealTime') {
                 document.getElementById('quickBtn1').disabled = false;
-            } else if (type === 'budget') {
+            } else if (type === 'goal') {
                 document.getElementById('quickBtn2').disabled = false;
+            } else if (type === 'cooking') {
+                document.getElementById('quickBtn3').disabled = false;
+            } else if (type === 'budget') {
+                document.getElementById('quickBtn4').disabled = false;
             }
         }
 
@@ -2039,16 +2173,22 @@
         function quickRecommend() {
             selectedData.avoid = document.getElementById('quickAvoidInput').value.toLowerCase();
             
-            // 빠른 추천용 기본값 설정
+            // 빠른 추천용 기본값 설정 (사용자가 선택한 값 활용)
             selectedData.gender = 'male';
             selectedData.height = 170;
             selectedData.weight = 65;
             selectedData.bmi = calculateBMI(170, 65);
-            selectedData.mealTime = '점심';
+            // selectedData.mealTime과 selectedData.goal은 이미 선택됨
             selectedData.activity = '보통';
-            selectedData.goal = '건강유지';
             selectedData.allergy = '';
-            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
+            selectedData.recommendCalories = getRecommendCalories(
+                'male', 
+                65, 
+                170, 
+                selectedData.mealTime, 
+                '보통', 
+                selectedData.goal
+            );
             
             saveUserData();
             
@@ -2255,16 +2395,17 @@
             }
 
             // 아직 보여주지 않은 메뉴만 선택
-            const availableMenus = allFilteredMenus.filter(menu => !shownMenuIds.includes(menu.id));
+            let availableMenus = allFilteredMenus.filter(menu => !shownMenuIds.includes(menu.id));
             
             // 모든 메뉴를 다 보여줬으면 초기화
             if (availableMenus.length < 3) {
+                console.log('메뉴 초기화 - 다시 처음부터');
                 shownMenuIds = [];
-                availableMenus.push(...allFilteredMenus.filter(menu => !shownMenuIds.includes(menu.id)));
+                availableMenus = [...allFilteredMenus];
             }
             
-            // 상위 메뉴 중에서 랜덤하게 3개 선택
-            const topMenus = availableMenus.slice(0, Math.min(12, availableMenus.length));
+            // 상위 메뉴 풀을 확대 (20개로 증가)
+            const topMenus = availableMenus.slice(0, Math.min(20, availableMenus.length));
             const selectedMenus = [];
             
             // Fisher-Yates 셔플 알고리즘으로 진짜 랜덤하게
@@ -2279,6 +2420,8 @@
                 selectedMenus.push(shuffled[i]);
                 shownMenuIds.push(shuffled[i].id);
             }
+            
+            console.log('보여준 메뉴 개수:', shownMenuIds.length, '/ 전체:', allFilteredMenus.length);
 
             displayMenus(selectedMenus);
             switchScreen('results');
