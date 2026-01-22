@@ -1691,6 +1691,8 @@
         let currentMenu = null;
         let filteredMenus = [];
         let currentTab = 'home';
+        let shownMenuIds = []; // 이미 보여준 메뉴 ID 기록
+        let allFilteredMenus = []; // 전체 필터된 메뉴 저장
 
         // LocalStorage 키
         const STORAGE_KEYS = {
@@ -2055,14 +2057,14 @@
             
             switchScreen('loading');
             setTimeout(() => {
-                filterAndDisplayMenus();
+                filterAndDisplayMenus(true); // 새로운 검색
             }, 2000);
         }
 
         function quickRecommendAgain() {
             switchScreen('loading');
             setTimeout(() => {
-                filterAndDisplayMenus();
+                filterAndDisplayMenus(true); // 새로운 검색으로 처리
             }, 1500);
         }
 
@@ -2070,7 +2072,7 @@
             // 현재 필터 조건으로 다른 메뉴 추천
             switchScreen('loading');
             setTimeout(() => {
-                filterAndDisplayMenus();
+                filterAndDisplayMenus(false); // false = 기존 필터 유지, 다른 메뉴만 선택
             }, 1500);
         }
 
@@ -2180,14 +2182,14 @@
                 saveUserData();
                 switchScreen('loading');
                 setTimeout(() => {
-                    filterAndDisplayMenus();
+                    filterAndDisplayMenus(true); // 새로운 검색
                 }, 2500);
             } else {
                 switchScreen(screenId);
             }
         }
 
-        function filterAndDisplayMenus() {
+        function filterAndDisplayMenus(isNewSearch = true) {
             const cookingTimeMap = {
                 '전자레인지': 5,
                 '10분': 10,
@@ -2201,57 +2203,81 @@
             const allergyList = selectedData.allergy.split(',').map(item => item.trim()).filter(item => item);
             const targetCalories = selectedData.recommendCalories;
 
-            filteredMenus = menuDatabase.filter(menu => {
-                if (menu.time > maxTime) return false;
-                if (menu.cost > maxBudget) return false;
+            // 새로운 검색이면 전체 필터링 다시 실행
+            if (isNewSearch) {
+                shownMenuIds = []; // 보여준 메뉴 초기화
                 
-                // 알레르기 필터 (더 엄격하게)
-                for (let allergy of allergyList) {
-                    for (let ingredient of menu.ingredients) {
-                        if (ingredient.includes(allergy) || allergy.includes(ingredient)) {
+                filteredMenus = menuDatabase.filter(menu => {
+                    if (menu.time > maxTime) return false;
+                    if (menu.cost > maxBudget) return false;
+                    
+                    // 알레르기 필터 (더 엄격하게)
+                    for (let allergy of allergyList) {
+                        for (let ingredient of menu.ingredients) {
+                            if (ingredient.includes(allergy) || allergy.includes(ingredient)) {
+                                return false;
+                            }
+                        }
+                        if (menu.name.includes(allergy)) {
                             return false;
                         }
                     }
-                    if (menu.name.includes(allergy)) {
-                        return false;
-                    }
-                }
-                
-                // 기피 재료 필터
-                for (let avoid of avoidList) {
-                    for (let ingredient of menu.ingredients) {
-                        if (ingredient.includes(avoid) || avoid.includes(ingredient)) {
+                    
+                    // 기피 재료 필터
+                    for (let avoid of avoidList) {
+                        for (let ingredient of menu.ingredients) {
+                            if (ingredient.includes(avoid) || avoid.includes(ingredient)) {
+                                return false;
+                            }
+                        }
+                        if (menu.name.includes(avoid)) {
                             return false;
                         }
                     }
-                    if (menu.name.includes(avoid)) {
-                        return false;
-                    }
-                }
+                    
+                    return true;
+                });
+
+                filteredMenus.sort((a, b) => b.healthScore - a.healthScore);
+
+                filteredMenus.forEach(menu => {
+                    const calorieDiff = Math.abs(menu.calories - targetCalories);
+                    menu.calorieScore = 100 - (calorieDiff / 10);
+                });
+
+                filteredMenus.sort((a, b) => {
+                    const scoreA = (a.healthScore * 0.7) + (a.calorieScore * 0.3);
+                    const scoreB = (b.healthScore * 0.7) + (b.calorieScore * 0.3);
+                    return scoreB - scoreA;
+                });
                 
-                return true;
-            });
+                allFilteredMenus = [...filteredMenus]; // 전체 저장
+            }
 
-            filteredMenus.sort((a, b) => b.healthScore - a.healthScore);
-
-            filteredMenus.forEach(menu => {
-                const calorieDiff = Math.abs(menu.calories - targetCalories);
-                menu.calorieScore = 100 - (calorieDiff / 10);
-            });
-
-            filteredMenus.sort((a, b) => {
-                const scoreA = (a.healthScore * 0.7) + (a.calorieScore * 0.3);
-                const scoreB = (b.healthScore * 0.7) + (b.calorieScore * 0.3);
-                return scoreB - scoreA;
-            });
-
-            const topMenus = filteredMenus.slice(0, Math.min(8, filteredMenus.length));
+            // 아직 보여주지 않은 메뉴만 선택
+            const availableMenus = allFilteredMenus.filter(menu => !shownMenuIds.includes(menu.id));
+            
+            // 모든 메뉴를 다 보여줬으면 초기화
+            if (availableMenus.length < 3) {
+                shownMenuIds = [];
+                availableMenus.push(...allFilteredMenus.filter(menu => !shownMenuIds.includes(menu.id)));
+            }
+            
+            // 상위 메뉴 중에서 랜덤하게 3개 선택
+            const topMenus = availableMenus.slice(0, Math.min(12, availableMenus.length));
             const selectedMenus = [];
             
-            for (let i = 0; i < Math.min(3, topMenus.length); i++) {
-                const randomIndex = Math.floor(Math.random() * topMenus.length);
-                selectedMenus.push(topMenus[randomIndex]);
-                topMenus.splice(randomIndex, 1);
+            // Fisher-Yates 셔플 알고리즘으로 진짜 랜덤하게
+            const shuffled = [...topMenus];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // 3개 선택하고 기록
+            for (let i = 0; i < Math.min(3, shuffled.length); i++) {
+                selectedMenus.push(shuffled[i]);
+                shownMenuIds.push(shuffled[i].id);
             }
 
             displayMenus(selectedMenus);
