@@ -908,9 +908,40 @@
                         <button class="btn btn-secondary" onclick="fortuneRecommend()">🔮 오늘의 운세 음식</button>
                     </div>
                     
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-secondary" onclick="showIngredientInput()">🧊 냉장고 재료로 추천</button>
+                    </div>
+                    
                     <div id="quickRecommendBtn" style="display: none; margin-top: 10px;">
                         <button class="btn btn-secondary" onclick="quickRecommendAgain()">🔄 이전 정보로 다시 추천</button>
                     </div>
+                </div>
+
+                <!-- Ingredient Input Screen -->
+                <div id="ingredientScreen" class="screen">
+                    <div class="question">
+                        <div class="question-num">냉장고 요리사 🧊</div>
+                        <h3>집에 있는 재료가 뭐예요?</h3>
+                        <p style="margin-bottom: 20px;">쉼표로 구분해서 입력해주세요 (예: 계란, 두부, 김치)</p>
+                        
+                        <div class="input-group">
+                            <label>🥬 보유 재료</label>
+                            <textarea id="myIngredientsInput" placeholder="예시:&#10;계란, 두부, 김치, 양파, 파, 마늘&#10;닭가슴살, 브로콜리, 파프리카&#10;토마토, 파스타, 올리브오일" 
+                                style="min-height: 120px; resize: vertical; font-family: 'Pretendard', sans-serif; padding: 14px; border: 2px solid #e9ecef; border-radius: 12px; font-size: 15px; line-height: 1.6;"
+                                onkeyup="checkIngredients()"></textarea>
+                            <p style="font-size: 13px; color: #999; margin-top: 8px;">💡 팁: 많이 입력할수록 다양한 메뉴가 나와요!</p>
+                        </div>
+                        
+                        <div style="margin-top: 20px; background: #e8f5e9; padding: 15px; border-radius: 12px;">
+                            <p style="font-size: 14px; color: #2E7D32; line-height: 1.6;">
+                                <strong>💚 자취생 꿀팁!</strong><br>
+                                기본 조미료(간장, 소금, 설탕 등)는 있다고 가정해요.<br>
+                                주재료만 입력하시면 됩니다!
+                            </p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="ingredientBtn" disabled onclick="recommendByIngredients()">내 재료로 요리 추천받기</button>
+                    <button class="btn btn-secondary" style="margin-top: 12px;" onclick="restart()">처음으로</button>
                 </div>
 
                 <!-- Fortune Screen -->
@@ -2113,6 +2144,190 @@
             }
         ];
 
+        // 냉장고 재료로 추천
+        function showIngredientInput() {
+            document.getElementById('tabNav').style.display = 'none';
+            switchScreen('ingredientScreen');
+        }
+
+        function checkIngredients() {
+            const input = document.getElementById('myIngredientsInput').value.trim();
+            const btn = document.getElementById('ingredientBtn');
+            btn.disabled = input.length < 2;
+        }
+
+        function recommendByIngredients() {
+            const input = document.getElementById('myIngredientsInput').value.toLowerCase();
+            const myIngredients = input.split(',').map(item => item.trim()).filter(item => item);
+            
+            if (myIngredients.length === 0) {
+                alert('재료를 입력해주세요!');
+                return;
+            }
+            
+            // 기본값 설정
+            selectedData.gender = 'male';
+            selectedData.height = 170;
+            selectedData.weight = 65;
+            selectedData.bmi = calculateBMI(170, 65);
+            selectedData.mealTime = '점심';
+            selectedData.activity = '보통';
+            selectedData.goal = '건강유지';
+            selectedData.allergy = '';
+            selectedData.avoid = '';
+            selectedData.cooking = '30분';
+            selectedData.budget = '15000';
+            selectedData.myIngredients = myIngredients;
+            selectedData.recommendCalories = getRecommendCalories('male', 65, 170, '점심', '보통', '건강유지');
+            
+            saveUserData();
+            
+            switchScreen('loading');
+            setTimeout(() => {
+                filterByIngredients(myIngredients);
+            }, 2000);
+        }
+
+        function filterByIngredients(myIngredients) {
+            // 건강한 메뉴만 (healthScore 75 이상)
+            let healthyMenus = menuDatabase.filter(menu => menu.healthScore >= 75);
+            
+            // 각 메뉴별 매칭 점수 계산
+            healthyMenus.forEach(menu => {
+                let matchScore = 0;
+                let matchCount = 0;
+                const requiredIngredients = menu.ingredients.length;
+                
+                // 내 재료와 메뉴 재료 비교
+                for (let myIng of myIngredients) {
+                    for (let menuIng of menu.ingredients) {
+                        if (menuIng.toLowerCase().includes(myIng) || myIng.includes(menuIng.toLowerCase())) {
+                            matchCount++;
+                            break;
+                        }
+                    }
+                }
+                
+                // 매칭률 계산 (내가 가진 재료로 얼마나 만들 수 있나)
+                matchScore = (matchCount / requiredIngredients) * 100;
+                menu.matchScore = matchScore;
+                menu.matchCount = matchCount;
+            });
+            
+            // 매칭 점수로 정렬 (매칭률 높은 순)
+            healthyMenus.sort((a, b) => {
+                if (b.matchScore !== a.matchScore) {
+                    return b.matchScore - a.matchScore;
+                }
+                return b.healthScore - a.healthScore; // 동일하면 건강점수로
+            });
+            
+            // 최소 1개 이상 재료가 매칭되는 메뉴만
+            let matchedMenus = healthyMenus.filter(menu => menu.matchCount > 0);
+            
+            if (matchedMenus.length === 0) {
+                // 매칭되는 메뉴가 없으면 건강한 메뉴 전체 추천
+                matchedMenus = healthyMenus;
+            }
+            
+            // 상위 20개 중 3개 선택
+            const topMenus = matchedMenus.slice(0, Math.min(20, matchedMenus.length));
+            const shuffled = [...topMenus];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            const selectedMenus = shuffled.slice(0, 3);
+            
+            displayIngredientMenus(selectedMenus, myIngredients);
+            switchScreen('results');
+            
+            document.getElementById('tabNav').style.display = 'flex';
+        }
+
+        function displayIngredientMenus(menus, myIngredients) {
+            const analysisDiv = document.getElementById('userAnalysis');
+            
+            analysisDiv.innerHTML = `
+                <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 25px; border-radius: 20px; margin-bottom: 25px; border-left: 4px solid #4CAF50;">
+                    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">🧊</div>
+                    <strong style="color: #2E7D32; font-size: 20px; display: block; text-align: center; margin-bottom: 12px;">
+                        냉장고 재료로 만드는 요리
+                    </strong>
+                    <p style="color: #2E7D32; font-size: 15px; line-height: 1.8; text-align: center;">
+                        보유 재료: ${myIngredients.join(', ')}
+                    </p>
+                </div>
+            `;
+            
+            const container = document.getElementById('menuContainer');
+            
+            container.innerHTML = menus.map(menu => {
+                let scoreClass = 'health-score';
+                let scoreEmoji = '🌟';
+                if (menu.healthScore >= 85) {
+                    scoreClass = 'health-score';
+                    scoreEmoji = '🌟';
+                } else if (menu.healthScore >= 75) {
+                    scoreClass = 'health-score medium';
+                    scoreEmoji = '⭐';
+                }
+
+                // 매칭률 계산
+                const matchPercent = Math.round(menu.matchScore);
+                let matchBadge = '';
+                if (matchPercent >= 80) {
+                    matchBadge = `<span style="background: #4CAF50; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-left: 8px;">재료 ${matchPercent}% 보유</span>`;
+                } else if (matchPercent >= 50) {
+                    matchBadge = `<span style="background: #FFA726; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-left: 8px;">재료 ${matchPercent}% 보유</span>`;
+                } else if (matchPercent > 0) {
+                    matchBadge = `<span style="background: #999; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-left: 8px;">재료 ${matchPercent}% 보유</span>`;
+                }
+
+                // 부족한 재료 표시
+                const missingIngredients = menu.ingredients.filter(ing => {
+                    return !myIngredients.some(myIng => 
+                        ing.toLowerCase().includes(myIng.toLowerCase()) || 
+                        myIng.toLowerCase().includes(ing.toLowerCase())
+                    );
+                });
+
+                let missingText = '';
+                if (missingIngredients.length > 0 && missingIngredients.length <= 3) {
+                    missingText = `<p style="font-size: 13px; color: #FFA726; margin-top: 8px;">
+                        🛒 추가로 필요: ${missingIngredients.join(', ')}
+                    </p>`;
+                }
+
+                return `
+                <div class="menu-card">
+                    <div onclick="showMenuDetail(${menu.id})">
+                        <h4>
+                            ${menu.name}
+                            <span class="${scoreClass}">${scoreEmoji} ${menu.healthScore}점</span>
+                        </h4>
+                        <div style="margin: 10px 0;">
+                            ${matchBadge}
+                        </div>
+                        <div class="recommendation-reason">
+                            🧊 <strong>냉장고 요리:</strong> ${matchPercent >= 80 ? '거의 다 있어요! 바로 만들 수 있어요.' : matchPercent >= 50 ? '반 정도는 있어요! 조금만 더 사면 됩니다.' : '일부 재료가 있어요. 참고해보세요!'}
+                        </div>
+                        ${missingText}
+                        <div class="menu-meta">
+                            <div class="meta-item">⏱️ ${menu.time}분</div>
+                            <div class="meta-item">⭐ ${menu.difficulty}</div>
+                            <div class="meta-item">🔥 ${menu.calories}kcal</div>
+                            <div class="meta-item">💪 ${menu.protein}g</div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            ${menu.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
         function fortuneRecommend() {
             document.getElementById('tabNav').style.display = 'none';
             
@@ -2165,20 +2380,44 @@
             // 건강한 메뉴만 (healthScore 80 이상)
             let healthyMenus = menuDatabase.filter(menu => menu.healthScore >= 80);
             
-            // 운세 색깔과 관련된 메뉴 필터링
+            // 운세 색깔과 관련된 메뉴 필터링 (개선된 로직)
             let fortuneMenus = healthyMenus.filter(menu => {
-                const menuText = (menu.name + menu.description + menu.ingredients.join(' ')).toLowerCase();
+                const menuText = (menu.name + menu.description).toLowerCase();
+                let matchCount = 0;
                 
-                // 운세 키워드와 매칭
+                // 운세 키워드와 매칭 (메뉴명과 설명에서)
                 for (let keyword of fortune.keywords) {
                     if (menuText.includes(keyword.toLowerCase())) {
-                        return true;
+                        matchCount++;
                     }
                 }
-                return false;
+                
+                // 재료에서도 확인 (주재료 우선)
+                const firstThreeIngredients = menu.ingredients.slice(0, 3).join(' ').toLowerCase();
+                for (let keyword of fortune.keywords) {
+                    if (firstThreeIngredients.includes(keyword.toLowerCase())) {
+                        matchCount += 2; // 주재료 매칭은 가중치 2배
+                    }
+                }
+                
+                // 최소 2점 이상 매칭되어야 선택
+                return matchCount >= 2;
             });
             
-            // 운세 메뉴가 없으면 건강한 메뉴 전체 사용
+            // 운세 메뉴가 부족하면 매칭 기준 완화
+            if (fortuneMenus.length < 10) {
+                fortuneMenus = healthyMenus.filter(menu => {
+                    const allText = (menu.name + menu.description + menu.ingredients.join(' ')).toLowerCase();
+                    for (let keyword of fortune.keywords) {
+                        if (allText.includes(keyword.toLowerCase())) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
+            
+            // 그래도 부족하면 건강한 메뉴 전체 사용
             if (fortuneMenus.length < 5) {
                 fortuneMenus = healthyMenus;
             }
