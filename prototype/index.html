@@ -979,13 +979,13 @@
                     </div>
                 </div>
 
-                <!-- Question Screens (기존과 동일) -->
+                <!-- Question Screens -->
                 <div id="q0" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 20%"></div>
+                        <div class="progress-fill" style="width: 12.5%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">필수 질문 1/5</div>
+                        <div class="question-num">필수 질문 1/8</div>
                         <h3>기본 정보를 입력해주세요</h3>
                         <p>적정 칼로리와 필요 영양소를 계산합니다</p>
                         
@@ -1015,10 +1015,10 @@
 
                 <div id="q1" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 40%"></div>
+                        <div class="progress-fill" style="width: 25%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">필수 질문 2/5</div>
+                        <div class="question-num">필수 질문 2/8</div>
                         <h3>언제 드실 식사인가요?</h3>
                         <div class="options">
                             <button class="option-btn" onclick="selectOption(this, 'mealTime', '아침')">
@@ -1040,10 +1040,10 @@
 
                 <div id="q2" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 60%"></div>
+                        <div class="progress-fill" style="width: 37.5%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">필수 질문 3/5</div>
+                        <div class="question-num">필수 질문 3/8</div>
                         <h3>요리 준비 시간은?</h3>
                         <div class="options">
                             <button class="option-btn" onclick="selectOption(this, 'cooking', '전자레인지')">
@@ -1069,10 +1069,10 @@
 
                 <div id="q3" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 80%"></div>
+                        <div class="progress-fill" style="width: 50%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">필수 질문 4/5</div>
+                        <div class="question-num">필수 질문 4/8</div>
                         <h3>한 끼 예산은?</h3>
                         <div class="options">
                             <button class="option-btn" onclick="selectOption(this, 'budget', '3000')">
@@ -1094,11 +1094,88 @@
 
                 <div id="q4" class="screen">
                     <div class="progress-bar">
+                        <div class="progress-fill" style="width: 62.5%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 5/8</div>
+                        <h3>평소 활동량은 어떤가요?</h3>
+                        <p>정확한 칼로리 계산을 위해 필요합니다</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(this, 'activity', '낮음')">
+                                🛋️ 거의 안 움직임<br>
+                                <small>주로 앉아서 생활</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'activity', '보통')">
+                                🚶 가볍게 움직임<br>
+                                <small>주 1-2회 가벼운 운동</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'activity', '높음')">
+                                🏃 규칙적으로 운동<br>
+                                <small>주 3-5회 운동</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'activity', '매우높음')">
+                                💪 매우 활동적<br>
+                                <small>거의 매일 격렬한 운동</small>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="nextBtn4" disabled onclick="nextScreen('q5')">다음</button>
+                </div>
+
+                <div id="q5" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 6/8</div>
+                        <h3>식단의 목표는 무엇인가요?</h3>
+                        <p>목표에 맞는 메뉴를 추천해드립니다</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(this, 'goal', '다이어트')">
+                                📉 체중 감량<br>
+                                <small>저칼로리, 고단백 위주</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'goal', '근육증가')">
+                                💪 근육 증가<br>
+                                <small>고단백, 적당한 탄수화물</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'goal', '건강유지')">
+                                🌱 건강 유지<br>
+                                <small>균형잡힌 영양소</small>
+                            </button>
+                            <button class="option-btn" onclick="selectOption(this, 'goal', '체중증가')">
+                                📈 체중 증가<br>
+                                <small>고칼로리, 영양 밸런스</small>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="nextBtn5" disabled onclick="nextScreen('q6')">다음</button>
+                </div>
+
+                <div id="q6" class="screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87.5%"></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-num">필수 질문 7/8</div>
+                        <h3>심각한 알레르기가 있나요?</h3>
+                        <p>안전한 메뉴 추천을 위해 확인합니다</p>
+                        <div class="input-group" style="margin-top: 20px;">
+                            <input type="text" placeholder="예: 땅콩, 우유, 갑각류 등" id="allergyInput">
+                            <p style="font-size: 13px; color: #999; margin-top: 8px;">없으면 비워두세요</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextScreen('q7')">다음</button>
+                </div>
+
+                <div id="q7" class="screen">
+                    <div class="progress-bar">
                         <div class="progress-fill" style="width: 100%"></div>
                     </div>
                     <div class="question">
-                        <div class="question-num">필수 질문 5/5</div>
-                        <h3>못 먹는 재료가 있나요?</h3>
+                        <div class="question-num">필수 질문 8/8</div>
+                        <h3>못 먹거나 싫어하는 재료는?</h3>
+                        <p>알레르기는 아니지만 선호하지 않는 재료</p>
                         <div class="input-group" style="margin-top: 20px;">
                             <input type="text" placeholder="예: 새우, 버섯, 파, 계란 등" id="avoidInput">
                             <p style="font-size: 13px; color: #999; margin-top: 8px;">없으면 비워두세요</p>
@@ -1527,7 +1604,10 @@
             mealTime: '',
             cooking: '',
             budget: '',
-            avoid: ''
+            avoid: '',
+            activity: '',
+            goal: '',
+            allergy: ''
         };
 
         let currentMenu = null;
@@ -1886,6 +1966,10 @@
                 document.getElementById('nextBtn2').disabled = false;
             } else if (type === 'budget') {
                 document.getElementById('nextBtn3').disabled = false;
+            } else if (type === 'activity') {
+                document.getElementById('nextBtn4').disabled = false;
+            } else if (type === 'goal') {
+                document.getElementById('nextBtn5').disabled = false;
             }
         }
 
@@ -1894,13 +1978,32 @@
             return (weight / (heightM * heightM)).toFixed(1);
         }
 
-        function getRecommendCalories(gender, weight, height, mealTime) {
+        function getRecommendCalories(gender, weight, height, mealTime, activity, goal) {
+            // BMR 계산 (기초대사량)
             let bmr = gender === 'male' 
                 ? 66 + (13.7 * weight) + (5 * height) - (6.8 * 25)
                 : 655 + (9.6 * weight) + (1.8 * height) - (4.7 * 25);
             
-            const tdee = bmr * 1.55;
+            // 활동량에 따른 계수
+            const activityFactors = {
+                '낮음': 1.2,
+                '보통': 1.375,
+                '높음': 1.55,
+                '매우높음': 1.725
+            };
             
+            let tdee = bmr * (activityFactors[activity] || 1.375);
+            
+            // 목표에 따른 칼로리 조정
+            if (goal === '다이어트') {
+                tdee = tdee * 0.85; // 15% 감소
+            } else if (goal === '체중증가') {
+                tdee = tdee * 1.15; // 15% 증가
+            } else if (goal === '근육증가') {
+                tdee = tdee * 1.10; // 10% 증가
+            }
+            
+            // 식사 시간별 비율
             const mealRatios = {
                 '아침': 0.25,
                 '점심': 0.35,
@@ -1918,13 +2021,19 @@
                 selectedData.bmi = calculateBMI(selectedData.height, selectedData.weight);
                 saveUserData();
                 switchScreen('q1');
+            } else if (screenId === 'q7') {
+                selectedData.allergy = document.getElementById('allergyInput').value.toLowerCase();
+                saveUserData();
+                switchScreen('q7');
             } else if (screenId === 'loading') {
                 selectedData.avoid = document.getElementById('avoidInput').value.toLowerCase();
                 selectedData.recommendCalories = getRecommendCalories(
                     selectedData.gender,
                     selectedData.weight,
                     selectedData.height,
-                    selectedData.mealTime
+                    selectedData.mealTime,
+                    selectedData.activity,
+                    selectedData.goal
                 );
                 saveUserData();
                 switchScreen('loading');
@@ -1947,12 +2056,26 @@
             const maxTime = cookingTimeMap[selectedData.cooking];
             const maxBudget = parseInt(selectedData.budget);
             const avoidList = selectedData.avoid.split(',').map(item => item.trim()).filter(item => item);
+            const allergyList = selectedData.allergy.split(',').map(item => item.trim()).filter(item => item);
             const targetCalories = selectedData.recommendCalories;
 
             filteredMenus = menuDatabase.filter(menu => {
                 if (menu.time > maxTime) return false;
                 if (menu.cost > maxBudget) return false;
                 
+                // 알레르기 필터 (더 엄격하게)
+                for (let allergy of allergyList) {
+                    for (let ingredient of menu.ingredients) {
+                        if (ingredient.includes(allergy) || allergy.includes(ingredient)) {
+                            return false;
+                        }
+                    }
+                    if (menu.name.includes(allergy)) {
+                        return false;
+                    }
+                }
+                
+                // 기피 재료 필터
                 for (let avoid of avoidList) {
                     for (let ingredient of menu.ingredients) {
                         if (ingredient.includes(avoid) || avoid.includes(ingredient)) {
@@ -2016,12 +2139,24 @@
                 bmiColor = '#FF7043';
             }
 
-            // 영양 부족 분석
+            // 영양 부족 분석 + 목표 분석
             let nutritionWarning = '';
             if (selectedData.bmi < 18.5) {
                 nutritionWarning = '<div class="nutrition-alert"><strong>⚠️ 영양 부족 경고</strong><p>체중이 부족합니다. 고단백, 고칼로리 메뉴를 우선 추천드립니다.</p></div>';
             } else if (selectedData.bmi > 25) {
                 nutritionWarning = '<div class="nutrition-alert"><strong>💪 건강 개선 권장</strong><p>저칼로리, 고단백 메뉴로 체중 관리를 시작해보세요!</p></div>';
+            }
+            
+            // 목표에 따른 메시지
+            let goalMessage = '';
+            if (selectedData.goal === '다이어트') {
+                goalMessage = '<div class="nutrition-alert"><strong>🎯 다이어트 모드</strong><p>저칼로리, 고단백 메뉴를 우선 추천합니다. 목표 칼로리는 TDEE의 85%입니다.</p></div>';
+            } else if (selectedData.goal === '근육증가') {
+                goalMessage = '<div class="nutrition-alert"><strong>💪 근육 증가 모드</strong><p>고단백, 적당한 탄수화물 메뉴를 추천합니다. 단백질 섭취에 집중하세요!</p></div>';
+            } else if (selectedData.goal === '체중증가') {
+                goalMessage = '<div class="nutrition-alert"><strong>📈 체중 증가 모드</strong><p>고칼로리, 영양 밸런스가 좋은 메뉴를 추천합니다.</p></div>';
+            } else if (selectedData.goal === '건강유지') {
+                goalMessage = '<div class="nutrition-alert"><strong>🌱 건강 유지 모드</strong><p>균형잡힌 영양소로 건강한 식단을 유지하세요!</p></div>';
             }
 
             analysisDiv.innerHTML = `
@@ -2029,10 +2164,13 @@
                     <strong>당신의 건강 분석</strong>
                     <div style="margin-top: 10px; font-size: 15px; line-height: 1.8;">
                         BMI: <span style="color: ${bmiColor}; font-weight: bold;">${selectedData.bmi}</span> (${bmiStatus})<br>
+                        활동량: <strong>${selectedData.activity}</strong><br>
+                        목표: <strong>${selectedData.goal}</strong><br>
                         권장 칼로리: <strong>${selectedData.recommendCalories}kcal</strong>
                     </div>
                 </div>
                 ${nutritionWarning}
+                ${goalMessage}
             `;
             
             if (menus.length === 0) {
