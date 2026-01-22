@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>밥심 - 스마트 영양 추천</title>
     
+    <!-- 카카오 SDK -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js"></script>
+    
     <!-- 한글 웹폰트 -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -112,6 +115,43 @@
             z-index: 1;
         }
 
+        /* 탭 네비게이션 */
+        .tab-nav {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            color: #999;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
         .content {
             padding: 25px 20px 30px;
         }
@@ -134,6 +174,57 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* 오늘의 추천 배너 */
+        .daily-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .daily-banner h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .daily-banner p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* 통계 카드 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 18px 12px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
         }
 
         .progress-bar {
@@ -281,6 +372,13 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            box-shadow: none;
+        }
+
         .bmi-info, .nutrition-alert {
             background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
             padding: 20px;
@@ -339,7 +437,38 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 10px;
+        }
+
+        .menu-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .action-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
         }
 
         .health-score {
@@ -588,7 +717,72 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
-        /* 웰컴 스크린 특별 스타일 */
+        /* 장보기 리스트 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        /* 별점 */
+        .rating-stars {
+            display: flex;
+            gap: 8px;
+            font-size: 24px;
+            margin: 12px 0;
+        }
+
+        .star {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        .star.filled {
+            color: #FFA726;
+        }
+
+        .star.empty {
+            color: #e0e0e0;
+        }
+
+        /* 웰컴 스크린 */
         #welcome {
             text-align: center;
             padding: 40px 0;
@@ -615,7 +809,7 @@
             background-clip: text;
         }
 
-        /* 스크롤바 스타일 */
+        /* 스크롤바 */
         .container::-webkit-scrollbar {
             width: 6px;
         }
@@ -655,6 +849,29 @@
                 padding-top: 50px;
             }
         }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -664,6 +881,13 @@
             <div class="header">
                 <h1>🍚 밥심</h1>
                 <p>당신의 영양 균형을 위한 스마트 식단 추천</p>
+            </div>
+
+            <!-- 탭 네비게이션 -->
+            <div class="tab-nav" id="tabNav" style="display: none;">
+                <button class="tab-btn active" onclick="switchTab('home')">홈</button>
+                <button class="tab-btn" onclick="switchTab('saved')">저장 <span id="savedCount"></span></button>
+                <button class="tab-btn" onclick="switchTab('tracker')">통계</button>
             </div>
 
             <div class="content">
@@ -678,10 +902,87 @@
                     <button class="btn btn-primary" onclick="startQuestions()">시작하기</button>
                 </div>
 
-                <!-- Question 0: 기본 정보 -->
+                <!-- Home Tab -->
+                <div id="home" class="screen">
+                    <!-- 오늘의 추천 -->
+                    <div class="daily-banner" onclick="showDailyRecommendation()">
+                        <h3>🌟 오늘의 추천</h3>
+                        <p id="dailyMenuName">탭해서 확인하기</p>
+                    </div>
+
+                    <!-- 통계 -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="value" id="todayCalories">0</div>
+                            <div class="label">오늘 칼로리</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" id="weeklyCount">0</div>
+                            <div class="label">이번 주</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" id="savedMenuCount">0</div>
+                            <div class="label">저장한 메뉴</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="startQuestions()">새로운 메뉴 추천받기</button>
+                    
+                    <!-- 최근 본 메뉴 -->
+                    <div id="recentSection" style="margin-top: 30px;">
+                        <h3 style="font-size: 18px; margin-bottom: 16px; color: #1a1a1a;">최근 본 메뉴</h3>
+                        <div id="recentMenus"></div>
+                    </div>
+                </div>
+
+                <!-- Saved Tab -->
+                <div id="saved" class="screen">
+                    <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">저장한 메뉴</h3>
+                    <div id="savedMenusContainer"></div>
+                </div>
+
+                <!-- Tracker Tab -->
+                <div id="tracker" class="screen">
+                    <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">내 식단 통계</h3>
+                    
+                    <div class="bmi-info" id="trackerBMI"></div>
+                    
+                    <div class="detail-section">
+                        <h4>📊 이번 주 기록</h4>
+                        <div class="nutrition-grid">
+                            <div class="nutrition-item">
+                                <div class="value" id="weekTotalCalories">0</div>
+                                <div class="label">총 칼로리</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="value" id="weekAvgProtein">0g</div>
+                                <div class="label">평균 단백질</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="value" id="weekMealCount">0</div>
+                                <div class="label">식사 횟수</div>
+                            </div>
+                            <div class="nutrition-item">
+                                <div class="value" id="weekHealthScore">0</div>
+                                <div class="label">평균 건강점수</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>🏆 내 기록</h4>
+                        <ul class="ingredient-list">
+                            <li>총 추천받은 메뉴: <strong id="totalRecommended">0개</strong></li>
+                            <li>저장한 메뉴: <strong id="totalSaved">0개</strong></li>
+                            <li>평균 건강 점수: <strong id="avgHealthScore">0점</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Question Screens (기존과 동일) -->
                 <div id="q0" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 16%"></div>
+                        <div class="progress-fill" style="width: 20%"></div>
                     </div>
                     <div class="question">
                         <div class="question-num">필수 질문 1/5</div>
@@ -712,10 +1013,9 @@
                     <button class="btn btn-primary" id="nextBtn0" disabled onclick="nextScreen('q1')">다음</button>
                 </div>
 
-                <!-- Question 1: 식사 시간대 -->
                 <div id="q1" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 33%"></div>
+                        <div class="progress-fill" style="width: 40%"></div>
                     </div>
                     <div class="question">
                         <div class="question-num">필수 질문 2/5</div>
@@ -738,10 +1038,9 @@
                     <button class="btn btn-primary" id="nextBtn1" disabled onclick="nextScreen('q2')">다음</button>
                 </div>
 
-                <!-- Question 2: 조리 가능 여부 -->
                 <div id="q2" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 50%"></div>
+                        <div class="progress-fill" style="width: 60%"></div>
                     </div>
                     <div class="question">
                         <div class="question-num">필수 질문 3/5</div>
@@ -768,10 +1067,9 @@
                     <button class="btn btn-primary" id="nextBtn2" disabled onclick="nextScreen('q3')">다음</button>
                 </div>
 
-                <!-- Question 3: 예산 -->
                 <div id="q3" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 66%"></div>
+                        <div class="progress-fill" style="width: 80%"></div>
                     </div>
                     <div class="question">
                         <div class="question-num">필수 질문 4/5</div>
@@ -794,10 +1092,9 @@
                     <button class="btn btn-primary" id="nextBtn3" disabled onclick="nextScreen('q4')">다음</button>
                 </div>
 
-                <!-- Question 4: 기피 식재료 -->
                 <div id="q4" class="screen">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 83%"></div>
+                        <div class="progress-fill" style="width: 100%"></div>
                     </div>
                     <div class="question">
                         <div class="question-num">필수 질문 5/5</div>
@@ -810,7 +1107,6 @@
                     <button class="btn btn-primary" onclick="nextScreen('loading')">추천받기</button>
                 </div>
 
-                <!-- Loading -->
                 <div id="loading" class="screen">
                     <div class="loading">
                         <div class="loading-spinner"></div>
@@ -819,7 +1115,6 @@
                     </div>
                 </div>
 
-                <!-- Results -->
                 <div id="results" class="screen">
                     <div id="userAnalysis"></div>
                     <h3 style="margin-bottom: 20px; font-size: 22px; font-weight: 700; color: #1a1a1a;">당신을 위한 건강한 식단</h3>
@@ -827,17 +1122,34 @@
                     <button class="btn btn-primary" style="margin-top: 20px;" onclick="restart()">다시 추천받기</button>
                 </div>
 
-                <!-- Detail View -->
                 <div id="detail" class="screen">
                     <div id="detailContent"></div>
+                    <div class="menu-actions">
+                        <button class="action-btn" id="saveBtn" onclick="toggleSaveMenu()">💾 저장</button>
+                        <button class="action-btn" onclick="showShoppingList()">🛒 장보기</button>
+                        <button class="action-btn" onclick="shareMenu()">📤 공유</button>
+                        <button class="action-btn" onclick="addToTracker()">📊 기록</button>
+                    </div>
                     <button class="btn btn-primary" onclick="backToResults()">다른 메뉴 보기</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 장보기 리스트 모달 -->
+    <div class="modal" id="shoppingModal">
+        <div class="modal-content">
+            <h3>🛒 장보기 리스트</h3>
+            <div id="shoppingList"></div>
+            <button class="btn btn-primary" style="margin-top: 20px;" onclick="closeModal()">닫기</button>
+        </div>
+    </div>
+
     <script>
-        // 메뉴 데이터베이스 (이전과 동일)
+        // 카카오 SDK 초기화 (실제 앱 키로 변경 필요)
+        // Kakao.init('YOUR_APP_KEY');
+
+        // 메뉴 데이터베이스 (동일)
         const menuDatabase = [
             {
                 id: 1,
@@ -1220,8 +1532,323 @@
 
         let currentMenu = null;
         let filteredMenus = [];
+        let currentTab = 'home';
+
+        // LocalStorage 키
+        const STORAGE_KEYS = {
+            savedMenus: 'babssim_saved_menus',
+            recentMenus: 'babssim_recent_menus',
+            mealHistory: 'babssim_meal_history',
+            userProfile: 'babssim_user_profile'
+        };
+
+        // 초기화
+        window.onload = function() {
+            loadUserData();
+            updateStats();
+            loadDailyRecommendation();
+        };
+
+        function loadUserData() {
+            const profile = localStorage.getItem(STORAGE_KEYS.userProfile);
+            if (profile) {
+                selectedData = JSON.parse(profile);
+            }
+        }
+
+        function saveUserData() {
+            localStorage.setItem(STORAGE_KEYS.userProfile, JSON.stringify(selectedData));
+        }
+
+        function updateStats() {
+            // 저장한 메뉴 수
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            document.getElementById('savedMenuCount').textContent = saved.length;
+            document.getElementById('savedCount').textContent = saved.length > 0 ? `(${saved.length})` : '';
+            
+            // 이번 주 기록
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.mealHistory) || '[]');
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekHistory = history.filter(h => new Date(h.date) > weekAgo);
+            
+            document.getElementById('weeklyCount').textContent = weekHistory.length;
+            
+            // 오늘 칼로리
+            const today = new Date().toDateString();
+            const todayMeals = history.filter(h => new Date(h.date).toDateString() === today);
+            const todayCalories = todayMeals.reduce((sum, m) => sum + m.calories, 0);
+            document.getElementById('todayCalories').textContent = todayCalories;
+            
+            // 통계 페이지 업데이트
+            updateTrackerStats(weekHistory, saved);
+        }
+
+        function updateTrackerStats(weekHistory, saved) {
+            // BMI 정보
+            if (selectedData.bmi) {
+                let bmiStatus = '';
+                if (selectedData.bmi < 18.5) bmiStatus = '저체중';
+                else if (selectedData.bmi < 23) bmiStatus = '정상';
+                else if (selectedData.bmi < 25) bmiStatus = '과체중';
+                else bmiStatus = '비만';
+                
+                document.getElementById('trackerBMI').innerHTML = `
+                    <strong>당신의 건강 정보</strong>
+                    <div style="margin-top: 10px; font-size: 15px; line-height: 1.8;">
+                        BMI: <strong>${selectedData.bmi}</strong> (${bmiStatus})<br>
+                        권장 칼로리: <strong>${selectedData.recommendCalories || 2000}kcal</strong>
+                    </div>
+                `;
+            }
+            
+            // 주간 통계
+            const weekCalories = weekHistory.reduce((sum, m) => sum + m.calories, 0);
+            const weekProtein = weekHistory.length > 0 
+                ? Math.round(weekHistory.reduce((sum, m) => sum + m.protein, 0) / weekHistory.length)
+                : 0;
+            const weekHealthScore = weekHistory.length > 0
+                ? Math.round(weekHistory.reduce((sum, m) => sum + m.healthScore, 0) / weekHistory.length)
+                : 0;
+                
+            document.getElementById('weekTotalCalories').textContent = weekCalories;
+            document.getElementById('weekAvgProtein').textContent = weekProtein + 'g';
+            document.getElementById('weekMealCount').textContent = weekHistory.length;
+            document.getElementById('weekHealthScore').textContent = weekHealthScore;
+            
+            // 전체 기록
+            const allHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.mealHistory) || '[]');
+            const avgHealth = allHistory.length > 0
+                ? Math.round(allHistory.reduce((sum, m) => sum + m.healthScore, 0) / allHistory.length)
+                : 0;
+                
+            document.getElementById('totalRecommended').textContent = allHistory.length + '개';
+            document.getElementById('totalSaved').textContent = saved.length + '개';
+            document.getElementById('avgHealthScore').textContent = avgHealth + '점';
+        }
+
+        function loadDailyRecommendation() {
+            // 오늘 날짜 기반으로 메뉴 선택 (매일 바뀜)
+            const today = new Date().toDateString();
+            const hash = today.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            const index = Math.abs(hash) % menuDatabase.length;
+            const dailyMenu = menuDatabase[index];
+            
+            document.getElementById('dailyMenuName').textContent = dailyMenu.name + ' - ' + dailyMenu.description;
+        }
+
+        function showDailyRecommendation() {
+            const today = new Date().toDateString();
+            const hash = today.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            const index = Math.abs(hash) % menuDatabase.length;
+            const dailyMenu = menuDatabase[index];
+            
+            currentMenu = dailyMenu;
+            showMenuDetail(dailyMenu.id);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // 탭 버튼 활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 화면 전환
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            if (tab === 'home') {
+                document.getElementById('home').classList.add('active');
+                loadRecentMenus();
+            } else if (tab === 'saved') {
+                document.getElementById('saved').classList.add('active');
+                loadSavedMenus();
+            } else if (tab === 'tracker') {
+                document.getElementById('tracker').classList.add('active');
+                updateStats();
+            }
+        }
+
+        function loadRecentMenus() {
+            const recent = JSON.parse(localStorage.getItem(STORAGE_KEYS.recentMenus) || '[]');
+            const container = document.getElementById('recentMenus');
+            
+            if (recent.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>최근 본 메뉴가 없어요</h3>
+                        <p>메뉴를 추천받아보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = recent.slice(0, 5).map(menuId => {
+                const menu = menuDatabase.find(m => m.id === menuId);
+                if (!menu) return '';
+                
+                return `
+                    <div class="menu-card" onclick="showMenuDetail(${menu.id})">
+                        <h4>${menu.name}</h4>
+                        <p style="font-size: 14px; color: #666;">${menu.description}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadSavedMenus() {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            const container = document.getElementById('savedMenusContainer');
+            
+            if (saved.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💾</div>
+                        <h3>저장한 메뉴가 없어요</h3>
+                        <p>마음에 드는 메뉴를 저장해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = saved.map(menuId => {
+                const menu = menuDatabase.find(m => m.id === menuId);
+                if (!menu) return '';
+                
+                return `
+                    <div class="menu-card" onclick="showMenuDetail(${menu.id})">
+                        <h4>
+                            ${menu.name}
+                            <span class="health-score">🌟 ${menu.healthScore}점</span>
+                        </h4>
+                        <p style="font-size: 14px; color: #666; margin: 8px 0;">${menu.description}</p>
+                        <div class="menu-meta">
+                            <div class="meta-item">⏱️ ${menu.time}분</div>
+                            <div class="meta-item">🔥 ${menu.calories}kcal</div>
+                            <div class="meta-item">💪 ${menu.protein}g</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showMenuDetail(menuId) {
+            const menu = menuDatabase.find(m => m.id === menuId);
+            if (!menu) return;
+            
+            currentMenu = menu;
+            
+            // 최근 본 메뉴에 추가
+            let recent = JSON.parse(localStorage.getItem(STORAGE_KEYS.recentMenus) || '[]');
+            recent = [menuId, ...recent.filter(id => id !== menuId)].slice(0, 10);
+            localStorage.setItem(STORAGE_KEYS.recentMenus, JSON.stringify(recent));
+            
+            showDetail(menuId);
+        }
+
+        function toggleSaveMenu() {
+            if (!currentMenu) return;
+            
+            let saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            const btn = document.getElementById('saveBtn');
+            
+            if (saved.includes(currentMenu.id)) {
+                saved = saved.filter(id => id !== currentMenu.id);
+                btn.classList.remove('active');
+                btn.textContent = '💾 저장';
+            } else {
+                saved.push(currentMenu.id);
+                btn.classList.add('active');
+                btn.textContent = '✅ 저장됨';
+            }
+            
+            localStorage.setItem(STORAGE_KEYS.savedMenus, JSON.stringify(saved));
+            updateStats();
+        }
+
+        function showShoppingList() {
+            if (!currentMenu) return;
+            
+            const modal = document.getElementById('shoppingModal');
+            const listDiv = document.getElementById('shoppingList');
+            
+            listDiv.innerHTML = `
+                <div class="detail-section">
+                    <h4>🛒 ${currentMenu.name}</h4>
+                    <p style="color: #667eea; font-weight: bold; margin-bottom: 16px;">예상 비용: ${currentMenu.cost.toLocaleString()}원</p>
+                    <ul class="ingredient-list">
+                        ${currentMenu.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                    <button class="btn btn-secondary" style="margin-top: 16px;" onclick="copyShoppingList()">📋 리스트 복사</button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function copyShoppingList() {
+            if (!currentMenu) return;
+            
+            const text = `[${currentMenu.name} 장보기 리스트]\n\n` +
+                currentMenu.ingredients.join('\n') +
+                `\n\n예상 비용: ${currentMenu.cost.toLocaleString()}원`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ 장보기 리스트가 복사되었습니다!');
+            });
+        }
+
+        function shareMenu() {
+            if (!currentMenu) return;
+            
+            const url = window.location.href;
+            const text = `🍚 밥심 추천 메뉴\n\n${currentMenu.name}\n${currentMenu.description}\n\n건강 점수: ${currentMenu.healthScore}점\n칼로리: ${currentMenu.calories}kcal\n\n${url}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '밥심 - ' + currentMenu.name,
+                    text: text
+                });
+            } else {
+                // 카카오톡 공유 (실제 구현 시 Kakao.init 필요)
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('✅ 메뉴 정보가 복사되었습니다!\n카카오톡 등에 공유해보세요.');
+                });
+            }
+        }
+
+        function addToTracker() {
+            if (!currentMenu) return;
+            
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.mealHistory) || '[]');
+            history.push({
+                menuId: currentMenu.id,
+                name: currentMenu.name,
+                calories: currentMenu.calories,
+                protein: currentMenu.protein,
+                healthScore: currentMenu.healthScore,
+                date: new Date().toISOString()
+            });
+            
+            localStorage.setItem(STORAGE_KEYS.mealHistory, JSON.stringify(history));
+            updateStats();
+            
+            alert('✅ 식단 기록에 추가되었습니다!');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
 
         function startQuestions() {
+            document.getElementById('tabNav').style.display = 'none';
             switchScreen('q0');
         }
 
@@ -1289,6 +1916,7 @@
                 selectedData.height = parseFloat(document.getElementById('heightInput').value);
                 selectedData.weight = parseFloat(document.getElementById('weightInput').value);
                 selectedData.bmi = calculateBMI(selectedData.height, selectedData.weight);
+                saveUserData();
                 switchScreen('q1');
             } else if (screenId === 'loading') {
                 selectedData.avoid = document.getElementById('avoidInput').value.toLowerCase();
@@ -1298,6 +1926,7 @@
                     selectedData.height,
                     selectedData.mealTime
                 );
+                saveUserData();
                 switchScreen('loading');
                 setTimeout(() => {
                     filterAndDisplayMenus();
@@ -1362,6 +1991,9 @@
 
             displayMenus(selectedMenus);
             switchScreen('results');
+            
+            // 탭 네비게이션 표시
+            document.getElementById('tabNav').style.display = 'flex';
         }
 
         function displayMenus(menus) {
@@ -1384,6 +2016,14 @@
                 bmiColor = '#FF7043';
             }
 
+            // 영양 부족 분석
+            let nutritionWarning = '';
+            if (selectedData.bmi < 18.5) {
+                nutritionWarning = '<div class="nutrition-alert"><strong>⚠️ 영양 부족 경고</strong><p>체중이 부족합니다. 고단백, 고칼로리 메뉴를 우선 추천드립니다.</p></div>';
+            } else if (selectedData.bmi > 25) {
+                nutritionWarning = '<div class="nutrition-alert"><strong>💪 건강 개선 권장</strong><p>저칼로리, 고단백 메뉴로 체중 관리를 시작해보세요!</p></div>';
+            }
+
             analysisDiv.innerHTML = `
                 <div class="bmi-info">
                     <strong>당신의 건강 분석</strong>
@@ -1392,6 +2032,7 @@
                         권장 칼로리: <strong>${selectedData.recommendCalories}kcal</strong>
                     </div>
                 </div>
+                ${nutritionWarning}
             `;
             
             if (menus.length === 0) {
@@ -1429,7 +2070,7 @@
                 }
 
                 return `
-                <div class="menu-card" onclick="showDetail(${menu.id})">
+                <div class="menu-card" onclick="showMenuDetail(${menu.id})">
                     <h4>
                         ${menu.name}
                         <span class="${scoreClass}">${scoreEmoji} ${menu.healthScore}점</span>
@@ -1456,6 +2097,10 @@
             if (!menu) return;
 
             currentMenu = menu;
+            
+            // 저장 버튼 상태 확인
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            const isSaved = saved.includes(menu.id);
             
             const detailHTML = `
                 <h3 style="margin-bottom: 12px; font-size: 24px; font-weight: 700;">${menu.name}</h3>
@@ -1522,6 +2167,17 @@
             `;
 
             document.getElementById('detailContent').innerHTML = detailHTML;
+            
+            // 저장 버튼 상태 업데이트
+            const saveBtn = document.getElementById('saveBtn');
+            if (isSaved) {
+                saveBtn.classList.add('active');
+                saveBtn.textContent = '✅ 저장됨';
+            } else {
+                saveBtn.classList.remove('active');
+                saveBtn.textContent = '💾 저장';
+            }
+            
             switchScreen('detail');
         }
 
@@ -1530,22 +2186,9 @@
         }
 
         function restart() {
-            selectedData = {
-                gender: '',
-                height: '',
-                weight: '',
-                bmi: 0,
-                recommendCalories: 0,
-                mealTime: '',
-                cooking: '',
-                budget: '',
-                avoid: ''
-            };
-            document.getElementById('genderSelect').value = '';
-            document.getElementById('heightInput').value = '';
-            document.getElementById('weightInput').value = '';
-            document.getElementById('avoidInput').value = '';
-            switchScreen('welcome');
+            document.getElementById('tabNav').style.display = 'flex';
+            switchTab('home');
+            updateStats();
         }
     </script>
 </body>
