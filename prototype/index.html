@@ -895,11 +895,27 @@
                 <!-- Welcome Screen -->
                 <div id="welcome" class="screen active">
                     <h2>환영합니다!</h2>
-                    <p style="margin-bottom: 40px;">
+                    <p style="margin-bottom: 30px;">
                         당신의 몸 상태와 목표를 분석해서<br>
                         <strong>영양학적으로 균형잡힌 식단</strong>을<br>
                         추천해드릴게요.
                     </p>
+                    
+                    <!-- 음식 영양 검색 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 20px; margin-bottom: 30px;">
+                        <h3 style="color: white; font-size: 20px; margin-bottom: 15px;">🔍 오늘 먹은 음식 검색</h3>
+                        <div style="position: relative;">
+                            <input type="text" id="foodSearchInputWelcome" placeholder="예: 초코라떼, 라면, 김밥..." 
+                                style="width: 100%; padding: 14px 50px 14px 14px; border: none; border-radius: 12px; font-size: 15px; font-family: 'Pretendard', sans-serif;"
+                                onkeyup="searchFoodWelcome(event)">
+                            <button onclick="searchFoodWelcome()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; cursor: pointer;">🔍</button>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 13px; margin-top: 10px; margin-bottom: 0;">
+                            💡 먹은 음식의 영양 성분과 건강 정보를 확인하세요!
+                        </p>
+                    </div>
+
+                    <div id="foodSearchResultWelcome" style="margin-bottom: 25px;"></div>
                     
                     <div style="margin-bottom: 20px;">
                         <button class="btn btn-primary" onclick="startQuestions()">자세하게 추천받기 (8문항)</button>
@@ -3363,6 +3379,40 @@
         // 음식 영양 검색 기능
         // ========================================
         
+        // Welcome 화면용 검색
+        function searchFoodWelcome(event) {
+            // Enter 키로도 검색 가능
+            if (event && event.key && event.key !== 'Enter') return;
+            
+            const searchTerm = document.getElementById('foodSearchInputWelcome').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('foodSearchResultWelcome');
+            
+            if (!searchTerm) {
+                resultDiv.innerHTML = '';
+                return;
+            }
+            
+            // 검색 (부분 일치)
+            const results = foodDatabase.filter(food => 
+                food.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (results.length === 0) {
+                resultDiv.innerHTML = `
+                    <div style="background: #f5f5f5; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="color: #999; margin: 0;">❌ "${searchTerm}"을(를) 찾을 수 없습니다.</p>
+                        <p style="color: #999; font-size: 13px; margin-top: 8px;">다른 검색어를 입력해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 여러 결과가 있으면 첫 번째만 표시
+            const food = results[0];
+            displayFoodNutrition(food, 'foodSearchResultWelcome');
+        }
+        
+        // Home 화면용 검색
         function searchFood(event) {
             // Enter 키로도 검색 가능
             if (event && event.key && event.key !== 'Enter') return;
@@ -3392,11 +3442,11 @@
             
             // 여러 결과가 있으면 첫 번째만 표시
             const food = results[0];
-            displayFoodNutrition(food);
+            displayFoodNutrition(food, 'foodSearchResult');
         }
         
-        function displayFoodNutrition(food) {
-            const resultDiv = document.getElementById('foodSearchResult');
+        function displayFoodNutrition(food, targetDivId = 'foodSearchResult') {
+            const resultDiv = document.getElementById(targetDivId);
             
             // 건강 점수에 따른 색상
             let scoreColor = '#4CAF50';
