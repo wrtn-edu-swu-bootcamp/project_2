@@ -887,7 +887,7 @@
             <div class="tab-nav" id="tabNav" style="display: none;">
                 <button class="tab-btn active" onclick="switchTab('home')">홈</button>
                 <button class="tab-btn" onclick="switchTab('saved')">저장 <span id="savedCount"></span></button>
-                <button class="tab-btn" onclick="switchTab('tracker')">통계</button>
+                <button class="tab-btn" onclick="switchTab('weekplan')">식단표</button>
                 <button class="tab-btn" onclick="switchTab('profile')">프로필</button>
             </div>
 
@@ -1017,6 +1017,12 @@
                 <!-- Saved Tab -->
                 <div id="saved" class="screen">
                     <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">저장한 메뉴</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                        <button class="btn btn-primary" onclick="generateShoppingListAll()">🛒 장보기 리스트</button>
+                        <button class="btn btn-secondary" onclick="switchTab('weekplan')">📅 주간 식단</button>
+                    </div>
+                    
                     <div id="savedMenusContainer"></div>
                 </div>
 
@@ -1055,6 +1061,28 @@
                             <li>저장한 메뉴: <strong id="totalSaved">0개</strong></li>
                             <li>평균 건강 점수: <strong id="avgHealthScore">0점</strong></li>
                         </ul>
+                    </div>
+                </div>
+
+                <!-- Week Plan Tab -->
+                <div id="weekplan" class="screen">
+                    <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">주간 식단표</h3>
+                    
+                    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 20px; border-radius: 16px; margin-bottom: 25px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">📅</div>
+                        <p style="color: #2E7D32; font-size: 15px; line-height: 1.6;">
+                            저장한 메뉴로 일주일 식단을 계획해보세요!<br>
+                            장도 한 번만 보면 됩니다!
+                        </p>
+                    </div>
+
+                    <div id="weekPlanContainer">
+                        <!-- 주간 식단이 여기에 표시됩니다 -->
+                    </div>
+
+                    <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="clearWeekPlan()">🗑️ 식단표 초기화</button>
+                        <button class="btn btn-primary" onclick="generateWeekShoppingList()">🛒 장보기 리스트</button>
                     </div>
                 </div>
 
@@ -1878,7 +1906,8 @@
             savedMenus: 'babssim_saved_menus',
             recentMenus: 'babssim_recent_menus',
             mealHistory: 'babssim_meal_history',
-            userProfile: 'babssim_user_profile'
+            userProfile: 'babssim_user_profile',
+            weekPlan: 'babssim_week_plan'
         };
 
         // 초기화
@@ -2157,6 +2186,9 @@
             } else if (tab === 'saved') {
                 document.getElementById('saved').classList.add('active');
                 loadSavedMenus();
+            } else if (tab === 'weekplan') {
+                document.getElementById('weekplan').classList.add('active');
+                loadWeekPlan();
             } else if (tab === 'tracker') {
                 document.getElementById('tracker').classList.add('active');
                 updateStats();
@@ -3266,6 +3298,282 @@
 
         function backToResults() {
             switchScreen('results');
+        }
+
+        // ========================================
+        // 장보기 리스트 자동 생성
+        // ========================================
+        
+        function generateShoppingListAll() {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            
+            if (saved.length === 0) {
+                alert('저장된 메뉴가 없습니다!\n메뉴를 먼저 저장해주세요.');
+                return;
+            }
+            
+            // 모든 재료 수집
+            const ingredientCount = {};
+            let totalCost = 0;
+            
+            saved.forEach(menuId => {
+                const menu = menuDatabase.find(m => m.id === menuId);
+                if (menu) {
+                    totalCost += menu.cost;
+                    menu.ingredients.forEach(ing => {
+                        ingredientCount[ing] = (ingredientCount[ing] || 0) + 1;
+                    });
+                }
+            });
+            
+            // 카테고리별 분류
+            const categories = {
+                '🥬 채소류': ['시금치', '브로콜리', '양상추', '상추', '오이', '애호박', '호박', '당근', '파프리카', '고추', '대파', '파', '양파', '마늘', '생강', '부추', '깻잎', '무', '감자', '고구마', '단호박'],
+                '🥩 육류/생선': ['닭가슴살', '닭고기', '소고기', '돼지고기', '새우', '연어', '고등어', '참치', '오징어'],
+                '🥚 달걀/유제품': ['계란', '달걀', '우유', '요거트', '치즈', '그릭요거트'],
+                '🌾 곡물/면': ['쌀', '밥', '현미', '흑미', '귀리', '퀴노아', '파스타', '면', '국수', '당면', '쌀국수'],
+                '🥫 두부/콩': ['두부', '연두부', '검은콩', '렌틸콩', '병아리콩'],
+                '🍄 버섯류': ['팽이버섯', '양송이', '표고버섯', '목이버섯', '느타리버섯'],
+                '🧂 조미료/양념': ['간장', '된장', '고추장', '참기름', '올리브오일', '식용유', '소금', '설탕', '꿀', '식초', '후추'],
+                '🥫 기타': []
+            };
+            
+            const categorized = {};
+            Object.keys(categories).forEach(cat => categorized[cat] = []);
+            
+            Object.entries(ingredientCount).forEach(([ing, count]) => {
+                let found = false;
+                for (let [cat, items] of Object.entries(categories)) {
+                    if (cat === '🥫 기타') continue;
+                    if (items.includes(ing)) {
+                        categorized[cat].push({ name: ing, count });
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    categorized['🥫 기타'].push({ name: ing, count });
+                }
+            });
+            
+            // 모달 표시
+            showShoppingListModal(categorized, totalCost, saved.length);
+        }
+        
+        function showShoppingListModal(categorized, totalCost, menuCount) {
+            let html = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;" onclick="this.remove()">
+                    <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;" onclick="event.stopPropagation()">
+                        <h3 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">🛒 장보기 리스트</h3>
+                        
+                        <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                            <p style="color: #2E7D32; font-size: 14px; margin: 0;">
+                                <strong>${menuCount}개 메뉴</strong>의 재료 리스트<br>
+                                예상 식재료비: <strong>${totalCost.toLocaleString()}원</strong>
+                            </p>
+                        </div>
+            `;
+            
+            Object.entries(categorized).forEach(([category, items]) => {
+                if (items.length === 0) return;
+                
+                html += `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 16px; color: #4CAF50; margin-bottom: 10px;">${category}</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                `;
+                
+                items.forEach(item => {
+                    const countText = item.count > 1 ? ` <span style="color: #4CAF50; font-weight: bold;">(${item.count}회 필요)</span>` : '';
+                    html += `
+                        <li style="padding: 8px 12px; background: #f5f5f5; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>${item.name}${countText}</span>
+                        </li>
+                    `;
+                });
+                
+                html += `</ul></div>`;
+            });
+            
+            html += `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+                            <button class="btn btn-secondary" onclick="this.closest('div[style*=fixed]').remove()">닫기</button>
+                            <button class="btn btn-primary" onclick="copyShoppingListText()">📋 복사</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+        
+        function copyShoppingListText() {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            const ingredientCount = {};
+            
+            saved.forEach(menuId => {
+                const menu = menuDatabase.find(m => m.id === menuId);
+                if (menu) {
+                    menu.ingredients.forEach(ing => {
+                        ingredientCount[ing] = (ingredientCount[ing] || 0) + 1;
+                    });
+                }
+            });
+            
+            let text = '🛒 장보기 리스트\n\n';
+            Object.entries(ingredientCount).forEach(([ing, count]) => {
+                text += `☐ ${ing}`;
+                if (count > 1) text += ` (${count}회 필요)`;
+                text += '\n';
+            });
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('장보기 리스트가 복사되었습니다!');
+            });
+        }
+        
+        // ========================================
+        // 주간 식단표 기능
+        // ========================================
+        
+        function loadWeekPlan() {
+            const weekPlan = JSON.parse(localStorage.getItem(STORAGE_KEYS.weekPlan) || '{}');
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.savedMenus) || '[]');
+            const days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+            
+            let html = '';
+            
+            days.forEach(day => {
+                const menuId = weekPlan[day];
+                const menu = menuId ? menuDatabase.find(m => m.id === menuId) : null;
+                
+                html += `
+                    <div style="background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 2px solid #e9ecef;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h4 style="font-size: 18px; color: #4CAF50; margin: 0;">${day}</h4>
+                            ${menu ? `<button class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="removeFromWeekPlan('${day}')">🗑️</button>` : ''}
+                        </div>
+                        
+                        ${menu ? `
+                            <div onclick="showMenuDetail(${menu.id})" style="cursor: pointer;">
+                                <h5 style="font-size: 16px; margin: 8px 0;">${menu.name}</h5>
+                                <p style="font-size: 13px; color: #666; margin: 4px 0;">${menu.description}</p>
+                                <div style="display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: #999;">
+                                    <span>⏱️ ${menu.time}분</span>
+                                    <span>🔥 ${menu.calories}kcal</span>
+                                    <span>💪 ${menu.protein}g</span>
+                                </div>
+                            </div>
+                        ` : `
+                            <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 12px; border: 2px dashed #ddd;">
+                                <select onchange="addToWeekPlan('${day}', this.value)" style="width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px;">
+                                    <option value="">메뉴 선택...</option>
+                                    ${saved.map(menuId => {
+                                        const m = menuDatabase.find(menu => menu.id === menuId);
+                                        return m ? `<option value="${m.id}">${m.name}</option>` : '';
+                                    }).join('')}
+                                </select>
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+            
+            if (saved.length === 0) {
+                html = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💾</div>
+                        <h3>저장된 메뉴가 없어요</h3>
+                        <p>먼저 메뉴를 저장해주세요!</p>
+                        <button class="btn btn-primary" onclick="switchTab('saved')">메뉴 저장하러 가기</button>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('weekPlanContainer').innerHTML = html;
+        }
+        
+        function addToWeekPlan(day, menuId) {
+            if (!menuId) return;
+            
+            const weekPlan = JSON.parse(localStorage.getItem(STORAGE_KEYS.weekPlan) || '{}');
+            weekPlan[day] = parseInt(menuId);
+            localStorage.setItem(STORAGE_KEYS.weekPlan, JSON.stringify(weekPlan));
+            
+            loadWeekPlan();
+        }
+        
+        function removeFromWeekPlan(day) {
+            const weekPlan = JSON.parse(localStorage.getItem(STORAGE_KEYS.weekPlan) || '{}');
+            delete weekPlan[day];
+            localStorage.setItem(STORAGE_KEYS.weekPlan, JSON.stringify(weekPlan));
+            
+            loadWeekPlan();
+        }
+        
+        function clearWeekPlan() {
+            if (!confirm('주간 식단표를 초기화하시겠습니까?')) return;
+            
+            localStorage.removeItem(STORAGE_KEYS.weekPlan);
+            loadWeekPlan();
+            alert('주간 식단표가 초기화되었습니다!');
+        }
+        
+        function generateWeekShoppingList() {
+            const weekPlan = JSON.parse(localStorage.getItem(STORAGE_KEYS.weekPlan) || '{}');
+            const menuIds = Object.values(weekPlan);
+            
+            if (menuIds.length === 0) {
+                alert('주간 식단표가 비어있습니다!\n식단을 먼저 계획해주세요.');
+                return;
+            }
+            
+            // 모든 재료 수집
+            const ingredientCount = {};
+            let totalCost = 0;
+            
+            menuIds.forEach(menuId => {
+                const menu = menuDatabase.find(m => m.id === menuId);
+                if (menu) {
+                    totalCost += menu.cost;
+                    menu.ingredients.forEach(ing => {
+                        ingredientCount[ing] = (ingredientCount[ing] || 0) + 1;
+                    });
+                }
+            });
+            
+            // 카테고리별 분류 (같은 로직)
+            const categories = {
+                '🥬 채소류': ['시금치', '브로콜리', '양상추', '상추', '오이', '애호박', '호박', '당근', '파프리카', '고추', '대파', '파', '양파', '마늘', '생강', '부추', '깻잎', '무', '감자', '고구마', '단호박'],
+                '🥩 육류/생선': ['닭가슴살', '닭고기', '소고기', '돼지고기', '새우', '연어', '고등어', '참치', '오징어'],
+                '🥚 달걀/유제품': ['계란', '달걀', '우유', '요거트', '치즈', '그릭요거트'],
+                '🌾 곡물/면': ['쌀', '밥', '현미', '흑미', '귀리', '퀴노아', '파스타', '면', '국수', '당면', '쌀국수'],
+                '🥫 두부/콩': ['두부', '연두부', '검은콩', '렌틸콩', '병아리콩'],
+                '🍄 버섯류': ['팽이버섯', '양송이', '표고버섯', '목이버섯', '느타리버섯'],
+                '🧂 조미료/양념': ['간장', '된장', '고추장', '참기름', '올리브오일', '식용유', '소금', '설탕', '꿀', '식초', '후추'],
+                '🥫 기타': []
+            };
+            
+            const categorized = {};
+            Object.keys(categories).forEach(cat => categorized[cat] = []);
+            
+            Object.entries(ingredientCount).forEach(([ing, count]) => {
+                let found = false;
+                for (let [cat, items] of Object.entries(categories)) {
+                    if (cat === '🥫 기타') continue;
+                    if (items.includes(ing)) {
+                        categorized[cat].push({ name: ing, count });
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    categorized['🥫 기타'].push({ name: ing, count });
+                }
+            });
+            
+            showShoppingListModal(categorized, totalCost, menuIds.length);
         }
 
         function restart() {
